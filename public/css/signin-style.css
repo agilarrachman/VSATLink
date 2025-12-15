@@ -1,0 +1,98 @@
+.content {
+    width: 100vw;
+    position: relative;
+    overflow-x: hidden !important;
+}
+
+.ellipse-background-blue {
+    border-radius: 810px;
+    background: radial-gradient(47.8% 47.8% at 50.02% 52.2%, rgba(10, 102, 194, 0.60) 0%, rgba(0, 138, 187, 0.60) 99.99%);
+    filter: blur(285.85px);
+    width: 700px;
+    height: 700px;
+    position: absolute;
+    z-index: -1;
+    bottom: 0;
+    left: 70%;
+}
+
+.ellipse-background-purple {
+    border-radius: 810px;
+    background: radial-gradient(47.8% 47.8% at 50.02% 52.2%, rgba(75, 51, 142, 0.80) 0%, rgba(129, 88, 244, 0.80) 99.99%);
+    filter: blur(285.8500061035156px);
+    width: 700px;
+    height: 700px;
+    position: absolute;
+    z-index: -1;
+    bottom: 50px;
+    left: 0;
+    transform: translate(-50%, -50%);
+}
+
+.container{
+    max-width: 900px;
+}
+
+.container #card {
+    border-bottom: 5px solid #8158F4;
+    border-radius: 28px;
+}
+
+.container .info {
+    background-color: #242134;
+    border-radius: 28px 0 0 28px;
+}
+
+@media (max-width: 990px) {
+    .container .info {
+        border-radius: 28px 28px 0 0;
+    }
+
+    .card-wrapper {
+        border-radius: 0 0 28px 28px !important;
+    }
+}
+
+@media (max-width: 450px) {
+    .ellipse-background-blue {
+        bottom: -120%;
+    }
+}
+
+.swal2-popup {
+    background-color: #2C2C44 !important;
+}
+
+.swal2-icon {
+    margin-bottom: 70px;
+}
+
+.swal2-title {
+    color: #fff !important;
+    font-weight: 500 !important;
+    font-size: 1rem !important;
+    margin-bottom: 20px;
+}
+
+.swal2-content {
+    color: #fff !important;
+}
+
+.swal2-confirm {
+    background-color: #FF8800 !important;
+    color: #fff !important;
+    margin-bottom: 20px;
+}
+
+.swal-login-title {
+    margin-top: -40px !important;
+    margin-bottom: 30px !important;
+}
+
+.swal-berhasil-icon {
+    margin-bottom: 30px !important;
+}
+
+footer .footer{
+    margin-top: 0 !important;
+}
