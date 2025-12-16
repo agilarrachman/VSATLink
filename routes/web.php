@@ -8,7 +8,7 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return view('login', ['page' => 'login']);
 });
-Route::get('/orders', function () {
+Route::get('/pesanan', function () {
     return view('orders', ['page' => 'orders']);
 });
 Route::get('/detail-product', function () {
