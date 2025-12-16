@@ -7,7 +7,7 @@
                         <div class="de-flex-col">
                             <!-- logo begin -->
                             <div id="logo">
-                                <a href="index.html">
+                                <a href="/">
                                     <img class="logo-main" src="images/Logo VSATLink.png" alt="">
                                     <img class="logo-mobile" src="images/Icon VSATLink.png" alt="" >
                                 </a>
@@ -17,12 +17,13 @@
                     </div>
                     <div class="de-flex-col header-col-mid">
                         <ul id="mainmenu">
-                            <li><a class="menu-item active" href="#swiper">Beranda</a></li>
-                            <li><a class="menu-item" href="#tentang">Tentang</a></li>
-                            <li><a class="menu-item" href="#produk">Produk</a></li>
-                            <li><a class="menu-item" href="#faq">FAQ</a></li>
-                            <li><a class="menu-item" href="game-server-1.html">Pesanan Saya</a></li>
-                            <li><a class="menu-item" href="locations.html">Profil</a></li>
+                            <li><a class="menu-item {{ ($page === 'home') ? 'active' : '' }}" href="{{ ($page === 'home') ? '#hero' : '/' }}">Beranda</a></li>
+                            <li><a class="menu-item" href="{{ ($page === 'home') ? '' : '/' }}#tentang">Tentang</a></li>
+                            <li><a class="menu-item" href="{{ ($page === 'home') ? '' : '/' }}#produk">Produk</a></li>
+                            <li><a class="menu-item" href="{{ ($page === 'home') ? '' : '/' }}#faq">FAQ</a></li>
+                            <li><a class="menu-item {{ ($page === 'login') ? 'd-none' : '' }}" href="/pesanan">Pesanan</a></li>
+                            <li><a class="menu-item {{ ($page === 'login') ? 'd-none' : '' }}" href="/aktivasi">Aktivasi</a></li>
+                            <li><a class="menu-item {{ ($page === 'login') ? 'd-none' : '' }}" href="/profil">Profil</a></li>
                         </ul>
                     </div>
                     <div class="de-flex-col">

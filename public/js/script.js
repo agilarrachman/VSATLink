@@ -27,27 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    window.addEventListener("scroll", updateActiveMenu);
-
-    navLinks.forEach((link) => {
-        link.addEventListener("click", function (e) {
-            e.preventDefault();
-
-            const targetId = this.getAttribute("href");
-            if (targetId.startsWith("/#") || targetId.startsWith("#")) {
-                const targetSection = document.querySelector(targetId);
-                if (targetSection) {
-                    navLinks.forEach((item) => item.classList.remove("active"));
-                    this.classList.add("active");
-
-                    window.scrollTo({
-                        top: targetSection.offsetTop - 80,
-                        behavior: "smooth",
-                    });
-                }
-            }
-        });
-    });
+    window.addEventListener("scroll", updateActiveMenu);    
 
     updateActiveMenu();
 });

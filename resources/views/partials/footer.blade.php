@@ -25,7 +25,7 @@
                         <div class="widget">
                             <h5>Tautan Cepat</h5>
                             <ul>
-                                <li><a href="#swiper">Beranda</a></li>
+                                <li><a href="#hero">Beranda</a></li>
                                 <li><a href="#tentang">Tentang</a></li>
                                 <li><a href="#produk">Katalog Produk</a></li>
                                 <li><a href="#faq">FAQ</a></li>
