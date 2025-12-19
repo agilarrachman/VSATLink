@@ -18,5 +18,5 @@ Route::get('/detail-pesanan', function () {
     return view('order-detail', ['page' => 'order-detail']);
 });
 Route::get('/lengkapi-pesanan', function () {
-    return view('order-complete', ['page' => 'order-complete']);
+    return view('order-completion', ['page' => 'order-complete'])ion
 });

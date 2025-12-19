@@ -249,12 +249,12 @@
 
         <!-- Modal -->
         <div id="mapModal" class="fixed inset-0 bg-black/25 hidden items-center justify-center z-[9999]">
-            <div class="bg-gray-900/40 backdrop-blur-md border !border-white/20 rounded-sm w-full max-w-[750px] p-6 relative">
+            <div class="bg-gray-900/40 backdrop-blur-md border !border-white/20 rounded-sm w-full max-w-[750px] p-6 relative mx-3">
                 <h4 class="mb-4 text-center">Lokasi Instalasi & Aktivasi</h4>
 
                 <div id="leafletMap" class="w-full h-[300px] rounded-lg border border-white/20 mb-4"></div>
 
-                <div class="mb-3 text-sm text-white/80">
+                <div class="mb-4 text-sm text-white/80">
                     <div class="myaddress flex items-center mb-2">
                         <input class="form-check-input me-2" type="checkbox" value="" id="myaddress">
                         <label class="form-check-label text-white" for="myaddress">
@@ -281,7 +281,7 @@
                 <input type="hidden" name="latitude" id="latitude">
                 <input type="hidden" name="longitude" id="longitude">
 
-                <div class="flex gap-3">
+                <div class="flex flex-col md:flex-row gap-3">
                     <button id="cancelBtn"
                         class="font-bold !text-sm text-white !uppercase !rounded-[5px] !font-['Oxanium',Helvetica,Arial,sans-serif] w-full md:w-1/2 px-4 py-2 !bg-[#9692A0] hover:!bg-[#898592]">
                         Batalkan

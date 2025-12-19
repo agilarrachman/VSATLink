@@ -28239,6 +28239,19 @@ img {
   }
 }
 
+.modal-open {
+    overflow: hidden;
+}
+
+#agreementModal {
+    overflow: hidden;
+}
+
+#agreementModal > div {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
 #produk #card{
     min-height: 350px;
 }
