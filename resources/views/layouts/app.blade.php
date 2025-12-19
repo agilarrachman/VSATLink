@@ -5,19 +5,19 @@
     <title>@yield('title', 'VSATLink - Solusi Internet Satelit Cepat dan Handal')</title>
     <link rel="icon" href="images/icon VSATLink.png" type="image/gif" sizes="16x16">
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" >
-    <meta content="Playhost - Game Hosting Website Template" name="description" >
-    <meta content="" name="keywords" >
-    <meta content="" name="author" >
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Playhost - Game Hosting Website Template" name="description">
+    <meta content="" name="keywords">
+    <meta content="" name="author">
     <!-- CSS Files
     ================================================== -->
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" id="bootstrap">
-    <link href="css/plugins.css" rel="stylesheet" type="text/css" >
-    <link href="css/swiper.css" rel="stylesheet" type="text/css" >
-    <link href="css/style.css" rel="stylesheet" type="text/css" >
-    <link href="css/coloring.css" rel="stylesheet" type="text/css" >
+    <link href="css/plugins.css" rel="stylesheet" type="text/css">
+    <link href="css/swiper.css" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/coloring.css" rel="stylesheet" type="text/css">
     <!-- color scheme -->
-    <link id="colors" href="css/colors/scheme-01.css" rel="stylesheet" type="text/css" >
+    <link id="colors" href="css/colors/scheme-01.css" rel="stylesheet" type="text/css">
     <!-- icon -->
     <link href="fonts/fontawesome4/css/all.min.css" rel="stylesheet">
     <link href="fonts/fontawesome6/css/all.min.css" rel="stylesheet">
@@ -25,6 +25,9 @@
     <link href="fonts/elegant_font/HTML_CSS/style.css" rel="stylesheet">
     {{-- Tailwind CSS CDN --}}
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    {{-- Leaflet --}}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
 <body class="dark-scheme">
@@ -43,7 +46,7 @@
         <!-- content begin -->
         @yield('content')
         <!-- content close -->
-        
+
         <!-- footer begin -->
         @include('partials.footer')
         <!-- footer close -->

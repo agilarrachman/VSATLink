@@ -30,7 +30,7 @@
 
                 <div class="orders flex flex-col gap-3">
                     <div
-                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-black/40">
+                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
                         <div class="flex flex-col flex-md-row justify-between items-center">
                             <div class="detail flex flex-col flex-md-row items-center gap-4">
                                 <img src="images/covers/produkVSAT1.png" alt="Product Image"
@@ -53,20 +53,50 @@
                                 </div>
                             </div>
                             <div class="action flex flex-col items-end w-full md:w-auto">
-                                <a class="btn-primary !rounded-md py-2 !w-full flex justify-center" href="#">
+                                <a class="btn-primary !rounded-md py-2 !w-full flex justify-center" href="/detail-pesanan">
                                     <span>Lihat Detail</span>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div
-                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-black/40">
+                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
                         <div class="flex flex-col flex-md-row justify-between items-center">
                             <div class="detail flex flex-col flex-md-row items-center gap-4">
                                 <img src="images/covers/produkVSAT1.png" alt="Product Image"
                                     class="rounded-md object-cover w-full md:max-w-[150px]" />
                                 <div class="info w-full mb-3 mb-md-0">
-                                    <div class="status bg-[#1073DD] px-3 py-1 rounded-full text-white w-fit mb-1">
+                                    <div
+                                        class="status bg-gray-300 px-3 py-1 rounded-full text-[var(--primary-color)] w-fit mb-1">
+                                        <p class="text-sm mb-0">
+                                            Pesanan Dikonfirmasi
+                                        </p>
+                                    </div>
+                                    <p class="mb-0 text-white">
+                                        Kode Pesanan: VSL7393741
+                                    </p>
+                                    <h3 class="mb-0">Nama Layanan</h3>
+                                    <p class="mb-0">
+                                        Pesanan dibuat pada tanggal 19 November
+                                        2025
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="action flex flex-col items-end w-full md:w-auto">
+                                <a class="btn-primary !rounded-md py-2 !w-full flex justify-center" href="/lengkapi-pesanan">
+                                    <span>Lengkapi Pemesanan</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
+                        <div class="flex flex-col flex-md-row justify-between items-center">
+                            <div class="detail flex flex-col flex-md-row items-center gap-4">
+                                <img src="images/covers/produkVSAT1.png" alt="Product Image"
+                                    class="rounded-md object-cover w-full md:max-w-[150px]" />
+                                <div class="info w-full mb-3 mb-md-0">
+                                    <div class="status bg-[#dd7310] px-3 py-1 rounded-full text-white w-fit mb-1">
                                         <p class="text-sm mb-0">
                                             Belum Dibayar
                                         </p>
@@ -99,7 +129,7 @@
                         </div>
                     </div>
                     <div
-                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-black/40">
+                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
                         <div class="flex flex-col flex-md-row justify-between items-center">
                             <div class="detail flex flex-col flex-md-row items-center gap-4">
                                 <img src="images/covers/produkVSAT1.png" alt="Product Image"
@@ -128,14 +158,14 @@
                                     </p>
                                 </div>
                                 <a class="btn-primary !rounded-md py-2 !w-full md:!w-fit flex justify-center"
-                                    href="#">
+                                    href="/detail-pesanan">
                                     <span>Lihat Detail</span>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div
-                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-black/40">
+                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
                         <div class="flex flex-col flex-md-row justify-between items-center">
                             <div class="detail flex flex-col flex-md-row items-center gap-4">
                                 <img src="images/covers/produkVSAT1.png" alt="Product Image"
@@ -163,14 +193,14 @@
                                     </p>
                                 </div>
                                 <a class="btn-primary !rounded-md py-2 !w-full md:!w-fit flex justify-center"
-                                    href="#">
+                                    href="/detail-pesanan">
                                     <span>Lihat Detail</span>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div
-                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-black/40">
+                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
                         <div class="flex flex-col flex-md-row justify-between items-center">
                             <div class="detail flex flex-col flex-md-row items-center gap-4">
                                 <img src="images/covers/produkVSAT1.png" alt="Product Image"
@@ -198,7 +228,7 @@
                                     </p>
                                 </div>
                                 <a class="btn-primary !rounded-md py-2 !w-full md:!w-fit flex justify-center"
-                                    href="#">
+                                    href="/detail-pesanan">
                                     <span>Lihat Detail</span>
                                 </a>
                             </div>

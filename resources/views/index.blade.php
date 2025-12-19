@@ -229,7 +229,7 @@
                                 </div>
                                 <p class="d-price">Harga Perangkat <span class="price">Rp10.000.000,00</span></p>
                                 <p class="d-price">Harga Layanan <span class="price">Rp500.000,00/bulan</span></p>
-                                <a class="btn-main btn-fullwidth" href="/detail-product"><span>Lihat Detail</span></a>
+                                <a class="btn-main btn-fullwidth" href="/detail-produk"><span>Lihat Detail</span></a>
                             </div>
                         </div>
                         <img src="images/covers/produkVSAT1.png" class="img-fluid " alt="">
@@ -251,7 +251,7 @@
                                 </div>
                                 <p class="d-price">Harga Perangkat <span class="price">Rp10.000.000,00</span></p>
                                 <p class="d-price">Harga Layanan <span class="price">Rp500.000,00/bulan</span></p>
-                                <a class="btn-main btn-fullwidth" href="/detail-product"><span>Lihat Detail</span></a>
+                                <a class="btn-main btn-fullwidth" href="/detail-produk"><span>Lihat Detail</span></a>
                             </div>
                         </div>
                         <img src="images/covers/produkVSAT2.png" class="img-fluid " alt="">
@@ -270,7 +270,7 @@
                                 </div>
                                 <p class="d-price">Harga Perangkat <span class="price">Rp10.000.000,00</span></p>
                                 <p class="d-price">Harga Layanan <span class="price">Rp500.000,00/bulan</span></p>
-                                <a class="btn-main btn-fullwidth" href="/detail-product"><span>Lihat Detail</span></a>
+                                <a class="btn-main btn-fullwidth" href="/detail-produk"><span>Lihat Detail</span></a>
                             </div>
                         </div>
                         <img src="images/covers/produkVSAT6.png" class="img-fluid " alt="">
@@ -289,7 +289,7 @@
                                 </div>
                                 <p class="d-price">Harga Perangkat <span class="price">Rp10.000.000,00</span></p>
                                 <p class="d-price">Harga Layanan <span class="price">Rp500.000,00/bulan</span></p>
-                                <a class="btn-main btn-fullwidth" href="/detail-product"><span>Lihat Detail</span></a>
+                                <a class="btn-main btn-fullwidth" href="/detail-produk"><span>Lihat Detail</span></a>
                             </div>
                         </div>
                         <img src="images/covers/produkVSAT7.png" class="img-fluid " alt="">
