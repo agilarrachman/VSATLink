@@ -15,7 +15,7 @@
                 <div class="flex flex-col md:flex-row gap-9">
                     <div class="col md:w-1/2 flex flex-col gap-9">
                         <div class="detail">
-                            <h4 class="!mb-8">Detail Pesanan</h4>
+                            <h4 class="!mb-8">Rincian Pesanan</h4>
                             <div class="flex items-start gap-4">
                                 <img src="images/covers/produkVSAT1.png" alt="Product Image"
                                     class="rounded-md object-cover w-[120px]" />
@@ -155,7 +155,7 @@
                                 <div class="flex gap-3">
                                     <div class="field-set w-1/2">
                                         <label>Provinsi</label>
-                                        <select class="form-select">
+                                        <select class="form-select" disabled>
                                             <option selected>Pilih Provinsi</option>
                                             <option value="1">One</option>
                                             <option value="2">Two</option>
@@ -164,7 +164,7 @@
                                     </div>
                                     <div class="field-set w-1/2">
                                         <label>Kota</label>
-                                        <select class="form-select">
+                                        <select class="form-select" disabled>
                                             <option selected>Pilih Kota</option>
                                             <option value="1">One</option>
                                             <option value="2">Two</option>
@@ -175,7 +175,7 @@
                                 <div class="flex gap-3">
                                     <div class="field-set w-1/2">
                                         <label>Kecamatan</label>
-                                        <select class="form-select">
+                                        <select class="form-select" disabled>
                                             <option selected>Pilih Kecamatan</option>
                                             <option value="1">One</option>
                                             <option value="2">Two</option>
@@ -184,7 +184,7 @@
                                     </div>
                                     <div class="field-set w-1/2">
                                         <label>Kelurahan</label>
-                                        <select class="form-select">
+                                        <select class="form-select" disabled>
                                             <option selected>Pilih Kelurahan</option>
                                             <option value="1">One</option>
                                             <option value="2">Two</option>
@@ -234,6 +234,7 @@
         async defer></script>
 
     <script>
+        // === Script Upload File Start ===
         function triggerFile() {
             document.getElementById('uploadInput').click();
         }
@@ -257,7 +258,9 @@
             document.getElementById('previewWrapper').style.display = 'none';
             document.getElementById('placeholder').style.display = 'block';
         }
+        // === Script Upload File End ===
 
+        // === Script Preview Map Start ===
         // Koordinat dummy
         const lat = -6.602234321160505;
         const lng = 106.80913996183654;
@@ -272,5 +275,6 @@
             .addTo(map)
             .bindPopup('Lokasi Anda')
             .openPopup();
+        // === Script Preview Map End ===
     </script>
 @endsection

@@ -28466,3 +28466,31 @@ img {
     cursor: pointer;
     font-size: 12px;
 }
+
+.form-check {
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.form-check:has(.form-check-input:checked) {
+    border: 1px solid #FFFFFF;
+    padding: 16px !important;
+}
+
+.form-check:has(.form-check-input:checked) input {
+    margin-left: 0px;
+    margin-left: 8px;
+}
+
+.form-check-input {
+    border: 2px solid #FFFFFF !important;
+    background-color: transparent !important;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #5623D8 !important;
+    border-color: #5623D8 !important;
+}
