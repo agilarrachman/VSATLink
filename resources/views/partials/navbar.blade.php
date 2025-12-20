@@ -26,8 +26,8 @@
                             </li>
                             <li><a class="menu-item {{ $page === 'login' ? 'd-none' : '' }}"
                                     href="/aktivasi">Aktivasi</a></li>
-                            <li class="mobile-only"><a class="menu-item" href="/profil">Profil</a></li>
-                            <li class="mobile-only"><a class="menu-item" href="/logout">Logout</a></li>
+                            <li class="md:!hidden"><a class="menu-item" href="/profil">Profil</a></li>
+                            <li class="md:!hidden"><a class="menu-item" href="/logout">Logout</a></li>
                         </ul>
                     </div>
                     <div class="de-flex-col">
