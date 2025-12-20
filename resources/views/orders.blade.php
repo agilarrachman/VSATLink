@@ -1,464 +1,241 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=\, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Masuk | VSATLink</title>
-    <link rel="icon" href="images/icon.webp" type="images/Logo Icon.png" sizes="16x16">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/orders-style.css">
-</head>
-<body>
-    <div class="content">
-        <div class="ellipse-background-purple"></div>
+@extends('layouts.app')
 
-        <div class="w-100 mx-0">
-            <div class="container-orders w-100 d-flex flex-column mb-3 mt-5">
-                <div
-                    class="d-flex flex-row justify-content-between justify-content-center align-items-center w-100 px-4 px-lg-5">
-                    <div class="title">
-                        Pesanan
-                    </div>
+@section('title', 'Pesanan Saya | VSATLink')
 
-                    <div class="d-none d-md-flex btn bg-transparent justify-content-center align-items-center"
-                        style="color: white; border: 1px solid white; border-radius: 34px; font-size: 12px;">
-                        <select id="filter" class="bg-transparent p-0" style="border: none; color: white;">
-                            <option value="newest" style="color: black;">Pesanan Terbaru</option>
-                            <option value="oldest" style="color: black;">Pesanan Terlama</option>
-                        </select>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"
-                            class="bi bi-filter ms-1" viewBox="0 0 16 16">
-                            <path
-                                d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
-                        </svg>
-                    </div>
+@section('content')
+    <div class="no-bottom no-top" id="content">
+        <div id="top"></div>
+
+        <section class="v-center jarallax">
+            <div class="de-gradient-edge-top"></div>
+            <div class="de-gradient-edge-bottom"></div>
+            <img src="images/background/jarralax.png" class="jarallax-img" alt="" />
+            <div class="container z-1000 mt-16 mb-auto">
+                <h2 class="mb-5 text-center wow fadeInUp">Riwayat Pesanan</h2>
+
+                <!-- Tab Filter -->
+                <div class="flex flex-wrap justify-center gap-2 mb-20">
+                    @php
+                        $tabs = ['Semua', 'Menunggu Konfirmasi', 'Belum Dibayar', 'Sedang Diproses', 'Selesai'];
+                        $currentTab = request()->get('status', 'Semua');
+                    @endphp
+                    @foreach ($tabs as $tab)
+                        <a href="{{ url()->current() }}?status={{ $tab }}"
+                            class="px-4 py-2 rounded-full font-medium text-sm
+               {{ $currentTab === $tab ? 'bg-[var(--primary-color)] text-white' : 'bg-gray-800 text-[var(--primary-color)]' }}">
+                            {{ $tab }}
+                        </a>
+                    @endforeach
                 </div>
 
-                <div class="categories px-4 my-4">
-                    <div class="hide-scrollbar d-flex w-100 px-lg-4"
-                        style="margin-top: 0vh; overflow-x: auto; white-space: nowrap;">
-                        <a href="#" class="btn me-2 active">
-                            Semua
-                        </a>
-                        <a href="#" class="btn me-2">
-                            Mangoes Retail
-                        </a>
-                        <a href="#" class="btn me-2">
-                            SBS
-                        </a>
-                    </div>
-                </div>
-
-                <div class="nav-order-placeholder hide-scrollbar d-flex px-4 px-lg-5 mb-4"
-                    style="overflow-x: auto; white-space: nowrap;">
-                    <button class="btn-nav-order active">Semua</button>
-                    <button class="btn-nav-order">Belum Dibayar</button>
-                    <button class="btn-nav-order">Diproses</button>
-                    <button class="btn-nav-order">Dikirim</button>
-                    <button class="btn-nav-order">Selesai</button>
-                </div>
-                <div class="d-flex d-md-none row mx-4 mt-2">
-                    <div class="card-pesanan col-12">
-                        <button class="w-100" href="#"> <div class="d-flex flex-column row px-2">
-                                <div class="col-12 d-flex align-items-center mb-3">
-                                    <img src="https://via.placeholder.com/300x150.png?text=Produk+A" alt="foto">
-                                </div>
-                                <div class="col-12 p-0 d-flex flex-column align-items-start">
-                                    <div class="d-flex flex-column">
-                                        <div class="text status gap-1 d-flex flex-row align-items-center justify-content-end"
-                                            style="color: #FF601C"> <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
-                                                fill="currentColor" class="bi bi-circle-fill m-0" viewBox="0 0 16 16">
-                                                <circle cx="6" cy="6" r="6" />
-                                            </svg>
-                                            <span class="status-nama">
-                                                Menunggu Pembayaran
-                                            </span>
-                                        </div>
-                                        <div class="text nama-produk text-start text-white">
-                                            Nama Produk A (Contoh)
-                                        </div>
-                                    </div>
-                                    <div class="text-start span-1" style="color: #9F9E9E">Pesanan dibuat tanggal
-                                        18 Okt 2025
-                                    </div>
-                                    <div class="text-start span-1" style="color: #9F9E9E">
-                                        ID Pesanan: ID-ABC111
-                                    </div>
-                                    <div class="payment-deadline-2">
-                                        Pesanan otomatis dibatalkan pada tanggal
-                                        20 Oktober 2025
-                                    </div>
+                <div class="orders flex flex-col gap-3">
+                    <div
+                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
+                        <div class="flex flex-col flex-md-row justify-between items-center">
+                            <div class="detail flex flex-col flex-md-row items-center gap-4">
+                                <img src="images/covers/produkVSAT1.png" alt="Product Image"
+                                    class="rounded-md object-cover w-full md:max-w-[150px]" />
+                                <div class="info w-full mb-3 mb-md-0">
                                     <div
-                                        class="w-100 d-flex flex-row mt-2 align-items-center mt-3 justify-content-between">
-                                        <div class="text-white"
-                                            style="font-size: 11px; font-family: Montserrat; font-weight: 500">
-                                            Rp150.000
-                                        </div>
-                                        <a class="btn btn-bayar text-white"
-                                            style="background-color: #3399FE; padding: 5px; border-radius: 6px; font-size: 10px;"
-                                            href="#">
-                                            Lanjutkan Pembayaran
-                                        </a>
+                                        class="status bg-gray-300 px-3 py-1 rounded-full text-[var(--primary-color)] w-fit mb-1">
+                                        <p class="text-sm mb-0">
+                                            Menunggu Konfirmasi
+                                        </p>
                                     </div>
+                                    <p class="mb-0 text-white">
+                                        Kode Pesanan: VSL7393741
+                                    </p>
+                                    <h3 class="mb-0">Nama Layanan</h3>
+                                    <p class="mb-0">
+                                        Pesanan dibuat pada tanggal 19 November
+                                        2025
+                                    </p>
                                 </div>
                             </div>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="d-flex d-md-none row mx-4 mt-2">
-                    <div class="card-pesanan col-12">
-                        <button class="w-100" href="#">
-                            <div class="d-flex flex-column row px-2">
-                                <div class="col-12 d-flex align-items-center mb-3">
-                                    <img src="https://via.placeholder.com/300x150.png?text=Produk+B" alt="foto">
-                                </div>
-                                <div class="col-12 p-0 d-flex flex-column align-items-start">
-                                    <div class="d-flex flex-column">
-                                        <div class="text status gap-1 d-flex flex-row align-items-center justify-content-end"
-                                            style="color: #3399FE"> <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
-                                                fill="currentColor" class="bi bi-circle-fill m-0" viewBox="0 0 16 16">
-                                                <circle cx="6" cy="6" r="6" />
-                                            </svg>
-                                            <span class="status-nama">
-                                                Sedang Diproses
-                                            </span>
-                                        </div>
-                                        <div class="text nama-produk text-start text-white">
-                                            Nama Produk B (Contoh Lain)
-                                        </div>
-                                    </div>
-                                    <div class="text-start span-1" style="color: #9F9E9E">Pesanan dibuat tanggal
-                                        17 Okt 2025
-                                    </div>
-                                    <div class="text-start span-1" style="color: #9F9E9E">
-                                        ID Pesanan: ID-DEF222
-                                    </div>
-                                    <div
-                                        class="w-100 d-flex flex-row mt-2 align-items-center mt-3 justify-content-end">
-                                        <a class="btn btn-bayar text-white"
-                                            style="background-color: #3399FE; padding: 5px; border-radius: 6px; font-size: 10px;"
-                                            href="#">
-                                            Lihat Detail
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="d-flex d-md-none row mx-4 mt-2">
-                    <div class="card-pesanan col-12">
-                        <button class="w-100" href="#">
-                            <div class="d-flex flex-column row px-2">
-                                <div class="col-12 d-flex align-items-center mb-3">
-                                    <img src="https://via.placeholder.com/300x150.png?text=Produk+C" alt="foto">
-                                </div>
-                                <div class="col-12 p-0 d-flex flex-column align-items-start">
-                                    <div class="d-flex flex-column">
-                                        <div class="text status gap-1 d-flex flex-row align-items-center justify-content-end"
-                                            style="color: #8CC243"> <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
-                                                fill="currentColor" class="bi bi-circle-fill m-0" viewBox="0 0 16 16">
-                                                <circle cx="6" cy="6" r="6" />
-                                            </svg>
-                                            <span class="status-nama">
-                                                Selesai
-                                            </span>
-                                        </div>
-                                        <div class="text nama-produk text-start text-white">
-                                            Layanan Top Up (Selesai)
-                                        </div>
-                                    </div>
-                                    <div class="text-start span-1" style="color: #9F9E9E">Pesanan dibuat tanggal
-                                        16 Okt 2025
-                                    </div>
-                                    <div class="text-start span-1" style="color: #9F9E9E">
-                                        ID Pesanan: ID-GHI333
-                                    </div>
-                                    <div
-                                        class="w-100 d-flex flex-row mt-2 align-items-center mt-3 justify-content-end">
-                                        <a class="btn btn-bayar text-white"
-                                            style="background-color: #3399FE; padding: 5px; border-radius: 6px; font-size: 10px;"
-                                            href="#">
-                                            Lihat Detail
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                <div class="d-flex d-md-none justify-content-center align-items-center flex-column my-4"
-                    style="text-align: center;">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#">
-                                    <i class="bi bi-chevron-left"></i>
+                            <div class="action flex flex-col items-end w-full md:w-auto">
+                                <a class="btn-primary !rounded-md py-2 !w-full flex justify-center" href="/detail-pesanan">
+                                    <span>Lihat Detail</span>
                                 </a>
-                            </li>
-
-                            <li class="page-item">
-                                <a class="page-link page-number" href="#">1</a>
-                            </li>
-                            <li class="page-item active">
-                                <a class="page-link page-number" href="#">2</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link page-number" href="#">3</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link page-number" href="#">4</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link page-number" href="#">5</a>
-                            </li>
-
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                            <li class="page-item">
-                                <a class="page-link page-number" href="#">10</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">
-                                    <i class="bi bi-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
+                        <div class="flex flex-col flex-md-row justify-between items-center">
+                            <div class="detail flex flex-col flex-md-row items-center gap-4">
+                                <img src="images/covers/produkVSAT1.png" alt="Product Image"
+                                    class="rounded-md object-cover w-full md:max-w-[150px]" />
+                                <div class="info w-full mb-3 mb-md-0">
+                                    <div
+                                        class="status bg-gray-300 px-3 py-1 rounded-full text-[var(--primary-color)] w-fit mb-1">
+                                        <p class="text-sm mb-0">
+                                            Pesanan Dikonfirmasi
+                                        </p>
+                                    </div>
+                                    <p class="mb-0 text-white">
+                                        Kode Pesanan: VSL7393741
+                                    </p>
+                                    <h3 class="mb-0">Nama Layanan</h3>
+                                    <p class="mb-0">
+                                        Pesanan dibuat pada tanggal 19 November
+                                        2025
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="action flex flex-col items-end w-full md:w-auto">
+                                <a class="btn-primary !rounded-md py-2 !w-full flex justify-center" href="/lengkapi-pesanan">
+                                    <span>Lengkapi Pemesanan</span>
                                 </a>
-                            </li>
-                        </ul>
-                    </nav>
-
-                    <div class="mt-2 d-flex d-md-none">
-                        <span class="text-white">Total Data: 20 dari 95</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
+                        <div class="flex flex-col flex-md-row justify-between items-center">
+                            <div class="detail flex flex-col flex-md-row items-center gap-4">
+                                <img src="images/covers/produkVSAT1.png" alt="Product Image"
+                                    class="rounded-md object-cover w-full md:max-w-[150px]" />
+                                <div class="info w-full mb-3 mb-md-0">
+                                    <div class="status bg-[#dd7310] px-3 py-1 rounded-full text-white w-fit mb-1">
+                                        <p class="text-sm mb-0">
+                                            Belum Dibayar
+                                        </p>
+                                    </div>
+                                    <p class="mb-0 text-white">
+                                        Kode Pesanan: VSL7393741
+                                    </p>
+                                    <h3 class="mb-0">Nama Layanan</h3>
+                                    <p class="mb-0">
+                                        Pesanan dibuat pada tanggal 19 November
+                                        2025
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="action flex flex-col md:items-end w-full md:w-auto">
+                                <div class="price mb-3">
+                                    <p class="font-extrabold text-2xl text-white mb-1 md:text-right">
+                                        Rp123.456.000
+                                    </p>
+                                    <p class="text-sm text-white font-medium mb-0">
+                                        *Pesanan otomatis dibatalkan jika
+                                        2x24jam tidak dibayarkan
+                                    </p>
+                                </div>
+                                <a class="btn-primary !rounded-md py-2 !w-full md:!w-fit flex justify-center"
+                                    href="#">
+                                    <span>Bayar Sekarang</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
+                        <div class="flex flex-col flex-md-row justify-between items-center">
+                            <div class="detail flex flex-col flex-md-row items-center gap-4">
+                                <img src="images/covers/produkVSAT1.png" alt="Product Image"
+                                    class="rounded-md object-cover w-full md:max-w-[150px]" />
+                                <div class="info w-full mb-3 mb-md-0">
+                                    <div
+                                        class="status bg-[var(--primary-color)] px-3 py-1 rounded-full text-white w-fit mb-1">
+                                        <p class="text-sm mb-0">
+                                            Sedang Diproses
+                                        </p>
+                                    </div>
+                                    <p class="mb-0 text-white">
+                                        Kode Pesanan: VSL7393741
+                                    </p>
+                                    <h3 class="mb-0">Nama Layanan</h3>
+                                    <p class="mb-0">
+                                        Pesanan dibuat pada tanggal 19 November
+                                        2025
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="action flex flex-col md:items-end w-full md:w-auto">
+                                <div class="price mb-3">
+                                    <p class="font-extrabold text-2xl text-white mb-1 md:text-right">
+                                        Rp123.456.000
+                                    </p>
+                                </div>
+                                <a class="btn-primary !rounded-md py-2 !w-full md:!w-fit flex justify-center"
+                                    href="/detail-pesanan">
+                                    <span>Lihat Detail</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
+                        <div class="flex flex-col flex-md-row justify-between items-center">
+                            <div class="detail flex flex-col flex-md-row items-center gap-4">
+                                <img src="images/covers/produkVSAT1.png" alt="Product Image"
+                                    class="rounded-md object-cover w-full md:max-w-[150px]" />
+                                <div class="info w-full mb-3 mb-md-0">
+                                    <div class="status bg-[#C70808] px-3 py-1 rounded-full text-white w-fit mb-1">
+                                        <p class="text-sm mb-0">
+                                            Dibatalkan
+                                        </p>
+                                    </div>
+                                    <p class="mb-0 text-white">
+                                        Kode Pesanan: VSL7393741
+                                    </p>
+                                    <h3 class="mb-0">Nama Layanan</h3>
+                                    <p class="mb-0">
+                                        Pesanan dibuat pada tanggal 19 November
+                                        2025
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="action flex flex-col md:items-end w-full md:w-auto">
+                                <div class="price mb-3">
+                                    <p class="font-extrabold text-2xl text-white mb-1 md:text-right">
+                                        Rp123.456.000
+                                    </p>
+                                </div>
+                                <a class="btn-primary !rounded-md py-2 !w-full md:!w-fit flex justify-center"
+                                    href="/detail-pesanan">
+                                    <span>Lihat Detail</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
+                        <div class="flex flex-col flex-md-row justify-between items-center">
+                            <div class="detail flex flex-col flex-md-row items-center gap-4">
+                                <img src="images/covers/produkVSAT1.png" alt="Product Image"
+                                    class="rounded-md object-cover w-full md:max-w-[150px]" />
+                                <div class="info w-full mb-3 mb-md-0">
+                                    <div class="status bg-[#08C755] px-3 py-1 rounded-full text-white w-fit mb-1">
+                                        <p class="text-sm mb-0">
+                                            Selesai
+                                        </p>
+                                    </div>
+                                    <p class="mb-0 text-white">
+                                        Kode Pesanan: VSL7393741
+                                    </p>
+                                    <h3 class="mb-0">Nama Layanan</h3>
+                                    <p class="mb-0">
+                                        Pesanan dibuat pada tanggal 19 November
+                                        2025
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="action flex flex-col md:items-end w-full md:w-auto">
+                                <div class="price mb-3">
+                                    <p class="font-extrabold text-2xl text-white mb-1 md:text-right">
+                                        Rp123.456.000
+                                    </p>
+                                </div>
+                                <a class="btn-primary !rounded-md py-2 !w-full md:!w-fit flex justify-center"
+                                    href="/detail-pesanan">
+                                    <span>Lihat Detail</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div id="orders" class="w-90 mb-5 mx-auto d-none d-md-block">
-                <div class="d-flex flex-wrap justify-content-between px-4">
-
-                    <div class="order-card p-3 mb-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <button style="border: none; background-color: transparent" class="d-flex" href="#">
-                                <div class="d-flex text-start align-items-center">
-                                    <img src="https://via.placeholder.com/120x120.png?text=Produk+A" alt="foto">
-                                    <div class="ms-3">
-                                        <div class="text" style="color: #9F9E9E">ID Pesanan: ID-ABC111</div>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center mb-2 text-white">
-                                            <span class="nama-produk-desktop">
-                                                Nama Produk A (Desktop)
-                                            </span>
-                                        </div>
-                                        <div class="text mb-2 status" style="color: #FF601C">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
-                                                fill="currentColor" class="bi bi-circle-fill me-1"
-                                                viewBox="0 0 16 16">
-                                                <circle cx="6" cy="6" r="6" />
-                                            </svg>
-                                            <span>
-                                                Menunggu Pembayaran
-                                            </span>
-                                        </div>
-                                        <div class="text" style="color: #9F9E9E">Pesanan dibuat tanggal
-                                            18 Okt 2025
-                                        </div>
-                                        <div class="payment-deadline">
-                                            Pesanan otomatis dibatalkan pada tanggal
-                                            20 Oktober 2025
-                                        </div>
-                                    </div>
-                                </div>
-                            </button>
-                            <div
-                                class="order-button d-flex flex-column justify-content-center align-items-center bg-transparent me-4">
-                                <div class="text fw-bold mb-2 price text-white">
-                                    Rp150.000
-                                </div>
-                                <button class="btn btn-bayar text-white"
-                                    style="background-color: #3399FE; width: 15vw; padding: 12px; border-radius: 6px; font-size: 12px;">
-                                    Lanjutkan Pembayaran
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="order-card p-3 mb-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <button style="border: none; background-color: transparent" class="d-flex" href="#">
-                                <div class="d-flex text-start align-items-center">
-                                    <img src="https://via.placeholder.com/120x120.png?text=Produk+B" alt="foto">
-                                    <div class="ms-3">
-                                        <div class="text" style="color: #9F9E9E">ID Pesanan: ID-DEF222</div>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center mb-2 text-white">
-                                            <span class="nama-produk-desktop">
-                                                Nama Produk B (Desktop)
-                                            </span>
-                                            <span style="font-size: 1rem; color: #9F9E9E;" class="ms-3">
-                                                +2 Produk Lainnya
-                                            </span>
-                                        </div>
-                                        <div class="text mb-2 status" style="color: #3399FE">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
-                                                fill="currentColor" class="bi bi-circle-fill me-1"
-                                                viewBox="0 0 16 16">
-                                                <circle cx="6" cy="6" r="6" />
-                                            </svg>
-                                            <span>
-                                                Sedang Diproses
-                                            </span>
-                                        </div>
-                                        <div class="text" style="color: #9F9E9E">Pesanan dibuat tanggal
-                                            17 Okt 2025
-                                        </div>
-                                    </div>
-                                </div>
-                            </button>
-                            <div
-                                class="order-button d-flex flex-column justify-content-center align-items-center bg-transparent me-4">
-                                <button class="btn btn-bayar text-white"
-                                    style="background-color: #3399FE; width: 15vw; padding: 12px; border-radius: 6px; font-size: 12px;">
-                                    Lihat Detail
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="order-card p-3 mb-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <button style="border: none; background-color: transparent" class="d-flex" href="#">
-                                <div class="d-flex text-start align-items-center">
-                                    <img src="https://via.placeholder.com/120x120.png?text=Produk+C" alt="foto">
-                                    <div class="ms-3">
-                                        <div class="text" style="color: #9F9E9E">ID Pesanan: ID-GHI333</div>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center mb-2 text-white">
-                                            <span class="nama-produk-desktop">
-                                                Layanan Top Up (Selesai)
-                                            </span>
-                                        </div>
-                                        <div class="text mb-2 status" style="color: #8CC243">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
-                                                fill="currentColor" class="bi bi-circle-fill me-1"
-                                                viewBox="0 0 16 16">
-                                                <circle cx="6" cy="6" r="6" />
-                                            </svg>
-                                            <span>
-                                                Selesai
-                                            </span>
-                                        </div>
-                                        <div class="text" style="color: #9F9E9E">Pesanan dibuat tanggal
-                                            16 Okt 2025
-                                        </div>
-                                    </div>
-                                </div>
-                            </button>
-                            <div
-                                class="order-button d-flex flex-column justify-content-center align-items-center bg-transparent me-4">
-                                <button class="btn btn-bayar text-white"
-                                    style="background-color: #3399FE; width: 15vw; padding: 12px; border-radius: 6px; font-size: 12px;">
-                                    Lihat Detail
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="order-card p-3 mb-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <button style="border: none; background-color: transparent" class="d-flex" href="#">
-                                <div class="d-flex text-start align-items-center">
-                                    <img src="https://via.placeholder.com/120x120.png?text=Produk+D" alt="foto">
-                                    <div class="ms-3">
-                                        <div class="text" style="color: #9F9E9E">ID Pesanan: ID-JKL444</div>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center mb-2 text-white">
-                                            <span class="nama-produk-desktop">
-                                                Produk Khusus (Desktop)
-                                            </span>
-                                        </div>
-                                        <div class="text mb-2 status" style="color: #8158F4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11"
-                                                fill="currentColor" class="bi bi-circle-fill me-1"
-                                                viewBox="0 0 16 16">
-                                                <circle cx="6" cy="6" r="6" />
-                                            </svg>
-                                            <span>
-                                                Menunggu Konfirmasi
-                                            </span>
-                                        </div>
-                                        <div class="text" style="color: #9F9E9E">Pesanan dibuat tanggal
-                                            15 Okt 2025
-                                        </div>
-                                    </div>
-                                </div>
-                            </button>
-                            <div
-                                class="order-button d-flex flex-column justify-content-center align-items-center bg-transparent me-4">
-                                <div class="text fw-bold mb-2 price text-white">
-                                    Rp2.500.000
-                                </div>
-                                <button class="btn btn-bayar text-white"
-                                    style="background-color: #263D51; width: 15vw; padding: 12px; border-radius: 6px; font-size: 12px;"
-                                    disabled>
-                                    Menunggu Konfirmasi
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="d-flex justify-content-center align-items-center flex-column mt-4"
-                    style="text-align: center;">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#">
-                                    <i class="bi bi-chevron-left"></i>
-                                </a>
-                            </li>
-
-                            <li class="page-item">
-                                <a class="page-link page-number" href="#">1</a>
-                            </li>
-                            <li class="page-item active">
-                                <a class="page-link page-number" href="#">2</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link page-number" href="#">3</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link page-number" href="#">4</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link page-number" href="#">5</a>
-                            </li>
-
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                            <li class="page-item">
-                                <a class="page-link page-number" href="#">10</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">
-                                    <i class="bi bi-chevron-right"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-
-                    <div class="mt-2">
-                        <span class="text-white">Total Data: 20 dari 95</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="ellipse-background-blue"></div>
+        </section>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-</body>
-</html>
+@endsection

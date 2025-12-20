@@ -8,9 +8,15 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return view('login', ['page' => 'login']);
 });
-Route::get('/orders', function () {
+Route::get('/detail-produk', function () {
+    return view('product-detail', ['page' => 'product-detail']);
+});
+Route::get('/pesanan', function () {
     return view('orders', ['page' => 'orders']);
 });
-Route::get('/detail-product', function () {
-    return view('detail-product', ['page' => 'detail-product']);
+Route::get('/detail-pesanan', function () {
+    return view('order-detail', ['page' => 'order-detail']);
+});
+Route::get('/lengkapi-pesanan', function () {
+    return view('order-completion', ['page' => 'order-completion']);
 });
