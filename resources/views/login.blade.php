@@ -32,7 +32,7 @@
                                     <input type="text" name="password" id="password" class="form-control" />
                                 </div>
                                 <div class="field-set">
-                                    <input type="checkbox" checked id="html" name="fav_language" value="HTML" />
+                                    <input class="form-check-input me-2" type="checkbox" value="" id="remember-me">
                                     <label for="html">
                                         <span class="op-5">Ingat saya</span>
                                     </label>
