@@ -46,6 +46,21 @@
 
                 <hr class="w-full !mt-0 !mb-6 border-t border-white/40">
 
+                <h4 class="!mb-3">Informasi Akun</h4>
+                <div class="form-border !h-fit grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <div class="field-set">
+                        <label>Sales Pendamping</label>
+                        <input type="text" name="am_name" class="form-control" value="Nasihuy Setiawan" disabled />
+                    </div>
+                    <div class="field-set">
+                        <label>Sumber Informasi</label>
+                        <input type="text" name="source" class="form-control" value="Media Sosial"
+                            disabled />
+                    </div>                    
+                </div>
+
+                <hr class="w-full !mt-0 !mb-6 border-t border-white/40">
+
                 <h4 class="!mb-3">Alamat Perusahaan</h4>
                 <div class="form-border mb-4 md:mb-6">
                     <div class="flex gap-3">
