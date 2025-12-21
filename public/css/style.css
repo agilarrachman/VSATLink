@@ -28490,6 +28490,7 @@ img {
 .form-check:has(.form-check-input:checked) {
     border: 1px solid #FFFFFF;
     padding: 16px !important;
+    border-radius: 5px;
 }
 
 .form-check:has(.form-check-input:checked) input {
