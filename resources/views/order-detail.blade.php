@@ -229,10 +229,6 @@
         </section>
     </div>
 
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZJEfXn4JomPN0kP0TIlqL1Qr8AniNKIY&callback=initMap&libraries=places"
-        async defer></script>
-
     <script>
         // === Script Upload File Start ===
         function triggerFile() {
