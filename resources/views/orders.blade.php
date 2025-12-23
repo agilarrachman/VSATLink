@@ -83,7 +83,8 @@
                                 </div>
                             </div>
                             <div class="action flex flex-col items-end w-full md:w-auto">
-                                <a class="btn-primary !rounded-md py-2 !w-full flex justify-center" href="/lengkapi-pesanan">
+                                <a class="btn-primary !rounded-md py-2 !w-full flex justify-center"
+                                    href="/lengkapi-pesanan">
                                     <span>Lengkapi Pemesanan</span>
                                 </a>
                             </div>
@@ -96,7 +97,7 @@
                                 <img src="images/covers/produkVSAT1.png" alt="Product Image"
                                     class="rounded-md object-cover w-full md:max-w-[150px]" />
                                 <div class="info w-full mb-3 mb-md-0">
-                                    <div class="status bg-[#dd7310] px-3 py-1 rounded-full text-white w-fit mb-1">
+                                    <div class="status bg-[#ffab00] px-3 py-1 rounded-full text-white w-fit mb-1">
                                         <p class="text-sm mb-0">
                                             Belum Dibayar
                                         </p>
@@ -136,7 +137,7 @@
                                     class="rounded-md object-cover w-full md:max-w-[150px]" />
                                 <div class="info w-full mb-3 mb-md-0">
                                     <div
-                                        class="status bg-[var(--primary-color)] px-3 py-1 rounded-full text-white w-fit mb-1">
+                                        class="status bg-[#03c3ec] px-3 py-1 rounded-full text-white w-fit mb-1">
                                         <p class="text-sm mb-0">
                                             Sedang Diproses
                                         </p>
@@ -171,7 +172,7 @@
                                 <img src="images/covers/produkVSAT1.png" alt="Product Image"
                                     class="rounded-md object-cover w-full md:max-w-[150px]" />
                                 <div class="info w-full mb-3 mb-md-0">
-                                    <div class="status bg-[#C70808] px-3 py-1 rounded-full text-white w-fit mb-1">
+                                    <div class="status bg-[#ff3e1d] px-3 py-1 rounded-full text-white w-fit mb-1">
                                         <p class="text-sm mb-0">
                                             Dibatalkan
                                         </p>
@@ -206,7 +207,7 @@
                                 <img src="images/covers/produkVSAT1.png" alt="Product Image"
                                     class="rounded-md object-cover w-full md:max-w-[150px]" />
                                 <div class="info w-full mb-3 mb-md-0">
-                                    <div class="status bg-[#08C755] px-3 py-1 rounded-full text-white w-fit mb-1">
+                                    <div class="status bg-[#71dd37] px-3 py-1 rounded-full text-white w-fit mb-1">
                                         <p class="text-sm mb-0">
                                             Selesai
                                         </p>
