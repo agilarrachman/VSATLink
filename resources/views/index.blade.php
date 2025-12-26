@@ -58,7 +58,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="spacer-10"></div>
-                                                    <a class="btn-main mb10" href="pricing-table-one.html"><span>Pesan
+                                                    <a class="btn-main mb10" href="/detail-produk/{{ $promo_product->slug }}"><span>Pesan
                                                             Sekarang</span></a>
                                                 </div>
                                             </div>
