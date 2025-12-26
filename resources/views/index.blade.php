@@ -136,7 +136,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="padding60 sm-padding40 sm-p-2 jarallax position-relative">
-                            <img src="images/background/jarralax.png" class="jarallax-img" alt="">
+                            <img src="images/background/membangun.webp" class="jarallax-img" alt="">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="subtitle wow fadeInUp mb-3">Tentang Kami</div>
