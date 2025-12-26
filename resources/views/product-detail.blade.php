@@ -3,36 +3,45 @@
 @section('title', 'VSATLink - Solusi Internet Satelit Cepat dan Handal')
 
 @section('content')
+    <style>
+        .image-miner {
+            filter: brightness(0.6);
+        }
+
+        .image-frontier {
+            filter: brightness(0.4) contrast(1.1);
+        }
+    </style>
     <div class="no-bottom no-top" id="content">
         <div id="top"></div>
         <!-- section begin -->
         <section id="subheader" class="jarallax">
             <div class="de-gradient-edge-bottom"></div>
-            <img src="images/covers/produkVSAT1.png" class="jarallax-img" alt="" />
+            <img src="/storage/{{ $product->image_url }}"
+                class="jarallax-img {{ $product->slug === 'miner' ? 'image-miner' : ($product->slug === 'frontier' ? 'image-frontier' : '') }}"
+                alt="{{ $product->name }}" />
             <div class="container z-1000">
                 <div class="row gx-5 align-items-center">
                     <div class="col-lg-6">
-                        <div class="subtitle blink wow fadeInUp mb-3">
-                            Penawaran Spesial
-                        </div>
+                        @if ($product->is_promo)
+                            <div class="subtitle blink wow fadeInUp mb-3">
+                                Penawaran Spesial
+                            </div>
+                        @endif
                         <h2 class="wow fadeInUp mb20" data-wow-delay=".2s">
-                            VSATLink Nova
+                            {{ $product->name }}
                         </h2>
-                        <p>
-                            Memberikan kecepatan tinggi dengan stabilitas
-                            premium. Ideal untuk kegiatan komunikasi real-time,
-                            video conference, dan monitoring sistem jarak jauh
-                        </p>
+                        <p>{{ $product->description }}</p>
                         <div class="sw-price wow fadeInUp">
                             <div class="d-starting">Biaya Perangkat</div>
                             <div class="d-price">
                                 <span class="d-cur">Rp</span>
-                                <span class="d-val">10.000.000</span>
+                                <span class="d-val">{{ number_format($product->otc_cost, 0, ',', '.') }}</span>
                             </div>
                             <div class="spacer-10"></div>
-                            <a class="btn-main mb10" href="pricing-table-one.html">
-                                <span>Pesan Sekarang</span>
-                            </a>
+                            <button class="btn-main mb10" id="openMapBtn">
+                                Pesan Sekarang
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -56,49 +65,33 @@
 
                     <div class="col-lg-3 col-sm-6 wow fadeInRight" data-wow-delay="0s">
                         <div>
-                            <img src="images/icons/speed.png" class="mb20" alt="" />
-                            <h4>Performa Unggul</h4>
-                            <p>
-                                Dolor minim in pariatur in deserunt laboris eu
-                                pariatur labore excepteur cupidatat cupidatat
-                                duis dolor in.
-                            </p>
+                            <img src="/images/icons/speed.png" class="mb20" alt="" />
+                            <h4>{{ $product->performance_benefit_title }}</h4>
+                            <p>{{ $product->performance_benefit_description }}</p>
                         </div>
                     </div>
 
                     <div class="col-lg-3 col-sm-6 wow fadeInRight" data-wow-delay=".2s">
                         <div>
-                            <img src="images/icons/globe.png" class="mb20" alt="" />
-                            <h4>Konektivitas Handal</h4>
-                            <p>
-                                Dolor minim in pariatur in deserunt laboris eu
-                                pariatur labore excepteur cupidatat cupidatat
-                                duis dolor in.
-                            </p>
+                            <img src="/images/icons/globe.png" class="mb20" alt="" />
+                            <h4>{{ $product->connectivity_benefit_title }}</h4>
+                            <p>{{ $product->connectivity_benefit_description }}</p>
                         </div>
                     </div>
 
                     <div class="col-lg-3 col-sm-6 wow fadeInRight" data-wow-delay=".4s">
                         <div>
-                            <img src="images/icons/group.png" class="mb20" alt="" />
-                            <h4>Untuk Kebutuhan Anda</h4>
-                            <p>
-                                Dolor minim in pariatur in deserunt laboris eu
-                                pariatur labore excepteur cupidatat cupidatat
-                                duis dolor in.
-                            </p>
+                            <img src="/images/icons/group.png" class="mb20" alt="" />
+                            <h4>{{ $product->segmentation_benefit_title }}</h4>
+                            <p>{{ $product->segmentation_benefit_description }}</p>
                         </div>
                     </div>
 
                     <div class="col-lg-3 col-sm-6 wow fadeInRight" data-wow-delay=".6s">
                         <div>
-                            <img src="images/icons/up graph.png" class="mb20" alt="" />
-                            <h4>Siap Tumbuh Bersama</h4>
-                            <p>
-                                Dolor minim in pariatur in deserunt laboris eu
-                                pariatur labore excepteur cupidatat cupidatat
-                                duis dolor in.
-                            </p>
+                            <img src="/images/icons/up graph.png" class="mb20" alt="" />
+                            <h4>{{ $product->added_value_benefit_title }}</h4>
+                            <p>{{ $product->added_value_benefit_description }}</p>
                         </div>
                     </div>
                 </div>
@@ -120,12 +113,14 @@
                         <h2 class="wow fadeInUp mb20" data-wow-delay=".2s">
                             Perangkat
                         </h2>
-                        <ul>
-                            <li>Antena Parabola Ku-Band Diameter 0.74m</li>
-                            <li>LNB PLL Ku-Band</li>
-                            <li>BUC 3W Ku-Band</li>
-                            <li>Modem Hughes 2300 Series</li>
-                            <li>Access Point Wi-Fi</li>
+                        <ul class="ps-0">
+                            <li>{{ $product->antena }}</li>
+                            <li>{{ $product->lnb }}</li>
+                            <li>{{ $product->buc }}</li>
+                            <li>{{ $product->modem }}</li>
+                            @if ($product->access_point)
+                                <li>{{ $product->access_point }}</li>
+                            @endif
                         </ul>
                     </div>
 
@@ -149,11 +144,11 @@
                                 <p>:</p>
                             </div>
                             <div class="value">
-                                <p>120 GB/bulan</p>
-                                <p>Rp700.000/bulan</p>
-                                <p>Up to 50 Mbps / 5 Mbps</p>
-                                <p>36 bulan</p>
-                                <p>20/2 Mbps saat kuota habis</p>
+                                <p>{{ $product->monthly_quota }} GB/bulan</p>
+                                <p>Rp{{ number_format($product->mrc_cost, 0, ',', '.') }}/bulan</p>
+                                <p>{{ $product->speed }}</p>
+                                <p>{{ $product->subscription_duration }} bulan</p>
+                                <p>{{ $product->free_airtime }}</p>
                             </div>
                         </div>
                     </div>
@@ -188,23 +183,23 @@
                                 <div class="row g-4">
                                     <div class="col-sm-2 col-4">
                                         <div class="p-2 rounded-10" data-bgcolor="rgba(255, 255, 255, .05)">
-                                            <img src="images/payments/visa.webp" class="img-fluid" alt="" />
+                                            <img src="/images/payments/visa.webp" class="img-fluid" alt="" />
                                         </div>
                                     </div>
                                     <div class="col-sm-2 col-4">
                                         <div class="p-2 rounded-10" data-bgcolor="rgba(255, 255, 255, .05)">
-                                            <img src="images/payments/mastercard.webp" class="img-fluid" alt="" />
+                                            <img src="/images/payments/mastercard.webp" class="img-fluid" alt="" />
                                         </div>
                                     </div>
                                     <div class="col-sm-2 col-4">
                                         <div class="p-2 rounded-10" data-bgcolor="rgba(255, 255, 255, .05)">
-                                            <img src="images/payments/paypal.webp" class="img-fluid" alt="" />
+                                            <img src="/images/payments/paypal.webp" class="img-fluid" alt="" />
                                         </div>
                                     </div>
                                     <div class="col-sm-2 col-4">
                                         <div class="p-2 rounded-10 d-flex" data-bgcolor="rgba(255, 255, 255, .05)"
                                             style="height: 100%">
-                                            <img src="images/payments/qris.png
+                                            <img src="/images/payments/qris.png
                                         "
                                                 class="img-fluid m-auto" alt="" />
                                         </div>
@@ -212,14 +207,14 @@
                                     <div class="col-sm-2 col-4">
                                         <div class="p-2 rounded-10 d-flex" data-bgcolor="rgba(255, 255, 255, .05)"
                                             style="height: 100%">
-                                            <img src="images/payments/indomaret.png" class="img-fluid m-auto"
+                                            <img src="/images/payments/indomaret.png" class="img-fluid m-auto"
                                                 alt="" />
                                         </div>
                                     </div>
                                     <div class="col-sm-2 col-4">
                                         <div class="p-2 rounded-10 d-flex" data-bgcolor="rgba(255, 255, 255, .05)"
                                             style="height: 100%">
-                                            <img src="images/payments/alfamart.png" class="img-fluid m-auto"
+                                            <img src="/images/payments/alfamart.png" class="img-fluid m-auto"
                                                 alt="" />
                                         </div>
                                     </div>
@@ -232,7 +227,7 @@
                         <p class="mb-3" style="font-size: 20px">Biaya Perangkat</p>
                         <div class="d-price">
                             <span class="d-cur" style="color: white">Rp</span>
-                            <span class="d-val">10.000.000</span>
+                            <span class="d-val">{{ number_format($product->otc_cost, 0, ',', '.') }}</span>
                         </div>
                         <p style="color: #92939e; margin-bottom: 0">
                             *Harga yang tercantum belum termasuk pajak dan biaya
@@ -249,7 +244,8 @@
 
         <!-- Modal -->
         <div id="mapModal" class="fixed inset-0 bg-black/25 hidden items-center justify-center z-[9999]">
-            <div class="bg-gray-900/40 backdrop-blur-md border !border-white/20 rounded-sm w-full max-w-[750px] p-6 relative mx-3">
+            <div
+                class="bg-gray-900/40 backdrop-blur-md border !border-white/20 rounded-sm w-full max-w-[750px] p-6 relative mx-3">
                 <h4 class="mb-4 text-center">Lokasi Instalasi & Aktivasi</h4>
 
                 <div id="leafletMap" class="w-full h-[300px] rounded-lg border border-white/20 mb-4"></div>
