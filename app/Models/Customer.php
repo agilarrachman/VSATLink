@@ -44,4 +44,9 @@ class Customer extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function sales()
+    {
+        return $this->belongsTo(Sales::class);
+    }
 }

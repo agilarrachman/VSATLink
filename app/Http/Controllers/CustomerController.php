@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use Laravolt\Indonesia\Facade as Indonesia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -48,6 +50,18 @@ class CustomerController extends Controller
 
     public function profile()
     {
-        return view('profile', ['page' => 'profile']);
+        $provinces = Indonesia::allProvinces();
+        $cities = Indonesia::allCities();
+        $districts = Indonesia::allDistricts();
+        $villages = DB::table('indonesia_villages')->get();
+
+        return view('profile', [
+            'page' => 'profile',
+            'user' => Auth::user(),
+            'provinces' => $provinces,
+            'cities' => $cities,
+            'districts' => $districts,
+            'villages' => $villages
+        ]);
     }
 }

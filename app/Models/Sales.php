@@ -9,4 +9,9 @@ class Sales extends Model
 {
     /** @use HasFactory<\Database\Factories\SalesFactory> */
     use HasFactory;
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
 }
