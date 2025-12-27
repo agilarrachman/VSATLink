@@ -28516,3 +28516,7 @@ img {
     background-color: #5623D8 !important;
     border-color: #5623D8 !important;
 }
+
+.custom-close {
+    filter: invert(23%) sepia(69%) saturate(748%) hue-rotate(343deg) brightness(90%) contrast(92%);
+}
