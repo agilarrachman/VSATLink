@@ -302,6 +302,10 @@
         const cancelBtn = document.getElementById('cancelBtn');
         const submitBtn = document.getElementById('submitOrderBtn');
 
+        const userLat = {{ auth()->user()->latitude ?? 'null' }};
+        const userLng = {{ auth()->user()->longitude ?? 'null' }};
+        const myAddressCheckbox = document.getElementById('myaddress');
+
         const latText = document.getElementById('latText');
         const lngText = document.getElementById('lngText');
         const latInput = document.getElementById('latitude');
@@ -346,6 +350,7 @@
             map.on('click', function(e) {
                 marker.setLatLng(e.latlng);
                 updateLatLng(e.latlng.lat, e.latlng.lng);
+                myAddressCheckbox.checked = false;
             });
         }
 
@@ -372,12 +377,27 @@
                 return;
             }
 
-            // contoh submit (nanti ganti ke form / AJAX)
-            console.log('LAT:', latInput.value);
-            console.log('LNG:', lngInput.value);
-
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+        });
+
+        myAddressCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                if (userLat === null || userLng === null) {
+                    alert('Alamat Anda belum tersimpan');
+                    this.checked = false;
+                    return;
+                }
+
+                // pindahkan map & marker ke alamat user
+                const lat = parseFloat(userLat);
+                const lng = parseFloat(userLng);
+
+                map.setView([lat, lng], 17);
+                marker.setLatLng([lat, lng]);
+
+                updateLatLng(lat, lng);
+            }
         });
     </script>
 @endsection
