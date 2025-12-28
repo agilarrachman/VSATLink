@@ -4,12 +4,10 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('index', ['page' => 'home']);
-});
+Route::get('/', [ProductController::class, 'index']);
+Route::get('/detail-produk/{product}', [ProductController::class, 'show']);
 Route::get('/login', [CustomerController::class, 'login'])->name('login');
 Route::post('/login', [CustomerController::class, 'authenticate']);
-Route::get('/detail-produk/{product}', [ProductController::class, 'show']);
 Route::middleware(['auth'])->group(
     function () {
         Route::post('/logout', [CustomerController::class, 'logout']);
