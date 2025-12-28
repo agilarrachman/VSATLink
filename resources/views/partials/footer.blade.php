@@ -3,7 +3,7 @@
         <div class="row gx-5">
             <div class="col-lg-4">
                 <img
-                    src="images/Logo VSATLink footer.png"
+                    src="/images/Logo VSATLink footer.png"
                     alt=""
                     style="max-width: 250px"
                 />
