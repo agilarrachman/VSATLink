@@ -8,8 +8,8 @@
                             <!-- logo begin -->
                             <div id="logo">
                                 <a href="/">
-                                    <img class="logo-main" src="images/Logo VSATLink.png" alt="">
-                                    <img class="logo-mobile" src="images/Icon VSATLink.png" alt="">
+                                    <img class="logo-main" src="/images/Logo VSATLink.png" alt="">
+                                    <img class="logo-mobile" src="/images/Icon VSATLink.png" alt="">
                                 </a>
                             </div>
                             <!-- logo close -->
