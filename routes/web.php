@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +13,8 @@ Route::middleware(['auth'])->group(
     function () {
         Route::post('/logout', [CustomerController::class, 'logout']);
         Route::get('/profil', [CustomerController::class, 'profile']);
+        
+        Route::post('/create-order', [OrderController::class, 'store']);
         Route::get('/pesanan', function () {
             return view('orders', ['page' => 'orders']);
         });

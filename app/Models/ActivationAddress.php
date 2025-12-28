@@ -10,6 +10,8 @@ class ActivationAddress extends Model
     /** @use HasFactory<\Database\Factories\ActivationAddressFactory> */
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function order()
     {
         return $this->belongsTo(Order::class);

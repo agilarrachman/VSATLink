@@ -39,7 +39,7 @@
                                 <span class="d-val">{{ number_format($product->otc_cost, 0, ',', '.') }}</span>
                             </div>
                             <div class="spacer-10"></div>
-                            <button class="btn-main mb10" id="openMapBtn">
+                            <button class="btn-main mb10" id="openMapBtnTop">
                                 Pesan Sekarang
                             </button>
                         </div>
@@ -234,7 +234,7 @@
                             lainnya
                         </p>
                         <div class="spacer-10"></div>
-                        <button class="btn-main mb10" id="openMapBtn">
+                        <button class="btn-main mb10" id="openMapBtnBottom">
                             Pesan Sekarang
                         </button>
                     </div>
@@ -250,50 +250,55 @@
 
                 <div id="leafletMap" class="w-full h-[300px] rounded-lg border border-white/20 mb-4"></div>
 
-                <div class="mb-4 text-sm text-white/80">
-                    <div class="myaddress flex items-center mb-2">
-                        <input class="form-check-input me-2" type="checkbox" value="" id="myaddress">
-                        <label class="form-check-label text-white" for="myaddress">
-                            Gunakan Alamat Saya
-                        </label>
+                <form action="/create-order" method="POST">
+                    @csrf
+                    <div class="mb-4 text-sm text-white/80">
+                        <div class="myaddress flex items-center mb-2">
+                            <input class="form-check-input me-2" type="checkbox" value="" id="myaddress">
+                            <label class="form-check-label text-white" for="myaddress">
+                                Gunakan Alamat Saya
+                            </label>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row justify-between">
+                            <p class="text-white font-semibold">Latitude: </p>
+                            <span class="text-white" id="latText">-</span>
+                        </div>
+                        <div class="flex flex-col md:flex-row justify-between">
+                            <p class="text-white font-semibold">Longitude: </p>
+                            <span class="text-white" id="lngText">-</span>
+                        </div>
+                        <div class="flex flex-col md:flex-row justify-between">
+                            <p class="text-white font-semibold">Google Maps Link: </p>
+                            <a id="gmapsLink" href="#" target="_blank" class="text-white underline break-all">
+                                -
+                            </a>
+                        </div>
                     </div>
 
-                    <div class="flex flex-col md:flex-row justify-between">
-                        <p class="text-white font-semibold">Latitude: </p>
-                        <span class="text-white" id="latText">-</span>
-                    </div>
-                    <div class="flex flex-col md:flex-row justify-between">
-                        <p class="text-white font-semibold">Longitude: </p>
-                        <span class="text-white" id="lngText">-</span>
-                    </div>
-                    <div class="flex flex-col md:flex-row justify-between">
-                        <p class="text-white font-semibold">Google Maps Link: </p>
-                        <a id="gmapsLink" href="#" target="_blank" class="text-white underline break-all">
-                            -
-                        </a>
-                    </div>
-                </div>
+                    <input type="hidden" name="product_id" id="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="latitude" id="latitude">
+                    <input type="hidden" name="longitude" id="longitude">
 
-                <input type="hidden" name="latitude" id="latitude">
-                <input type="hidden" name="longitude" id="longitude">
+                    <div class="flex flex-col md:flex-row gap-3">
+                        <button id="cancelBtn" type="button"
+                            class="font-bold !text-sm text-white !uppercase !rounded-[5px] !font-['Oxanium',Helvetica,Arial,sans-serif] w-full md:w-1/2 px-4 py-2 !bg-[#9692A0] hover:!bg-[#898592]">
+                            Batalkan
+                        </button>
 
-                <div class="flex flex-col md:flex-row gap-3">
-                    <button id="cancelBtn"
-                        class="font-bold !text-sm text-white !uppercase !rounded-[5px] !font-['Oxanium',Helvetica,Arial,sans-serif] w-full md:w-1/2 px-4 py-2 !bg-[#9692A0] hover:!bg-[#898592]">
-                        Batalkan
-                    </button>
-
-                    <button id="submitOrderBtn" class="btn-main w-full md:w-1/2">
-                        Buat Pesanan
-                    </button>
-                </div>
+                        <button id="submitOrderBtn" type="submit" class="btn-main w-full md:w-1/2">
+                            Buat Pesanan
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
         const modal = document.getElementById('mapModal');
-        const openBtn = document.getElementById('openMapBtn');
+        const openBtnTop = document.getElementById('openMapBtnTop');
+        const openBtnBottom = document.getElementById('openMapBtnBottom');
         const cancelBtn = document.getElementById('cancelBtn');
         const submitBtn = document.getElementById('submitOrderBtn');
 
@@ -308,12 +313,14 @@
 
         let map, marker;
 
-        openBtn.addEventListener('click', () => {
+        document.getElementById('openMapBtnTop').addEventListener('click', openModal);
+        document.getElementById('openMapBtnBottom').addEventListener('click', openModal);
+
+        function openModal() {
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-
             setTimeout(initMap, 100);
-        });
+        }
 
         cancelBtn.addEventListener('click', () => {
             modal.classList.add('hidden');

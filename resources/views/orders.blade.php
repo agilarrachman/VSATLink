@@ -13,6 +13,14 @@
             <div class="container z-1000 mt-16 mb-auto">
                 <h2 class="mb-5 text-center wow fadeInUp">Riwayat Pesanan</h2>
 
+                @if (session()->has('success'))
+                    <div class="alert text-white bg-gray-900/40 backdrop-blur-md border !border-white/20 alert-dismissible fade show mb-5 text-left"
+                        role="alert">
+                        <i class="fa-solid fa-circle-check me-2"></i> {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
                 <!-- Tab Filter -->
                 <div class="flex flex-wrap justify-center gap-2 mb-20">
                     @php
@@ -136,8 +144,7 @@
                                 <img src="images/covers/produkVSAT1.png" alt="Product Image"
                                     class="rounded-md object-cover w-full md:max-w-[150px]" />
                                 <div class="info w-full mb-3 mb-md-0">
-                                    <div
-                                        class="status bg-[#03c3ec] px-3 py-1 rounded-full text-white w-fit mb-1">
+                                    <div class="status bg-[#03c3ec] px-3 py-1 rounded-full text-white w-fit mb-1">
                                         <p class="text-sm mb-0">
                                             Sedang Diproses
                                         </p>
