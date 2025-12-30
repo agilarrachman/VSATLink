@@ -15,7 +15,14 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        if (!Auth::check()) {
+            return response()->json(['error' => 'Pengguna Belum Login'], 401);
+        }
+        
+        return view('orders', [
+            "page" => "orders",
+            'orders' => Order::getAllMyOrders(Auth::user())            
+        ]);
     }
 
     /**

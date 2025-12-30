@@ -15,9 +15,7 @@ Route::middleware(['auth'])->group(
         Route::get('/profil', [CustomerController::class, 'profile']);
         
         Route::post('/create-order', [OrderController::class, 'store']);
-        Route::get('/pesanan', function () {
-            return view('orders', ['page' => 'orders']);
-        });
+        Route::get('/pesanan', [OrderController::class, 'index']);
         Route::get('/detail-pesanan', function () {
             return view('order-detail', ['page' => 'order-detail']);
         });

@@ -37,6 +37,52 @@
                 </div>
 
                 <div class="orders flex flex-col gap-3">
+                    @foreach ($orders as $order)
+                        <div
+                            class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
+                            <div class="flex flex-col flex-md-row justify-between items-center">
+                                <div class="detail flex flex-col flex-md-row items-center gap-4">
+                                    <img src="/storage/{{ $order->product->image_url }}" alt="Product Image"
+                                        class="rounded-md object-cover w-full md:max-w-[150px]" />
+                                    <div class="info w-full mb-3 mb-md-0">
+                                        @php($badge = $order->statusBadge())
+                                        <div class="status px-3 py-1 rounded-full w-fit mb-1 {{ $badge['class'] }}">
+                                            <p class="text-sm mb-0">{{ $badge['label'] }}</p>
+                                        </div>
+                                        <p class="mb-0 text-white">
+                                            Kode Pesanan: {{ $order->unique_order }}
+                                        </p>
+                                        <h3 class="mb-0">{{ $order->product->name }}</h3>
+                                        <p class="mb-0">
+                                            Pesanan dibuat pada tanggal {{ $order->created_at->format('d F Y') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="action flex flex-col items-end w-full md:w-auto">
+                                    @php($action = $order->actionConfig())
+                                    @if ($action['show_price'])
+                                        <div class="price mb-3">
+                                            <p class="font-extrabold text-2xl text-white mb-1 md:text-right">
+                                                Rp123.456.000
+                                            </p>
+
+                                            @isset($action['note'])
+                                                <p class="text-sm text-white font-medium mb-0">
+                                                    {{ $action['note'] }}
+                                                </p>
+                                            @endisset
+                                        </div>
+                                    @endif
+                                    <a class="btn-primary !rounded-md py-2 !w-full md:!w-fit flex justify-center"
+                                        href="{{ $action['url'] }}">
+                                        <span>{{ $action['label'] }}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                    {{-- Dummy Orders Start --}}
                     <div
                         class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
                         <div class="flex flex-col flex-md-row justify-between items-center">
@@ -242,6 +288,8 @@
                             </div>
                         </div>
                     </div>
+                    {{-- Dummy Orders Start --}}
+                    
                 </div>
             </div>
         </section>

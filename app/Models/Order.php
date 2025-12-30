@@ -24,9 +24,9 @@ class Order extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function order_statuses()
+    public function order_status()
     {
-        return $this->belongsTo(OrderStatus::class);
+        return $this->belongsTo(OrderStatus::class, 'current_status_id');
     }
 
     public function order_status_histories()
@@ -54,7 +54,7 @@ class Order extends Model
         return DB::transaction(function () use ($user, $productId, $latitude, $longitude) {
 
             $today = Carbon::now()->format('Ymd');
-        
+
             $lastOrder = self::whereDate('created_at', Carbon::today())
                 ->lockForUpdate()
                 ->orderBy('id', 'desc')
@@ -88,5 +88,69 @@ class Order extends Model
                 'product_cost' => $product->otc_cost,
             ]);
         });
+    }
+
+    public function statusBadge(): array
+    {
+        return match ($this->current_status_id) {
+            1 => [
+                'label' => 'Menunggu Konfirmasi',
+                'class' => 'bg-gray-300 text-[var(--primary-color)]',
+            ],
+            2 => [
+                'label' => 'Pesanan Dikonfirmasi',
+                'class' => 'bg-gray-300 text-[var(--primary-color)]',
+            ],
+            3 => [
+                'label' => 'Belum Dibayar',
+                'class' => 'bg-[#ffab00] text-white',
+            ],
+            7 => [
+                'label' => 'Selesai',
+                'class' => 'bg-[#71dd37] text-white',
+            ],
+            8 => [
+                'label' => 'Dibatalkan',
+                'class' => 'bg-[#ff3e1d] text-white',
+            ],
+            default => [
+                'label' => 'Sedang Diproses',
+                'class' => 'bg-[#03c3ec] text-white',
+            ],
+        };
+    }
+
+    public function actionConfig(): array
+    {
+        return match ($this->current_status_id) {
+            1, 8 => [
+                'label' => 'Lihat Detail',
+                'url' => '/detail-pesanan',
+                'show_price' => false,
+            ],
+            2 => [
+                'label' => 'Lengkapi Pemesanan',
+                'url' => '/lengkapi-pesanan',
+                'show_price' => false,
+            ],
+            3 => [
+                'label' => 'Bayar Sekarang',
+                'url' => '#',
+                'show_price' => true,
+                'note' => '*Pesanan otomatis dibatalkan jika 2x24jam tidak dibayarkan',
+            ],
+            default => [
+                'label' => 'Lihat Detail',
+                'url' => '/detail-pesanan',
+                'show_price' => true,
+            ],
+        };
+    }
+
+    public static function getAllMyOrders($user)
+    {
+        return self::where('customer_id', $user->id)
+            ->latest()
+            ->get();
     }
 }
