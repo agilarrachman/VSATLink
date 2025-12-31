@@ -82,7 +82,7 @@ class Order extends Model
 
             $product = Product::findOrFail($productId);
 
-            return self::create([
+            $order = self::create([
                 'customer_id' => $user->id,
                 'product_id' => $productId,
                 'current_status_id' => 1,
@@ -91,6 +91,12 @@ class Order extends Model
                 'unique_order' => $uniqueOrder,
                 'activation_address_id' => $activationAddress->id,
                 'product_cost' => $product->otc_cost,
+            ]);
+
+            OrderStatusHistory::create([
+                'order_status_id' => 1,
+                'order_id' => $order->id,
+                'note' => "Pesanan {$uniqueOrder} berhasil dibuat oleh {$user->name} dan menunggu verifikasi pesanan.",
             ]);
         });
     }
