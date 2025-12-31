@@ -46,15 +46,15 @@
                                         class="rounded-md object-cover w-full md:max-w-[150px]" />
                                     <div class="info w-full mb-3 mb-md-0">
                                         @php($badge = $order->statusBadge())
-                                        <div class="status px-3 py-1 rounded-full w-fit mb-1 {{ $badge['class'] }}">
+                                        <div class="status px-3 py-1 rounded-full w-fit mb-2 {{ $badge['class'] }}">
                                             <p class="text-sm mb-0">{{ $badge['label'] }}</p>
                                         </div>
-                                        <p class="mb-0 text-white">
+                                        <p class="mb-0 text-white text-sm">
                                             Kode Pesanan: {{ $order->unique_order }}
                                         </p>
                                         <h3 class="mb-0">{{ $order->product->name }}</h3>
-                                        <p class="mb-0">
-                                            Pesanan dibuat pada tanggal {{ $order->created_at->format('d F Y') }}
+                                        <p class="mb-0 text-sm">
+                                            Pesanan dibuat pada tanggal {{ $order->created_at->translatedFormat('d F Y') }}
                                         </p>
                                     </div>
                                 </div>
@@ -288,8 +288,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- Dummy Orders Start --}}
-                    
+                    {{-- Dummy Orders End --}}                
                 </div>
             </div>
         </section>

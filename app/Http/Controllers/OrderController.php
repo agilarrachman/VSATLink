@@ -15,13 +15,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        if (!Auth::check()) {
-            return response()->json(['error' => 'Pengguna Belum Login'], 401);
-        }
-        
         return view('orders', [
             "page" => "orders",
-            'orders' => Order::getAllMyOrders(Auth::user())            
+            'orders' => Order::getAllMyOrders(Auth::user())
         ]);
     }
 
@@ -38,10 +34,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Auth::check()) {
-            return response()->json(['error' => 'Pengguna Belum Login'], 401);
-        }
-
         Order::createOrder(
             Auth::user(),
             $request->product_id,
@@ -57,7 +49,14 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        if ($order->customer_id !== Auth::id()) {
+            abort(403, 'Anda bukan pemilik pesanan ini.');
+        }
+
+        return view('order-detail', [
+            'page' => 'order-detail',
+            'order' => $order
+        ]);
     }
 
     /**

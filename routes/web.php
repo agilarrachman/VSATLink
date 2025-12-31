@@ -16,9 +16,7 @@ Route::middleware(['auth'])->group(
         
         Route::post('/create-order', [OrderController::class, 'store']);
         Route::get('/pesanan', [OrderController::class, 'index']);
-        Route::get('/detail-pesanan', function () {
-            return view('order-detail', ['page' => 'order-detail']);
-        });
+        Route::get('/detail-pesanan/{order}', [OrderController::class, 'show']);
         Route::get('/lengkapi-pesanan', function () {
             return view('order-completion', ['page' => 'order-completion']);
         });

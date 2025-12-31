@@ -28329,7 +28329,7 @@ img {
 
 .step {
     display: flex;
-    align-items: center;
+    align-items: start;
     gap: 24px;
     margin-bottom: 16px;
 }
@@ -28338,7 +28338,7 @@ img {
     content: "";
     position: absolute;
     left: 30px;
-    top: 60px;
+    top: 50px;
     bottom: 10px;
     width: 1px;
     background: #adadad;
@@ -28354,6 +28354,7 @@ img {
 }
 
 .indicator {
+    flex-shrink: 0;
     position: relative;
     width: 60px;
     height: 60px;

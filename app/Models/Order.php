@@ -14,6 +14,11 @@ class Order extends Model
 
     protected $guarded = ['id'];
 
+    public function getRouteKeyName()
+    {
+        return 'unique_order';
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);
@@ -125,7 +130,7 @@ class Order extends Model
         return match ($this->current_status_id) {
             1, 8 => [
                 'label' => 'Lihat Detail',
-                'url' => '/detail-pesanan',
+                'url' => '/detail-pesanan/' . $this->unique_order,
                 'show_price' => false,
             ],
             2 => [
@@ -141,7 +146,7 @@ class Order extends Model
             ],
             default => [
                 'label' => 'Lihat Detail',
-                'url' => '/detail-pesanan',
+                'url' => '/detail-pesanan/' . $this->unique_order,
                 'show_price' => true,
             ],
         };

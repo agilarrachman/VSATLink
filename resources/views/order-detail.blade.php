@@ -9,7 +9,7 @@
         <section class="v-center jarallax">
             <div class="de-gradient-edge-top"></div>
             <div class="de-gradient-edge-bottom"></div>
-            <img src="images/background/jarralax.png" class="jarallax-img" alt="" />
+            <img src="/images/background/jarralax.png" class="jarallax-img" alt="" />
             <div
                 class="container shadow-lg/10 rounded-10 bg-gray-900/40 backdrop-blur-md border !border-white/20 !p-10 z-1000 mt-14 mb-auto">
                 <div class="flex flex-col md:flex-row gap-9">
@@ -17,85 +17,122 @@
                         <div class="detail">
                             <h4 class="!mb-8">Rincian Pesanan</h4>
                             <div class="flex items-start gap-4">
-                                <img src="images/covers/produkVSAT1.png" alt="Product Image"
+                                <img src="/storage/{{ $order->product->image_url }}" alt="{{ $order->product->name }}"
                                     class="rounded-md object-cover w-[120px]" />
                                 <div class="info w-full mb-3 mb-md-0">
-                                    <div
-                                        class="status bg-[var(--primary-color)] px-3 py-1 rounded-full text-white w-fit mb-1">
-                                        <p class="text-sm mb-0">
-                                            Sedang Diproses
-                                        </p>
+                                    @php($badge = $order->statusBadge())
+                                    <div class="status px-3 py-1 rounded-full w-fit mb-2 {{ $badge['class'] }}">
+                                        <p class="text-sm mb-0">{{ $badge['label'] }}</p>
                                     </div>
                                     <p class="mb-0 text-base text-white">
-                                        Kode Pesanan: VSL7393741
+                                        Kode Pesanan: {{ $order->unique_order }}
                                     </p>
-                                    <h4 class="mb-0">Nama Layanan</h4>
+                                    <h4 class="mb-0">{{ $order->product->name }}</h4>
                                     <p class="mb-0 text-base">
-                                        Pesanan dibuat pada tanggal 19 November
-                                        2025
+                                        Pesanan dibuat pada tanggal {{ $order->created_at->translatedFormat('d F Y') }}
                                     </p>
                                 </div>
                             </div>
                             <div class="summary my-3">
                                 <div class="flex justify-between">
                                     <h4>Jenis Pengiriman</h4>
-                                    <p class="text-right text-white">JNE</p>
+                                    <p class="text-right text-white">{{ $order->shipping ? $order->shipping : '-' }}</p>
                                 </div>
                                 <div class="flex justify-between">
                                     <h4>Harga</h4>
-                                    <p class="text-right text-white">Rp11.500.000</p>
+                                    <p class="text-right text-white">
+                                        {{ $order->product_cost ? 'Rp' . number_format($order->product_cost, 0, ',', '.') : '-' }}
+                                    </p>
                                 </div>
                                 <div class="flex justify-between">
                                     <h4>Biaya Pengiriman</h4>
-                                    <p class="text-right text-white">Rp11.500.000</p>
+                                    <p class="text-right text-white">
+                                        {{ $order->shipping_cost ? 'Rp' . number_format($order->shipping_cost, 0, ',', '.') : '-' }}
+                                    </p>
                                 </div>
                                 <div class="flex justify-between">
                                     <h4>Biaya Instalasi</h4>
-                                    <p class="text-right text-white">Rp11.500.000</p>
+                                    <p class="text-right text-white">
+                                        {{ $order->installation_service_cost == 0 && $order->installation_transport_cost == 0
+                                            ? '-'
+                                            : 'Rp ' . number_format($order->installation_service_cost + $order->installation_transport_cost, 0, ',', '.') }}
+                                    </p>
                                 </div>
                                 <div class="flex justify-between">
                                     <h4>PPN (10%)</h4>
-                                    <p class="text-right text-white">Rp1.150.000</p>
+                                    <p class="text-right text-white">
+                                        {{ $order->tax_cost ? 'Rp' . number_format($order->tax_cost, 0, ',', '.') : '-' }}
+                                    </p>
                                 </div>
                             </div>
                             <hr class="w-full !my-5 border-t border-white/40">
                             <div class="flex justify-between">
                                 <h4>Total</h4>
-                                <p class="text-right text-white">Rp50.150.000</p>
+                                <p class="text-right text-white">
+                                    {{ $order->total_cost ? 'Rp' . number_format($order->total_cost, 0, ',', '.') : '-' }}
+                                </p>
                             </div>
                         </div>
 
                         <div class="status">
                             <h4 class="!mb-8">Status Pesanan</h4>
                             <div class="flow relative">
-                                <div class="step completed">
+                                <div class="step first {{ $order->current_status_id > 1 ? 'completed' : '-' }}">
                                     <div class="indicator">
                                         <div class="dot">
-                                            <div class="circle">
-                                                <i class="fa-solid fa-check"></i>
-                                            </div>
+                                            @if ($order->current_status_id > 1)
+                                                <div class="circle">
+                                                    <i class="fa-solid fa-check"></i>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="content">
                                         <p>Konfirmasi Pesanan</p>
-                                        <p class="title">Pesanan dikonfirmasi pada 23 Desember 2025</p>
+                                        @if ($order->current_status_id > 1)
+                                            <p class="title">Pesanan dikonfirmasi pada 23 Desember 2025</p>
+                                        @else
+                                            <div class="w-75">
+                                                <p class="title mb-2">Pesanan Anda sedang dalam proses konfirmasi oleh tim
+                                                    kami</p>
+
+                                                <p class="text-sm text-gray-400 mb-4">
+                                                    Mohon periksa email secara berkala untuk mendapatkan notifikasi
+                                                    selanjutnya.
+                                                </p>
+
+                                                <p class="text-sm text-gray-400 mb-2">
+                                                    Jika mengalami kendala atau membutuhkan informasi lebih
+                                                    lanjut, silakan hubungi sales Anda.
+                                                </p>
+
+                                                <a href="https://wa.me/{{ auth()->user()->sales->phone }}" target="_blank" class="btn-invoice">
+                                                    <i class="fab fa-whatsapp me-2"></i>
+                                                    Hubungi Sales
+                                                </a>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
 
-                                <div class="step completed">
+                                <div class="step {{ $order->current_status_id >= 4 ? 'completed' : '-' }}">
                                     <div class="indicator">
                                         <div class="dot">
-                                            <div class="circle">
-                                                <i class="fa-solid fa-check"></i>
-                                            </div>
+                                            @if ($order->current_status_id >= 4)
+                                                <div class="circle">
+                                                    <i class="fa-solid fa-check"></i>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="content">
                                         <p>Pembayaran</p>
-                                        <p class="title">Rp123.456.000</p>
-                                        <a class="btn-invoice mt-2" href="#">
-                                            <span><i class="fa-solid fa-download me-2"></i>Unduh Invoice</span>
-                                        </a>
+                                        @if ($order->current_status_id >= 4)
+                                            <p class="title">Rp123.456.000</p>
+                                            <a class="btn-invoice mt-2" href="#">
+                                                <span><i class="fa-solid fa-download me-2"></i>Unduh Invoice</span>
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
 
@@ -135,17 +172,17 @@
                                 <div class="field-set">
                                     <label>Nama Lengkap</label>
                                     <input type="text" name="name" id="name" class="form-control"
-                                        value="Agil ArRachman" disabled />
+                                        value="{{ $order->order_contact?->name ?? '-' }}" disabled />
                                 </div>
                                 <div class="field-set">
                                     <label>Nomor Telepon</label>
-                                    <input type="number" name="phone" id="phone" class="form-control"
-                                        value="081332303211" disabled />
+                                    <input type="text" name="phone" id="phone" class="form-control"
+                                        value="{{ $order->order_contact?->phone ?? '-' }}" disabled />
                                 </div>
                                 <div class="field-set">
                                     <label>Email</label>
                                     <input type="text" name="email" id="email" class="form-control"
-                                        value="agilarrachman@gmail.com" disabled />
+                                        value="{{ $order->order_contact?->email ?? '-' }}" disabled />
                                 </div>
                             </div>
                         </div>
@@ -155,72 +192,56 @@
                                 <div class="flex gap-3">
                                     <div class="field-set w-1/2">
                                         <label>Provinsi</label>
-                                        <select class="form-select" disabled>
-                                            <option selected>Pilih Provinsi</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                        <input type="text" name="province" id="province" class="form-control"
+                                            value="{{ $order->order_address?->province ?? '-' }}" disabled />
                                     </div>
                                     <div class="field-set w-1/2">
                                         <label>Kota</label>
-                                        <select class="form-select" disabled>
-                                            <option selected>Pilih Kota</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                        <input type="text" name="city" id="city" class="form-control"
+                                            value="{{ $order->order_address?->city ?? '-' }}" disabled />
                                     </div>
                                 </div>
                                 <div class="flex gap-3">
                                     <div class="field-set w-1/2">
                                         <label>Kecamatan</label>
-                                        <select class="form-select" disabled>
-                                            <option selected>Pilih Kecamatan</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                        <input type="text" name="district" id="district" class="form-control"
+                                            value="{{ $order->order_address?->district ?? '-' }}" disabled />
                                     </div>
                                     <div class="field-set w-1/2">
                                         <label>Kelurahan</label>
-                                        <select class="form-select" disabled>
-                                            <option selected>Pilih Kelurahan</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                        <input type="text" name="village" id="village" class="form-control"
+                                            value="{{ $order->order_address?->village ?? '-' }}" disabled />
                                     </div>
                                 </div>
                                 <div class="flex gap-3">
                                     <div class="field-set w-1/3">
                                         <label>RT</label>
-                                        <input type="number" name="rt" id="rt" class="form-control"
-                                            value="1" disabled />
+                                        <input type="text" name="rt" id="rt" class="form-control"
+                                            value="{{ $order->order_address?->rt ?? '-' }}" disabled />
                                     </div>
                                     <div class="field-set w-1/3">
                                         <label>RW</label>
-                                        <input type="number" name="rw" id="rw" class="form-control"
-                                            value="3" disabled />
+                                        <input type="text" name="rw" id="rw" class="form-control"
+                                            value="{{ $order->order_address?->rw ?? '-' }}" disabled />
                                     </div>
                                     <div class="field-set w-1/3">
                                         <label>Kode Pos</label>
-                                        <input type="number" name="post-code" id="post-code" class="form-control"
-                                            value="12345" disabled />
+                                        <input type="text" name="post-code" id="post-code" class="form-control"
+                                            value="{{ $order->order_address?->postal_code ?? '-' }}" disabled />
                                     </div>
                                 </div>
                                 <div class="field-set">
                                     <label>Alamat Lengkap</label>
-                                    <textarea name="address" id="address" class="form-control !min-h-[160px]">Jalan Sudirman No 19</textarea>
+                                    <textarea name="address" id="address" class="form-control !min-h-[160px]">{{ $order->order_address?->full_address ?? '-' }}</textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="install">
                             <h4 class="!mb-8">Lokasi Instalasi & Aktivasi</h4>
                             <div id="map" class="w-full !h-[250px] rounded-lg mb-3"></div>
-                            <a href="https://maps.app.goo.gl/189CmxbFUrZpXsD19"
+                            <a href="{{ $order->activation_address?->google_maps_url ?? '-' }}"
                                 class="text-white border-2 border-white/10 px-2 py-2.5 block">
-                                https://maps.app.goo.gl/189CmxbFUrZpXsD19
+                                {{ $order->activation_address?->google_maps_url ?? '-' }}
                             </a>
                         </div>
                     </div>
@@ -257,10 +278,8 @@
         // === Script Upload File End ===
 
         // === Script Preview Map Start ===
-        // Koordinat dummy
-        const lat = -6.602234321160505;
-        const lng = 106.80913996183654;
-
+        const lat = {{ $order->activation_address?->latitude ?? '-' }};
+        const lng = {{ $order->activation_address?->longitude ?? '-' }};
         const map = L.map('map').setView([lat, lng], 15);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
