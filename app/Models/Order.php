@@ -98,6 +98,8 @@ class Order extends Model
                 'order_id' => $order->id,
                 'note' => "Pesanan {$uniqueOrder} berhasil dibuat oleh {$user->name} dan menunggu verifikasi pesanan.",
             ]);
+
+            return $order;
         });
     }
 

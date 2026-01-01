@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ActivationAddress;
 use App\Models\Order;
-use App\Models\Product;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -34,12 +34,26 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        Order::createOrder(
+        $order = Order::createOrder(
             Auth::user(),
             $request->product_id,
             $request->latitude,
             $request->longitude
-        );
+        );        
+
+        $data = [
+            'customer_name' => $order->customer->name,
+            'unique_order'  => $order->unique_order,
+            'product_name'  => $order->product->name,
+            'order_date' => $order->created_at->translatedFormat('d F Y H:i'),
+        ];
+
+        $salesEmail = $order->customer->sales->email;
+
+        Mail::send('emails.order-created', $data, function ($message) use ($salesEmail) {
+            $message->to($salesEmail)
+                ->subject('[NOTIFIKASI] Pesanan Baru dari Customer');
+        });;
 
         return redirect('/pesanan')->with('success', 'Pesanan berhasil dibuat! Saat ini pesanan Anda sedang kami verifikasi. Notifikasi akan dikirimkan melalui email, mohon cek secara berkala.');
     }
