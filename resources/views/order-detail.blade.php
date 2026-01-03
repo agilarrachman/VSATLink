@@ -89,8 +89,23 @@
                                     </div>
                                     <div class="content">
                                         <p>Konfirmasi Pesanan</p>
-                                        @if ($order->current_status_id > 1)
+                                        @if ($order->current_status_id > 1 && $order->current_status_id < 8)
                                             <p class="title">Pesanan dikonfirmasi pada 23 Desember 2025</p>
+                                            <a class="btn-main mt-2" href="#">
+                                                <span>Lengkapi Pesanan</span>
+                                            </a>
+                                        @elseif ($order->current_status_id == 8)
+                                            <p class="title">{{ $order_status->note }}</p>
+                                            <p class="text-sm text-gray-400 mb-2">
+                                                Jika membutuhkan informasi lebih
+                                                lanjut, silakan hubungi sales Anda.
+                                            </p>
+
+                                            <a href="https://wa.me/{{ auth()->user()->sales->phone }}" target="_blank"
+                                                class="btn-invoice">
+                                                <i class="fab fa-whatsapp me-2"></i>
+                                                Hubungi Sales
+                                            </a>
                                         @else
                                             <div class="w-75">
                                                 <p class="title mb-2">Pesanan Anda sedang dalam proses konfirmasi oleh tim
@@ -106,7 +121,8 @@
                                                     lanjut, silakan hubungi sales Anda.
                                                 </p>
 
-                                                <a href="https://wa.me/{{ auth()->user()->sales->phone }}" target="_blank" class="btn-invoice">
+                                                <a href="https://wa.me/{{ auth()->user()->sales->phone }}" target="_blank"
+                                                    class="btn-invoice">
                                                     <i class="fab fa-whatsapp me-2"></i>
                                                     Hubungi Sales
                                                 </a>
@@ -115,10 +131,11 @@
                                     </div>
                                 </div>
 
-                                <div class="step {{ $order->current_status_id >= 4 ? 'completed' : '-' }}">
+                                <div
+                                    class="step {{ $order->current_status_id >= 4 && $order->current_status_id < 8 ? 'completed' : '-' }}">
                                     <div class="indicator">
                                         <div class="dot">
-                                            @if ($order->current_status_id >= 4)
+                                            @if ($order->current_status_id >= 4 && $order->current_status_id < 8)
                                                 <div class="circle">
                                                     <i class="fa-solid fa-check"></i>
                                                 </div>
@@ -126,8 +143,10 @@
                                         </div>
                                     </div>
                                     <div class="content">
-                                        <p>Pembayaran</p>
-                                        @if ($order->current_status_id >= 4)
+                                        <p
+                                            class="{{ $order->current_status_id >= 4 && $order->current_status_id < 8 ? '' : 'pt-3' }}">
+                                            Pembayaran</p>
+                                        @if ($order->current_status_id >= 4 && $order->current_status_id < 8)
                                             <p class="title">Rp123.456.000</p>
                                             <a class="btn-invoice mt-2" href="#">
                                                 <span><i class="fa-solid fa-download me-2"></i>Unduh Invoice</span>
@@ -141,7 +160,7 @@
                                         <div class="dot"></div>
                                     </div>
                                     <div class="content">
-                                        <p>Pengiriman</p>
+                                        <p class="pt-3">Pengiriman</p>
                                     </div>
                                 </div>
 
@@ -150,7 +169,7 @@
                                         <div class="dot"></div>
                                     </div>
                                     <div class="content">
-                                        <p>Pesanan Diterima</p>
+                                        <p class="pt-3">Pesanan Diterima</p>
                                     </div>
                                 </div>
 
@@ -159,7 +178,7 @@
                                         <div class="dot"></div>
                                     </div>
                                     <div class="content">
-                                        <p>Aktivasi Perangkat</p>
+                                        <p class="pt-3">Aktivasi Perangkat</p>
                                     </div>
                                 </div>
                             </div>

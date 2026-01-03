@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderStatusHistory;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -69,7 +70,8 @@ class OrderController extends Controller
 
         return view('order-detail', [
             'page' => 'order-detail',
-            'order' => $order
+            'order' => $order,
+            'order_status' => OrderStatusHistory::getLatestStatusOrder($order->id)
         ]);
     }
 

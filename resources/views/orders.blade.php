@@ -38,8 +38,9 @@
 
                 <div class="orders flex flex-col gap-3">
                     @foreach ($orders as $order)
-                        <div
-                            class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
+                        <div role="link" tabindex="0"
+                            onclick="window.location.href='{{ url('/detail-pesanan/' . $order->unique_order) }}'"
+                            class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20 cursor-pointer">
                             <div class="flex flex-col flex-md-row justify-between items-center">
                                 <div class="detail flex flex-col flex-md-row items-center gap-4">
                                     <img src="/storage/{{ $order->product->image_url }}" alt="Product Image"
@@ -288,7 +289,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- Dummy Orders End --}}                
+                    {{-- Dummy Orders End --}}
                 </div>
             </div>
         </section>
