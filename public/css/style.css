@@ -28521,3 +28521,7 @@ img {
 .custom-close {
     filter: invert(23%) sepia(69%) saturate(748%) hue-rotate(343deg) brightness(90%) contrast(92%);
 }
+
+.form-control:disabled, .form-control[readonly] {
+    background-color: transparent !important;
+}

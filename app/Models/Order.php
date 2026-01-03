@@ -143,7 +143,7 @@ class Order extends Model
             ],
             2 => [
                 'label' => 'Lengkapi Pemesanan',
-                'url' => '/lengkapi-pesanan',
+                'url' => '/lengkapi-pesanan/' . $this->unique_order,
                 'show_price' => false,
             ],
             3 => [
