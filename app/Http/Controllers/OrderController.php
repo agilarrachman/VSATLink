@@ -89,6 +89,10 @@ class OrderController extends Controller
             abort(403, 'Anda bukan pemilik pesanan ini.');
         }
 
+        if ($order->current_status_id >= 3) {
+            abort(403, 'Pesanan sudah dilengkapi.');
+        }
+
         $provinces = Region::provinces();
 
         return view('order-completion', [
@@ -138,7 +142,55 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        try {
+            $validatedData = $request->validate([
+                // order
+                'shipping_cost' => 'required|integer|min:0',
+                'tax_cost'      => 'required|integer|min:0',
+                'total_cost'    => 'required|integer|min:0',
+                'shipping'      => 'required|in:JNE,Ambil Ditempat',
+
+                // contact
+                'name'  => 'required|string|max:255',
+                'email' => 'required|email:dns',
+                'phone' => 'required|string|max:20',
+
+                // address
+                'province' => 'required_if:shipping,jne',
+                'city'     => 'required_if:shipping,jne',
+                'district' => 'required_if:shipping,jne',
+                'village'  => 'required_if:shipping,jne',
+                'rt'        => 'required_if:shipping,jne|string',
+                'rw'          => 'required_if:shipping,jne|string',
+                'postal-code' => 'required_if:shipping,jne|string',
+                'address'  => 'required_if:shipping,jne|string',
+            ]);
+
+            Log::info('Mulai melengkapi pesanan', [
+                'order_id' => $order->id,
+                'payload'  => $validatedData,
+            ]);
+
+            $order = Order::completeOrder($order, $validatedData);
+
+            Log::info('Pesanan berhasil dilengkapi', [
+                'order_id' => $order->id,
+            ]);
+
+            return redirect()
+                ->to("/detail-pesanan/{$order->unique_order}")
+                ->with('success', 'Pesanan berhasil dilengkapi silakan melakukan pembayaran!');
+        } catch (\Throwable $e) {
+            Log::error('Gagal melengkapi pesanan', [
+                'order_id' => $order->id ?? null,
+                'message'  => $e->getMessage(),
+                'file'     => $e->getFile(),
+                'line'     => $e->getLine(),
+            ]);
+
+            return back()
+                ->with('error', 'Terjadi kesalahan saat memproses pesanan');
+        }
     }
 
     /**

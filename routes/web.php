@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(
         Route::get('/pesanan', [OrderController::class, 'index']);
         Route::get('/detail-pesanan/{order}', [OrderController::class, 'show']);
         Route::get('/lengkapi-pesanan/{order}', [OrderController::class, 'complete']);
+        Route::put('/lengkapi-pesanan/{order}', [OrderController::class, 'update']);
         Route::get('/jne/tarif', [OrderController::class, 'getTariffJNE']);
     }
 );

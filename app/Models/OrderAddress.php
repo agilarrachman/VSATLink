@@ -10,6 +10,8 @@ class OrderAddress extends Model
     /** @use HasFactory<\Database\Factories\OrderAddressFactory> */
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function order()
     {
         return $this->belongsTo(Order::class);

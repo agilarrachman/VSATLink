@@ -166,4 +166,52 @@ class Order extends Model
             ->latest()
             ->get();
     }
+
+    public static function completeOrder(Order $order, array $data)
+    {
+        DB::transaction(function () use ($order, $data) {
+            /** 1. Simpan Contact */
+            $contact = OrderContact::create([
+                'name'  => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'],
+            ]);
+
+            /** 2. Simpan Address (jika JNE) */
+            $address = null;
+
+            if ($data['shipping'] === 'JNE') {
+                $address = OrderAddress::create([
+                    'province_id' => $data['province'],
+                    'city_id'     => $data['city'],
+                    'district_id' => $data['district'],
+                    'village_id'  => $data['village'],
+                    'rt'          => $data['rt'] ?? null,
+                    'rw'          => $data['rw'] ?? null,
+                    'postal_code' => $data['postal-code'] ?? null,
+                    'full_address' => $data['address'],
+                ]);
+            }
+
+            /** 3. Update Order */
+            $order->update([
+                'shipping'   => $data['shipping'],
+                'shipping_cost'     => $data['shipping_cost'],
+                'tax_cost'          => $data['tax_cost'],
+                'total_cost'        => $data['total_cost'],
+                'order_contact_id'  => $contact->id,
+                'order_address_id'  => $address?->id,
+                'current_status_id' => 3,
+            ]);
+
+            /** 4. Status History */
+            OrderStatusHistory::create([
+                'order_status_id' => 3,
+                'order_id'        => $order->id,
+                'note'            => "Pesanan {$order->unique_order} telah dilengkapi",
+            ]);
+        });
+
+        return $order;
+    }
 }
