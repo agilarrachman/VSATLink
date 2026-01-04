@@ -91,7 +91,7 @@
                                         <p>Konfirmasi Pesanan</p>
                                         @if ($order->current_status_id > 1 && $order->current_status_id < 8)
                                             <p class="title">Pesanan dikonfirmasi pada 23 Desember 2025</p>
-                                            <a class="btn-main mt-2" href="#">
+                                            <a class="btn-main mt-2" href="/lengkapi-pesanan/{{ $order->unique_order }}">
                                                 <span>Lengkapi Pesanan</span>
                                             </a>
                                         @elseif ($order->current_status_id == 8)

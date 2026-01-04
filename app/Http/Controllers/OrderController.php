@@ -105,14 +105,14 @@ class OrderController extends Controller
         $api_key = config('app.api_key_jne');
         $village_id = $request->input('village_id') ?? 95811;
         $village = DB::table('villages')->select('tariff_code')->where('id', $village_id)->first();
-        $berat = 39.95;
+        $device_weight = $request->input('device_weight');
 
         $response = Http::asForm()->withOptions(['verify' => false])->post($url_jne . 'pricedev', [
             'username' => $username,
             'api_key' => $api_key,
             'from' => 'BOO10000',
             'thru' => $village->tariff_code,
-            'weight' => $berat,
+            'weight' => $device_weight,
         ]);
 
         if ($response->successful()) {

@@ -333,18 +333,19 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            // Script Perhitungan PPn dan Total Start
             function formatRupiah(number) {
                 return 'Rp' + new Intl.NumberFormat('id-ID').format(number);
             }
 
             function updatePPNAndTotal() {
-                let productCost = {{ $order->product_cost ?? 0 }}; // Biaya produk
-                let shippingCost = parseInt($('#shipping_cost').text().replace(/\D/g, '')) || 0; // Biaya pengiriman
+                let productCost = {{ $order->product_cost ?? 0 }};
+                let shippingCost = parseInt($('#shipping_cost').text().replace(/\D/g, '')) || 0;
                 let installationCost =
                     {{ $order->installation_service_cost + $order->installation_transport_cost ?? 0 }};
 
                 let subtotal = productCost + shippingCost + installationCost;
-                let ppn = Math.round(subtotal * 0.10); // PPN 10%
+                let ppn = Math.round(subtotal * 0.10);
                 let total = subtotal + ppn;
 
                 $('#shipping_cost').text(formatRupiah(shippingCost));
@@ -353,6 +354,7 @@
             }
 
             updatePPNAndTotal();
+            // Script Perhitungan PPn dan Total End
 
             // Script Filter Provinsi, Kota, Kecamatan, Kelurahan Start
             $('#province').on('change', function() {
@@ -472,6 +474,7 @@
             $('#village').on('change', function() {
                 const villageId = $(this).val();
                 const cityId = $('#city').val();
+                const deviceWeight = {{ $order->product->device_weight }};
 
                 if (!villageId) return;
 
@@ -483,7 +486,8 @@
                     url: '/jne/tarif',
                     method: 'GET',
                     data: {
-                        village_id: villageId
+                        village_id: villageId,
+                        device_weight: deviceWeight
                     },
                     beforeSend() {
                         $('#shipping_cost').text('Menghitung...');
