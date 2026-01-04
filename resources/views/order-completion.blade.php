@@ -32,7 +32,7 @@
                         <div class="col flex flex-col md:flex-row gap-9">
                             <div class="detail md:w-1/2">
                                 <h4 class="!mb-4">Rincian Pesanan</h4>
-                                <div class="flex items-center gap-3">
+                                <div class="flex justify-between items-center gap-3">
                                     <div class="info flex items-center gap-4">
                                         <img src="/storage/{{ $order->product->image_url }}"
                                             alt="{{ $order->product->name }}" class="rounded-md object-cover w-[120px]" />
@@ -115,16 +115,26 @@
                                         <label>Nama Lengkap</label>
                                         <input type="text" name="name" id="name" class="form-control"
                                             placeholder="Masukkan Nama Narahubung" />
+                                        <small class="text-white d-none" id="name-error">
+                                            Nama wajib diisi
+                                        </small>
                                     </div>
                                     <div class="field-set">
                                         <label>Nomor Telepon</label>
                                         <input type="number" name="phone" id="phone" class="form-control"
+                                            inputmode="numeric" pattern="[0-9]*"
                                             placeholder="Masukkan Nomor Telepon Narahubung" />
+                                        <small class="text-white d-none" id="phone-error">
+                                            Nomor harus diawali 08 dan 10-20 digit
+                                        </small>
                                     </div>
                                     <div class="field-set">
                                         <label>Email</label>
                                         <input type="text" name="email" id="email" class="form-control"
                                             placeholder="Masukkan Email Narhubung" />
+                                        <small class="text-white d-none" id="email-error">
+                                            Format email tidak valid
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -173,16 +183,22 @@
                                             <label>RT</label>
                                             <input type="number" name="rt" id="rt" class="form-control"
                                                 placeholder="RT" />
+                                            <small class="text-white d-none" id="rt-error">
+                                                Harus 3 digit (contoh: 003)
+                                            </small>
                                         </div>
                                         <div class="field-set w-1/3">
                                             <label>RW</label>
                                             <input type="number" name="rw" id="rw" class="form-control"
                                                 placeholder="RW" />
+                                            <small class="text-white d-none" id="rw-error">
+                                                Harus 3 digit (contoh: 005)
+                                            </small>
                                         </div>
                                         <div class="field-set w-1/3">
                                             <label>Kode Pos</label>
-                                            <input type="number" name="postal-code" id="postal-code" class="form-control"
-                                                placeholder="Kode Pos" readonly />
+                                            <input type="number" name="postal-code" id="postal-code"
+                                                class="form-control" placeholder="Kode Pos" readonly />
                                         </div>
                                     </div>
                                     <div class="field-set">
@@ -202,7 +218,8 @@
                             </label>
                         </div>
                         <div id="submit">
-                            <button class="btn-main btn-fullwidth rounded-3" type="submit">Kirim Pesanan</button>
+                            <button class="btn-fullwidth rounded-3" id="submitBtn" type="submit">Kirim
+                                Pesanan</button>
                         </div>
                     </form>
                 </div>
@@ -352,6 +369,118 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            // Script Validadsi Form Start
+            function showError(field, message) {
+                $(`#${field}-error`).text(message).removeClass('d-none');
+            }
+
+            function hideError(field) {
+                $(`#${field}-error`).addClass('d-none');
+            }
+
+            function isValidPhone(phone) {
+                return /^08\d{8,18}$/.test(phone);
+            }
+
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            function isValidRTRW(value) {
+                return /^\d{3}$/.test(value);
+            }
+
+            function isFormValid() {
+                let valid = true;
+
+                const name = $('#name').val().trim();
+                const phone = $('#phone').val().trim();
+                const email = $('#email').val().trim();
+                const rt = $('#rt').val().trim();
+                const rw = $('#rw').val().trim();
+                const address = $('#address').val().trim();
+
+                if (!name) {
+                    valid = false;
+                }
+
+                if (!phone) {
+                    valid = false;
+                } else if (!isValidPhone(phone)) {
+                    showError('phone', 'Nomor harus diawali 08 dan 10-20 digit');
+                    valid = false;
+                } else {
+                    hideError('phone');
+                }
+
+                if (!email) {
+                    valid = false;
+                } else if (!isValidEmail(email)) {
+                    showError('email', 'Format email tidak valid');
+                    valid = false;
+                } else {
+                    hideError('email');
+                }
+
+                if (!rt) {
+                    valid = false;
+                } else if (!isValidRTRW(rt)) {
+                    showError('rt', 'Harus 3 digit (contoh: 003)');
+                    valid = false;
+                } else {
+                    hideError('rt');
+                }
+
+                if (!rw) {
+                    valid = false;
+                } else if (!isValidRTRW(rw)) {
+                    showError('rw', 'Harus 3 digit (contoh: 010)');
+                    valid = false;
+                } else {
+                    hideError('rw');
+                }
+
+                if (!address) {
+                    valid = false;
+                }
+
+                if ($('#jne').is(':checked')) {
+                    const selects = ['province', 'city', 'district', 'village'];
+                    selects.forEach(id => {
+                        if (!$(`#${id}`).val() || $(`#${id}`).prop('selectedIndex') === 0) {
+                            valid = false;
+                        }
+                    });
+                }
+
+                if (!$('#agreement').is(':checked')) {
+                    valid = false;
+                }
+
+                return valid;
+            }
+
+            function toggleSubmitButton() {
+                const btn = $('#submitBtn');
+
+                if (isFormValid()) {
+                    btn.prop('disabled', false)
+                        .removeClass('btn-disabled cursor-not-allowed')
+                        .addClass('btn-main');
+                } else {
+                    btn.prop('disabled', true)
+                        .removeClass('btn-main')
+                        .addClass('btn-disabled cursor-not-allowed');
+                }
+            }
+
+            $('input, textarea, select').on('input change', function() {
+                toggleSubmitButton();
+            });
+
+            toggleSubmitButton();
+            // Script Validadsi Form End
+
             // Script Perhitungan PPn dan Total Start
             function formatRupiah(number) {
                 return 'Rp' + new Intl.NumberFormat('id-ID').format(number);
@@ -534,16 +663,11 @@
             // Script Filter Provinsi, Kota, Kecamatan, Kelurahan End
 
             // Script Ambil di Tempat Start
-            function resetShippingAndAddress() {
-                $('#shipping_cost').text('0');
-                $('#shipping-etd').text('Pilih alamat untuk melihat estimasi sampai');
-                updatePPNAndTotal();
-
-                $('#province').prop('disabled', false);
+            function resetAddressValue() {
                 $('#province option:first').prop('selected', true);
-                $('#city').html('<option selected>Pilih Kota</option>').prop('disabled', true);
-                $('#district').html('<option selected>Pilih Kecamatan</option>').prop('disabled', true);
-                $('#village').html('<option selected>Pilih Kelurahan</option>').prop('disabled', true);
+                $('#city').html('<option selected>Pilih Kota</option>');
+                $('#district').html('<option selected>Pilih Kecamatan</option>');
+                $('#village').html('<option selected>Pilih Kelurahan</option>');
 
                 $('#postal-code').val('');
                 $('#rt').val('');
@@ -551,19 +675,36 @@
                 $('#address').val('');
             }
 
+            function disableAddress() {
+                $('#province, #city, #district, #village, #postal-code, #rt, #rw, #address')
+                    .prop('disabled', true);
+            }
+
+            function enableAddress() {
+                $('#province').prop('disabled', false);
+                $('#city, #district, #village').prop('disabled', true);
+                $('#postal-code, #rt, #rw, #address').prop('disabled', false);
+            }
+
             $('input[name="shipping"]').on('change', function() {
-                const selected = $(this).attr('id');
+                const selected = this.id;
 
                 if (selected === 'pickup') {
-                    resetShippingAndAddress();
-                    $('#city, #district, #village, #postal-code, #rt, #rw, #address').prop('disabled',
-                        true);
+                    $('#shipping_cost').text('0');
+                    $('#shipping-etd').text('Pilih alamat untuk melihat estimasi sampai');
+                    updatePPNAndTotal();
+
+                    resetAddressValue();
+                    disableAddress();
                 }
 
                 if (selected === 'jne') {
-                    $('#province, #city, #district, #village, #postal-code, #rt, #rw, #address').prop(
-                        'disabled', false);
-                    resetShippingAndAddress();
+                    resetAddressValue();
+                    enableAddress();
+
+                    $('#shipping_cost').text('Rp0');
+                    $('#shipping-etd').text('Pilih alamat untuk melihat estimasi sampai');
+                    updatePPNAndTotal();
                 }
             });
             // Script Ambil di Tempat End            
@@ -603,11 +744,13 @@
             agreeBtn.addEventListener('click', function() {
                 checkbox.checked = true;
                 closeModal();
+                toggleSubmitButton();
             });
 
             disagreeBtn.addEventListener('click', function() {
                 checkbox.checked = false;
                 closeModal();
+                toggleSubmitButton();
             });
 
             modal.addEventListener('click', function(e) {

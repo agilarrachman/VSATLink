@@ -170,14 +170,12 @@ class Order extends Model
     public static function completeOrder(Order $order, array $data)
     {
         DB::transaction(function () use ($order, $data) {
-            /** 1. Simpan Contact */
             $contact = OrderContact::create([
                 'name'  => $data['name'],
                 'email' => $data['email'],
                 'phone' => $data['phone'],
             ]);
 
-            /** 2. Simpan Address (jika JNE) */
             $address = null;
 
             if ($data['shipping'] === 'JNE') {
@@ -193,7 +191,6 @@ class Order extends Model
                 ]);
             }
 
-            /** 3. Update Order */
             $order->update([
                 'shipping'   => $data['shipping'],
                 'shipping_cost'     => $data['shipping_cost'],
@@ -204,7 +201,6 @@ class Order extends Model
                 'current_status_id' => 3,
             ]);
 
-            /** 4. Status History */
             OrderStatusHistory::create([
                 'order_status_id' => 3,
                 'order_id'        => $order->id,
