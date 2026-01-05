@@ -9,184 +9,220 @@
         <section class="v-center jarallax">
             <div class="de-gradient-edge-top"></div>
             <div class="de-gradient-edge-bottom"></div>
-            <img src="images/background/jarralax.png" class="jarallax-img" alt="" />
-            <div
-                class="container shadow-lg/10 rounded-10 bg-gray-900/40 backdrop-blur-md border !border-white/20 !p-10 z-1000 mt-14 mb-auto">
-                <h3 class="text-3xl text-center !mb-7">Lengkapi Pemesanan</h3>
-                <form action="" class="flex flex-col gap-7">
-                    <div class="col flex flex-col md:flex-row gap-9">
-                        <div class="detail md:w-1/2">
-                            <h4 class="!mb-4">Rincian Pesanan</h4>
-                            <div class="flex items-center gap-5">
-                                <div class="info flex items-center gap-4">
-                                    <img src="images/covers/produkVSAT1.png" alt="Product Image"
-                                        class="rounded-md object-cover w-[120px]" />
-                                    <div class="info w-full mb-3 mb-md-0">
-                                        <p class="mb-0 text-base text-white">
-                                            Kode Pesanan: VSL7393741
+            <img src="/images/background/jarralax.png" class="jarallax-img" alt="" />
+            <div class="content z-1000 mt-14 mx-auto">
+                @if (session()->has('error'))
+                    <div class="alert text-white bg-gray-900/40 backdrop-blur-md border !border-white/20 alert-dismissible fade show mb-5 text-left"
+                        role="alert">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i> {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                <div
+                    class="container shadow-lg/10 rounded-10 bg-gray-900/40 backdrop-blur-md border !border-white/20 !p-10">
+                    <h3 class="text-3xl text-center !mb-7">Lengkapi Pemesanan</h3>
+                    <form class="flex flex-col gap-7" action="/lengkapi-pesanan/{{ $order->unique_order }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="shipping_cost" id="shipping_cost_input">
+                        <input type="hidden" name="tax_cost" id="tax_cost_input">
+                        <input type="hidden" name="total_cost" id="total_cost_input">
+
+                        <div class="col flex flex-col md:flex-row gap-9">
+                            <div class="detail md:w-1/2">
+                                <h4 class="!mb-4">Rincian Pesanan</h4>
+                                <div class="flex justify-between items-center gap-3">
+                                    <div class="info flex items-center gap-4">
+                                        <img src="/storage/{{ $order->product->image_url }}"
+                                            alt="{{ $order->product->name }}" class="rounded-md object-cover w-[120px]" />
+                                        <div class="info w-full mb-3 mb-md-0">
+                                            <p class="mb-0 text-base text-white">
+                                                Kode Pesanan: {{ $order->unique_order }}
+                                            </p>
+                                            <h4 class="mb-0">{{ $order->product->name }}</h4>
+                                            <p class="mb-0 text-base">
+                                                Pesanan dibuat pada tanggal
+                                                {{ $order->created_at->translatedFormat('d M Y') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="price">
+                                        <p class="text-right text-white">
+                                            {{ $order->product_cost ? 'Rp' . number_format($order->product_cost, 0, ',', '.') : '-' }}
                                         </p>
-                                        <h4 class="mb-0">Nama Layanan</h4>
-                                        <p class="mb-0 text-base">
-                                            Pesanan dibuat pada tanggal 19 November
-                                            2025
+                                    </div>
+                                </div>
+                                <div class="summary my-3">
+                                    <div class="flex justify-between">
+                                        <h4>Biaya Pengiriman</h4>
+                                        <p class="text-right text-white" id="shipping_cost">Rp0</p>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <h4>Biaya Instalasi</h4>
+                                        <p class="text-right text-white">
+                                            {{ $order->installation_service_cost == 0 && $order->installation_transport_cost == 0
+                                                ? '-'
+                                                : 'Rp' . number_format($order->installation_service_cost + $order->installation_transport_cost, 0, ',', '.') }}
                                         </p>
                                     </div>
+                                    <div class="flex justify-between">
+                                        <h4>PPN (10%)</h4>
+                                        <p class="text-right text-white" id="ppn_cost">Rp0</p>
+                                    </div>
                                 </div>
-                                <div class="price">
-                                    <p class="text-right text-white">Rp11.500.000</p>
-                                </div>
-                            </div>
-                            <div class="summary my-3">
+                                <hr class="w-full !my-5 border-t border-white/40">
                                 <div class="flex justify-between">
-                                    <h4>Biaya Pengiriman</h4>
-                                    <p class="text-right text-white">Rp11.500.000</p>
-                                </div>
-                                <div class="flex justify-between">
-                                    <h4>Biaya Instalasi</h4>
-                                    <p class="text-right text-white">Rp11.500.000</p>
-                                </div>
-                                <div class="flex justify-between">
-                                    <h4>PPN (10%)</h4>
-                                    <p class="text-right text-white">Rp1.150.000</p>
+                                    <h4>Total</h4>
+                                    <p class="text-right text-white" id="total_cost">Rp0</p>
                                 </div>
                             </div>
-                            <hr class="w-full !my-5 border-t border-white/40">
-                            <div class="flex justify-between">
-                                <h4>Total</h4>
-                                <p class="text-right text-white">Rp50.150.000</p>
+
+                            <div class="shipping md:w-1/2">
+                                <h4>Jenis Pengiriman</h4>
+                                <p class="!mb-4">Pilih metode pengiriman perangkat sesuai kebutuhan Anda</p>
+                                <div class="form-check p-0 mb-3 !flex !items-center">
+                                    <input class="form-check-input ms-2 me-0 shrink-0" type="radio" name="shipping"
+                                        id="jne" value="JNE" checked>
+                                    <label class="form-check-label ms-3 cursor-pointer" for="jne">
+                                        <h4 class="mb-1">Ekspedisi JNE</h4>
+                                        <p class="text-white mb-0" id="shipping-etd">Pilih alamat untuk melihat estimasi
+                                            sampai
+                                        </p>
+                                    </label>
+                                </div>
+
+                                <div class="form-check p-0 !flex !items-center">
+                                    <input class="form-check-input ms-2 me-0 shrink-0" type="radio" name="shipping"
+                                        id="pickup" value="Ambil Ditempat">
+                                    <label class="form-check-label ms-3 cursor-pointer" for="pickup">
+                                        <h4 class="mb-1">Ambil di VSATLink Center</h4>
+                                        <p class="text-white mb-0">
+                                            Jl. Sholeh Iskandar No.KM 6, RT.04/RW.01, Cibadak, Kec. Tanah Sereal,
+                                            Kota Bogor, Jawa Barat 16166
+                                        </p>
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="delivery md:w-1/2">
-                            <h4>Jenis Pengiriman</h4>
-                            <p class="!mb-4">Pilih metode pengiriman perangkat sesuai kebutuhan Anda</p>
-                            <div class="form-check p-0 mb-3 !flex !items-center">
-                                <input class="form-check-input ms-2 me-0 shrink-0" type="radio" name="delivery"
-                                    id="jne" checked>
-                                <label class="form-check-label ms-3 cursor-pointer" for="jne">
-                                    <h4 class="mb-1">Ekspedisi JNE</h4>
-                                    <p class="text-white mb-0">Estimasi sampai 2–5 Mei</p>
-                                </label>
-                            </div>
-
-                            <div class="form-check p-0 !flex !items-center">
-                                <input class="form-check-input ms-2 me-0 shrink-0" type="radio" name="delivery"
-                                    id="pickup">
-                                <label class="form-check-label ms-3 cursor-pointer" for="pickup">
-                                    <h4 class="mb-1">Ambil di VSATLink Center</h4>
-                                    <p class="text-white mb-0">
-                                        Jl. Sholeh Iskandar No.KM 6, RT.04/RW.01, Cibadak, Kec. Tanah Sereal,
-                                        Kota Bogor, Jawa Barat 16166
-                                    </p>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col flex flex-col md:flex-row gap-9">
-                        <div class="contact md:w-1/2">
-                            <h4>Narahubung</h4>
-                            <p class="!mb-4">Data ini digunakan untuk konfirmasi dan komunikasi pemesanan</p>
-                            <div class="form-border">
-                                <div class="field-set">
-                                    <label>Nama Lengkap</label>
-                                    <input type="text" name="name" id="name" class="form-control"
-                                        placeholder="Masukkan Nama Narahubung" />
-                                </div>
-                                <div class="field-set">
-                                    <label>Nomor Telepon</label>
-                                    <input type="number" name="phone" id="phone" class="form-control"
-                                        placeholder="Masukkan Nomor Telepon Narahubung" />
-                                </div>
-                                <div class="field-set">
-                                    <label>Email</label>
-                                    <input type="text" name="email" id="email" class="form-control"
-                                        placeholder="Masukkan Email Narhubung" />
+                        <div class="col flex flex-col md:flex-row gap-9">
+                            <div class="contact md:w-1/2">
+                                <h4>Narahubung</h4>
+                                <p class="!mb-4">Data ini digunakan untuk konfirmasi dan komunikasi pemesanan</p>
+                                <div class="form-border">
+                                    <div class="field-set">
+                                        <label>Nama Lengkap</label>
+                                        <input type="text" name="name" id="name" class="form-control"
+                                            placeholder="Masukkan Nama Narahubung" />
+                                        <small class="text-white d-none" id="name-error">
+                                            Nama wajib diisi
+                                        </small>
+                                    </div>
+                                    <div class="field-set">
+                                        <label>Nomor Telepon</label>
+                                        <input type="number" name="phone" id="phone" class="form-control"
+                                            inputmode="numeric" pattern="[0-9]*"
+                                            placeholder="Masukkan Nomor Telepon Narahubung" />
+                                        <small class="text-white d-none" id="phone-error">
+                                            Nomor harus diawali 08 dan 10-20 digit
+                                        </small>
+                                    </div>
+                                    <div class="field-set">
+                                        <label>Email</label>
+                                        <input type="text" name="email" id="email" class="form-control"
+                                            placeholder="Masukkan Email Narhubung" />
+                                        <small class="text-white d-none" id="email-error">
+                                            Format email tidak valid
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="address md:w-1/2">
-                            <h4>Alamat Pengiriman</h4>
-                            <p class="!mb-4">Alamat ini digunakan sebagai tujuan pengiriman perangkat oleh tim logistik
-                            </p>
-                            <div class="form-border">
-                                <div class="flex gap-3">
-                                    <div class="field-set w-1/2">
-                                        <label>Provinsi</label>
-                                        <select class="form-select">
-                                            <option selected>Pilih Provinsi</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                            <div class="address md:w-1/2">
+                                <h4>Alamat Pengiriman</h4>
+                                <p class="!mb-4">Alamat ini digunakan sebagai tujuan pengiriman perangkat oleh tim
+                                    logistik
+                                </p>
+                                <div class="form-border">
+                                    <div class="flex gap-3">
+                                        <div class="field-set w-1/2">
+                                            <label>Provinsi</label>
+                                            <select id="province" name="province" class="form-select">
+                                                <option selected disabled>Pilih Provinsi</option>
+                                                @foreach ($provinces as $province)
+                                                    <option value="{{ $province->id }}"
+                                                        {{ old('province') == $province->id ? 'selected' : '' }}>
+                                                        {{ $province->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="field-set w-1/2">
+                                            <label>Kota</label>
+                                            <select id="city" name="city" class="form-select">
+                                                <option selected>Pilih Kota</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="field-set w-1/2">
-                                        <label>Kota</label>
-                                        <select class="form-select">
-                                            <option selected>Pilih Kota</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                    <div class="flex gap-3">
+                                        <div class="field-set w-1/2">
+                                            <label>Kecamatan</label>
+                                            <select id="district" name="district" class="form-select">
+                                                <option selected>Pilih Kecamatan</option>
+                                            </select>
+                                        </div>
+                                        <div class="field-set w-1/2">
+                                            <label>Kelurahan</label>
+                                            <select id="village" name="village" class="form-select">
+                                                <option selected>Pilih Kelurahan</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="flex gap-3">
-                                    <div class="field-set w-1/2">
-                                        <label>Kecamatan</label>
-                                        <select class="form-select">
-                                            <option selected>Pilih Kecamatan</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                    <div class="flex gap-3">
+                                        <div class="field-set w-1/3">
+                                            <label>RT</label>
+                                            <input type="number" name="rt" id="rt" class="form-control"
+                                                placeholder="RT" />
+                                            <small class="text-white d-none" id="rt-error">
+                                                Harus 3 digit (contoh: 003)
+                                            </small>
+                                        </div>
+                                        <div class="field-set w-1/3">
+                                            <label>RW</label>
+                                            <input type="number" name="rw" id="rw" class="form-control"
+                                                placeholder="RW" />
+                                            <small class="text-white d-none" id="rw-error">
+                                                Harus 3 digit (contoh: 005)
+                                            </small>
+                                        </div>
+                                        <div class="field-set w-1/3">
+                                            <label>Kode Pos</label>
+                                            <input type="number" name="postal-code" id="postal-code"
+                                                class="form-control" placeholder="Kode Pos" readonly />
+                                        </div>
                                     </div>
-                                    <div class="field-set w-1/2">
-                                        <label>Kelurahan</label>
-                                        <select class="form-select">
-                                            <option selected>Pilih Kelurahan</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                    <div class="field-set">
+                                        <label>Alamat Lengkap</label>
+                                        <textarea name="address" id="address" class="form-control !min-h-[160px]"
+                                            placeholder="Masukkan Alamat Lengkap (Contoh: Jl. Sudirman No. 10, Jakarta)"></textarea>
                                     </div>
-                                </div>
-                                <div class="flex gap-3">
-                                    <div class="field-set w-1/3">
-                                        <label>RT</label>
-                                        <input type="number" name="rt" id="rt" class="form-control"
-                                            placeholder="RT" />
-                                    </div>
-                                    <div class="field-set w-1/3">
-                                        <label>RW</label>
-                                        <input type="number" name="rw" id="rw" class="form-control"
-                                            placeholder="RW" />
-                                    </div>
-                                    <div class="field-set w-1/3">
-                                        <label>Kode Pos</label>
-                                        <input type="number" name="post-code" id="post-code" class="form-control"
-                                            placeholder="Kode Pos" />
-                                    </div>
-                                </div>
-                                <div class="field-set">
-                                    <label>Alamat Lengkap</label>
-                                    <textarea name="address" id="address" class="form-control !min-h-[160px]"
-                                        placeholder="Masukkan Alamat Lengkap (Contoh: Jl. Sudirman No. 10, Jakarta)"></textarea>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="agreement">
-                        <input class="form-check-input me-2" type="checkbox" value="" id="agreement">
-                        <label class="form-check-label text-white cursor-pointer" for="agreement">
-                            Saya telah membaca dan menyetujui <span class="font-bold text-[#5623D8]">Syarat dan
-                                Ketentuan</span> penggunaan layanan
-                        </label>
-                    </div>
-                    <div id="submit">
-                        <button class="btn-main btn-fullwidth rounded-3" type="submit">Kirim Pesanan</button>
-                    </div>
-                </form>
+                        <div class="agreement">
+                            <input class="form-check-input me-2" type="checkbox" value="" id="agreement">
+                            <label class="form-check-label text-white cursor-pointer" for="agreement">
+                                Saya telah membaca dan menyetujui <span class="font-bold text-[#5623D8]">Syarat dan
+                                    Ketentuan</span> penggunaan layanan
+                            </label>
+                        </div>
+                        <div id="submit">
+                            <button class="btn-fullwidth rounded-3" id="submitBtn" type="submit">Kirim
+                                Pesanan</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </section>
 
@@ -329,62 +365,409 @@
             </div>
         </div>
     </div>
-
+@endsection
+@push('scripts')
     <script>
-        const checkbox = document.getElementById('agreement');
-        const modal = document.getElementById('agreementModal');
-        const agreeBtn = document.getElementById('agreeBtn');
-        const disagreeBtn = document.getElementById('disagreeBtn');
-        const body = document.body;
-
-        checkbox.addEventListener('click', function(e) {
-            e.preventDefault(); // cegah checkbox langsung tercentang
-            openModal();
-        });
-
-        function openModal() {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            body.classList.add('modal-open');
-
-            if (typeof lenis !== 'undefined') {
-                lenis.stop();
+        $(document).ready(function() {
+            // Script Validadsi Form Start
+            function showError(field, message) {
+                $(`#${field}-error`).text(message).removeClass('d-none');
             }
-        }
 
-        function closeModal() {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            body.classList.remove('modal-open');
-
-            if (typeof lenis !== 'undefined') {
-                lenis.start();
+            function hideError(field) {
+                $(`#${field}-error`).addClass('d-none');
             }
-        }
 
-        agreeBtn.addEventListener('click', function() {
-            checkbox.checked = true;
-            closeModal();
-        });
+            function isValidPhone(phone) {
+                return /^08\d{8,18}$/.test(phone);
+            }
 
-        disagreeBtn.addEventListener('click', function() {
-            checkbox.checked = false;
-            closeModal();
-        });
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
 
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
+            function isValidRTRW(value) {
+                return /^\d{3}$/.test(value);
+            }
+
+            function isFormValid() {
+                let valid = true;
+
+                const name = $('#name').val().trim();
+                const phone = $('#phone').val().trim();
+                const email = $('#email').val().trim();
+                const rt = $('#rt').val().trim();
+                const rw = $('#rw').val().trim();
+                const address = $('#address').val().trim();
+
+                if (!name) {
+                    valid = false;
+                }
+
+                if (!phone) {
+                    valid = false;
+                } else if (!isValidPhone(phone)) {
+                    showError('phone', 'Nomor harus diawali 08 dan 10-20 digit');
+                    valid = false;
+                } else {
+                    hideError('phone');
+                }
+
+                if (!email) {
+                    valid = false;
+                } else if (!isValidEmail(email)) {
+                    showError('email', 'Format email tidak valid');
+                    valid = false;
+                } else {
+                    hideError('email');
+                }
+
+                if (!rt) {
+                    valid = false;
+                } else if (!isValidRTRW(rt)) {
+                    showError('rt', 'Harus 3 digit (contoh: 003)');
+                    valid = false;
+                } else {
+                    hideError('rt');
+                }
+
+                if (!rw) {
+                    valid = false;
+                } else if (!isValidRTRW(rw)) {
+                    showError('rw', 'Harus 3 digit (contoh: 010)');
+                    valid = false;
+                } else {
+                    hideError('rw');
+                }
+
+                if (!address) {
+                    valid = false;
+                }
+
+                if ($('#jne').is(':checked')) {
+                    const selects = ['province', 'city', 'district', 'village'];
+                    selects.forEach(id => {
+                        if (!$(`#${id}`).val() || $(`#${id}`).prop('selectedIndex') === 0) {
+                            valid = false;
+                        }
+                    });
+                }
+
+                if (!$('#agreement').is(':checked')) {
+                    valid = false;
+                }
+
+                return valid;
+            }
+
+            function toggleSubmitButton() {
+                const btn = $('#submitBtn');
+
+                if (isFormValid()) {
+                    btn.prop('disabled', false)
+                        .removeClass('btn-disabled cursor-not-allowed')
+                        .addClass('btn-main');
+                } else {
+                    btn.prop('disabled', true)
+                        .removeClass('btn-main')
+                        .addClass('btn-disabled cursor-not-allowed');
+                }
+            }
+
+            $('input, textarea, select').on('input change', function() {
+                toggleSubmitButton();
+            });
+
+            toggleSubmitButton();
+            // Script Validadsi Form End
+
+            // Script Perhitungan PPn dan Total Start
+            function formatRupiah(number) {
+                return 'Rp' + new Intl.NumberFormat('id-ID').format(number);
+            }
+
+            function updatePPNAndTotal() {
+                let productCost = {{ $order->product_cost ?? 0 }};
+                let shippingCost = parseInt($('#shipping_cost').text().replace(/\D/g, '')) || 0;
+                let installationCost =
+                    {{ $order->installation_service_cost + $order->installation_transport_cost ?? 0 }};
+
+                let subtotal = productCost + shippingCost + installationCost;
+                let ppn = Math.round(subtotal * 0.10);
+                let total = subtotal + ppn;
+
+                $('#shipping_cost').text(formatRupiah(shippingCost));
+                $('#ppn_cost').text(formatRupiah(ppn));
+                $('#total_cost').text(formatRupiah(total));
+
+                $('#shipping_cost_input').val(shippingCost);
+                $('#tax_cost_input').val(ppn);
+                $('#total_cost_input').val(total);
+            }
+
+            updatePPNAndTotal();
+            // Script Perhitungan PPn dan Total End
+
+            // Script Filter Provinsi, Kota, Kecamatan, Kelurahan Start
+            $('#province').on('change', function() {
+                let provinceId = $(this).val();
+
+                $('#city').prop('disabled', true).html('<option selected>Pilih Kota</option>');
+                $('#district').prop('disabled', true).html('<option selected>Pilih Kecamatan</option>');
+                $('#village').prop('disabled', true).html('<option selected>Pilih Kelurahan</option>');
+                $('#postal-code').val('Kode Pos');
+
+                $.ajax({
+                    url: `/cities/${provinceId}`,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#city').prop('disabled', false);
+
+                        $.each(data, function(i, item) {
+                            $('#city').append(
+                                `<option value="${item.id}">${item.name}</option>`
+                            );
+                        });
+                    }
+                });
+            });
+
+            $('#city').on('change', function() {
+                let cityId = $(this).val();
+
+                $('#district').prop('disabled', true).html('<option selected>Pilih Kecamatan</option>');
+                $('#village').prop('disabled', true).html('<option selected>Pilih Kelurahan</option>');
+                $('#postal-code').val('Kode Pos');
+
+                $.ajax({
+                    url: `/districts/${cityId}`,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#district').prop('disabled', false);
+
+                        $.each(data, function(i, item) {
+                            $('#district').append(
+                                `<option value="${item.id}">${item.name}</option>`
+                            );
+                        });
+                    }
+                });
+            });
+
+            $('#district').on('change', function() {
+                let districtId = $(this).val();
+
+                $('#village').prop('disabled', true).html('<option selected>Pilih Kelurahan</option>');
+                $('#postal-code').val('Kode Pos');
+
+                $.ajax({
+                    url: `/villages/${districtId}`,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#village').prop('disabled', false);
+
+                        $.each(data, function(i, item) {
+                            $('#village').append(
+                                `<option value="${item.id}">${item.name}</option>`
+                            );
+                        });
+                    }
+                });
+            });
+
+            function formatTanggalID(date) {
+                const bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                return `${date.getDate()} ${bulan[date.getMonth()]} ${date.getFullYear()}`;
+            }
+
+            function getJNEService(prices, cityId) {
+                let service = prices.find(p => p.service_display === 'REG');
+
+                // Kabupaten Bogor menggunakan CTC
+                if (cityId == 70) {
+                    service = prices.find(p => p.service_display === 'CTC') || service;
+                }
+
+                return service;
+            }
+
+            function renderShipping(priceData) {
+                const etdFrom = parseInt(priceData.etd_from || 0);
+                const etdThru = parseInt(priceData.etd_thru || 0);
+
+                const fromDate = addDays(new Date(), etdFrom);
+                const thruDate = addDays(new Date(), etdThru);
+
+                const price = new Intl.NumberFormat('id-ID').format(priceData.price);
+
+                const etdText = etdFrom === etdThru ?
+                    `Estimasi tiba ${formatTanggalID(fromDate)}` :
+                    `Estimasi tiba ${formatTanggalID(fromDate)} – ${formatTanggalID(thruDate)}`;
+
+                $('#shipping_cost').text(price);
+                $('#shipping-etd').text(`${priceData.service_display} • ${etdText}`);
+
+                updatePPNAndTotal();
+            }
+
+            function setShippingUnavailable(message = 'Tidak tersedia') {
+                $('#shipping_cost').text('0');
+                $('#shipping-etd').text('-');
+
+                updatePPNAndTotal();
+            }
+
+            function addDays(date, days) {
+                const d = new Date(date);
+                d.setDate(d.getDate() + days);
+                return d;
+            }
+
+            $('#village').on('change', function() {
+                const villageId = $(this).val();
+                const cityId = $('#city').val();
+                const deviceWeight = {{ $order->product->device_weight }};
+
+                if (!villageId) return;
+
+                $.get(`/postalcode/${villageId}`, function(data) {
+                    $('#postal-code').val(data.postal_code ?? '');
+                });
+
+                $.ajax({
+                    url: '/jne/tarif',
+                    method: 'GET',
+                    data: {
+                        village_id: villageId,
+                        device_weight: deviceWeight
+                    },
+                    beforeSend() {
+                        $('#shipping_cost').text('Menghitung...');
+                        $('#shipping-etd').text('Menghitung estimasi...');
+                    },
+                    success(res) {
+                        if (!res.success || !res.data?.price?.length) {
+                            return setShippingUnavailable();
+                        }
+
+                        const priceData = getJNEService(res.data.price, cityId);
+                        if (!priceData) return setShippingUnavailable();
+
+                        renderShipping(priceData);
+                    },
+                    error() {
+                        setShippingUnavailable('Gagal mengambil ongkir');
+                    }
+                });
+            });
+            // Script Filter Provinsi, Kota, Kecamatan, Kelurahan End
+
+            // Script Ambil di Tempat Start
+            function resetAddressValue() {
+                $('#province option:first').prop('selected', true);
+                $('#city').html('<option selected>Pilih Kota</option>');
+                $('#district').html('<option selected>Pilih Kecamatan</option>');
+                $('#village').html('<option selected>Pilih Kelurahan</option>');
+
+                $('#postal-code').val('');
+                $('#rt').val('');
+                $('#rw').val('');
+                $('#address').val('');
+            }
+
+            function disableAddress() {
+                $('#province, #city, #district, #village, #postal-code, #rt, #rw, #address')
+                    .prop('disabled', true);
+            }
+
+            function enableAddress() {
+                $('#province').prop('disabled', false);
+                $('#city, #district, #village').prop('disabled', true);
+                $('#postal-code, #rt, #rw, #address').prop('disabled', false);
+            }
+
+            $('input[name="shipping"]').on('change', function() {
+                const selected = this.id;
+
+                if (selected === 'pickup') {
+                    $('#shipping_cost').text('0');
+                    $('#shipping-etd').text('Pilih alamat untuk melihat estimasi sampai');
+                    updatePPNAndTotal();
+
+                    resetAddressValue();
+                    disableAddress();
+                }
+
+                if (selected === 'jne') {
+                    resetAddressValue();
+                    enableAddress();
+
+                    $('#shipping_cost').text('Rp0');
+                    $('#shipping-etd').text('Pilih alamat untuk melihat estimasi sampai');
+                    updatePPNAndTotal();
+                }
+            });
+            // Script Ambil di Tempat End            
+
+            // Script Syarat dan Ketentuan Start
+            const checkbox = document.getElementById('agreement');
+            const modal = document.getElementById('agreementModal');
+            const agreeBtn = document.getElementById('agreeBtn');
+            const disagreeBtn = document.getElementById('disagreeBtn');
+            const body = document.body;
+
+            checkbox.addEventListener('click', function(e) {
+                e.preventDefault(); // cegah checkbox langsung tercentang
+                openModal();
+            });
+
+            function openModal() {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                body.classList.add('modal-open');
+
+                if (typeof lenis !== 'undefined') {
+                    lenis.stop();
+                }
+            }
+
+            function closeModal() {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                body.classList.remove('modal-open');
+
+                if (typeof lenis !== 'undefined') {
+                    lenis.start();
+                }
+            }
+
+            agreeBtn.addEventListener('click', function() {
+                checkbox.checked = true;
+                closeModal();
+                toggleSubmitButton();
+            });
+
+            disagreeBtn.addEventListener('click', function() {
                 checkbox.checked = false;
                 closeModal();
-            }
-        });
+                toggleSubmitButton();
+            });
 
-        // Tangkap event scroll di dalam modal
-        const modalContent = modal.querySelector('div > div:last-child');
-        modalContent.addEventListener('wheel', function(e) {
-            e.stopPropagation(); // Mencegah scroll event bubble ke parent
-        }, {
-            passive: false
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    checkbox.checked = false;
+                    closeModal();
+                }
+            });
+
+            // Tangkap event scroll di dalam modal
+            const modalContent = modal.querySelector('div > div:last-child');
+            modalContent.addEventListener('wheel', function(e) {
+                e.stopPropagation(); // Mencegah scroll event bubble ke parent
+            }, {
+                passive: false
+            });
+            // Script Syarat dan Ketentuan End
         });
     </script>
-@endsection
+@endpush

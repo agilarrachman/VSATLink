@@ -13,6 +13,14 @@
             <div class="container z-1000 mt-16 mb-auto">
                 <h2 class="mb-5 text-center wow fadeInUp">Riwayat Pesanan</h2>
 
+                @if (session()->has('success'))
+                    <div class="alert text-white bg-gray-900/40 backdrop-blur-md border !border-white/20 alert-dismissible fade show mb-5 text-left"
+                        role="alert">
+                        <i class="fa-solid fa-circle-check me-2"></i> {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
                 <!-- Tab Filter -->
                 <div class="flex flex-wrap justify-center gap-2 mb-20">
                     @php
@@ -29,6 +37,53 @@
                 </div>
 
                 <div class="orders flex flex-col gap-3">
+                    @foreach ($orders as $order)
+                        <div role="link" tabindex="0"
+                            onclick="window.location.href='{{ url('/detail-pesanan/' . $order->unique_order) }}'"
+                            class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20 cursor-pointer">
+                            <div class="flex flex-col flex-md-row justify-between items-center">
+                                <div class="detail flex flex-col flex-md-row items-center gap-4">
+                                    <img src="/storage/{{ $order->product->image_url }}" alt="Product Image"
+                                        class="rounded-md object-cover w-full md:max-w-[150px]" />
+                                    <div class="info w-full mb-3 mb-md-0">
+                                        @php($badge = $order->statusBadge())
+                                        <div class="status px-3 py-1 rounded-full w-fit mb-2 {{ $badge['class'] }}">
+                                            <p class="text-sm mb-0">{{ $badge['label'] }}</p>
+                                        </div>
+                                        <p class="mb-0 text-white text-sm">
+                                            Kode Pesanan: {{ $order->unique_order }}
+                                        </p>
+                                        <h3 class="mb-0">{{ $order->product->name }}</h3>
+                                        <p class="mb-0 text-sm">
+                                            Pesanan dibuat pada tanggal {{ $order->created_at->translatedFormat('d F Y') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="action flex flex-col items-end w-full md:w-auto">
+                                    @php($action = $order->actionConfig())
+                                    @if ($action['show_price'])
+                                        <div class="price mb-3">
+                                            <p class="font-extrabold text-2xl text-white mb-1 md:text-right">
+                                                Rp123.456.000
+                                            </p>
+
+                                            @isset($action['note'])
+                                                <p class="text-sm text-white font-medium mb-0">
+                                                    {{ $action['note'] }}
+                                                </p>
+                                            @endisset
+                                        </div>
+                                    @endif
+                                    <a class="btn-primary !rounded-md py-2 !w-full md:!w-fit flex justify-center"
+                                        href="{{ $action['url'] }}">
+                                        <span>{{ $action['label'] }}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                    {{-- Dummy Orders Start --}}
                     <div
                         class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
                         <div class="flex flex-col flex-md-row justify-between items-center">
@@ -136,8 +191,7 @@
                                 <img src="images/covers/produkVSAT1.png" alt="Product Image"
                                     class="rounded-md object-cover w-full md:max-w-[150px]" />
                                 <div class="info w-full mb-3 mb-md-0">
-                                    <div
-                                        class="status bg-[#03c3ec] px-3 py-1 rounded-full text-white w-fit mb-1">
+                                    <div class="status bg-[#03c3ec] px-3 py-1 rounded-full text-white w-fit mb-1">
                                         <p class="text-sm mb-0">
                                             Sedang Diproses
                                         </p>
@@ -235,6 +289,7 @@
                             </div>
                         </div>
                     </div>
+                    {{-- Dummy Orders End --}}
                 </div>
             </div>
         </section>

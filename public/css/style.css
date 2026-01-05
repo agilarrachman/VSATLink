@@ -28299,6 +28299,25 @@ img {
     margin-bottom: 0 !important;
 }
 
+.btn-disabled{
+    display: inline-block;
+    font-family: var(--title-font);
+    text-align: center;
+    color: #fff;
+    outline: 0;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 3px 20px 2px 20px;
+    font-size: 14px;
+    border: none;
+    text-transform: uppercase;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    overflow: hidden;
+    background: #68707d;
+}
+
 .btn-invoice{
     display: inline-block;
     font-family: var(--title-font);
@@ -28329,7 +28348,7 @@ img {
 
 .step {
     display: flex;
-    align-items: center;
+    align-items: start;
     gap: 24px;
     margin-bottom: 16px;
 }
@@ -28338,7 +28357,7 @@ img {
     content: "";
     position: absolute;
     left: 30px;
-    top: 60px;
+    top: 50px;
     bottom: 10px;
     width: 1px;
     background: #adadad;
@@ -28354,6 +28373,7 @@ img {
 }
 
 .indicator {
+    flex-shrink: 0;
     position: relative;
     width: 60px;
     height: 60px;
@@ -28519,4 +28539,8 @@ img {
 
 .custom-close {
     filter: invert(23%) sepia(69%) saturate(748%) hue-rotate(343deg) brightness(90%) contrast(92%);
+}
+
+.form-control:disabled, .form-control[readonly] {
+    background-color: transparent !important;
 }

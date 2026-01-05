@@ -28,13 +28,13 @@
                     </div>
                     <div class="field-set">
                         <label>Nama {{ $user->customer_type != 'Perorangan' ? 'Perusahaan' : 'Lengkap' }}</label>
-                        <input type="text" name="company_name" class="form-control" value="{{ $user->name }}"
+                        <input type="text" name="name" class="form-control" value="{{ $user->name }}"
                             disabled />
                     </div>
                     @if ($user->customer_type != 'Perorangan')
                     <div class="field-set">
                         <label>Nama Pejabat yang Berwenang</label>
-                        <input type="text" name="company_name" class="form-control"
+                        <input type="text" name="company_representative_name" class="form-control"
                             value="{{ $user->company_representative_name }}" disabled />
                     </div>
                     @endif
