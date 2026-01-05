@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use Laravolt\Indonesia\Facade as Indonesia;
 
 class OrderController extends Controller
 {
@@ -156,14 +154,18 @@ class OrderController extends Controller
                 'phone' => 'required|string|max:20',
 
                 // address
-                'province' => 'required_if:shipping,jne',
-                'city'     => 'required_if:shipping,jne',
-                'district' => 'required_if:shipping,jne',
-                'village'  => 'required_if:shipping,jne',
-                'rt'        => 'required_if:shipping,jne|string',
-                'rw'          => 'required_if:shipping,jne|string',
-                'postal-code' => 'required_if:shipping,jne|string',
-                'address'  => 'required_if:shipping,jne|string',
+                'province' => 'required_if:shipping,JNE',
+                'city'     => 'required_if:shipping,JNE',
+                'district' => 'required_if:shipping,JNE',
+                'village'  => 'required_if:shipping,JNE',
+                'rt'       => 'required_if:shipping,JNE|string',
+                'rw'       => 'required_if:shipping,JNE|string',
+                'postal-code' => 'required_if:shipping,JNE|string',
+                'address'  => 'required_if:shipping,JNE|string',
+            ], [
+                'email.email' => 'Format email tidak valid atau domain tidak ditemukan',
+                'email.dns' => 'Domain email tidak valid atau tidak dapat ditemukan',
+                'required_if' => 'Field :attribute wajib diisi ketika pengiriman menggunakan JNE',
             ]);
 
             Log::info('Mulai melengkapi pesanan', [
@@ -180,15 +182,18 @@ class OrderController extends Controller
             return redirect()
                 ->to("/detail-pesanan/{$order->unique_order}")
                 ->with('success', 'Pesanan berhasil dilengkapi silakan melakukan pembayaran!');
-        } catch (\Throwable $e) {
-            Log::error('Gagal melengkapi pesanan', [
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::warning('Validasi gagal', [
                 'order_id' => $order->id ?? null,
-                'message'  => $e->getMessage(),
-                'file'     => $e->getFile(),
-                'line'     => $e->getLine(),
+                'errors'   => $e->errors(),
             ]);
 
             return back()
+                ->withInput()
+                ->withErrors($e->validator);
+        } catch (\Throwable $e) {
+            return back()
+                ->withInput()
                 ->with('error', 'Terjadi kesalahan saat memproses pesanan');
         }
     }

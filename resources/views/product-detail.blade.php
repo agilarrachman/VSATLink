@@ -302,8 +302,8 @@
         const cancelBtn = document.getElementById('cancelBtn');
         const submitBtn = document.getElementById('submitOrderBtn');
 
-        const userLat = {{ auth()->user()->latitude ?? 'null' }};
-        const userLng = {{ auth()->user()->longitude ?? 'null' }};
+        const userLat = @json(auth()->user()->latitude);
+        const userLng = @json(auth()->user()->longitude);
         const myAddressCheckbox = document.getElementById('myaddress');
 
         const latText = document.getElementById('latText');

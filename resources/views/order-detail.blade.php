@@ -10,7 +10,7 @@
             <div class="de-gradient-edge-top"></div>
             <div class="de-gradient-edge-bottom"></div>
             <img src="/images/background/jarralax.png" class="jarallax-img" alt="" />
-            <div class="content z-1000 mt-14 mx-auto">
+            <div class="content-order z-1000 mt-14 mx-auto">
                 @if (session()->has('success'))
                     <div class="alert text-white bg-gray-900/40 backdrop-blur-md border !border-white/20 alert-dismissible fade show mb-5 text-left"
                         role="alert">
@@ -225,24 +225,24 @@
                                         <div class="field-set w-1/2">
                                             <label>Provinsi</label>
                                             <input type="text" name="province" id="province" class="form-control"
-                                                value="{{ $order->order_address->province()->name ?? '-' }}" disabled />
+                                                value="{{ $order->order_address?->province()->name ?? '-' }}" disabled />
                                         </div>
                                         <div class="field-set w-1/2">
                                             <label>Kota</label>
                                             <input type="text" name="city" id="city" class="form-control"
-                                                value="{{ $order->order_address->city()->name ?? '-' }}" disabled />
+                                                value="{{ $order->order_address?->city()->name ?? '-' }}" disabled />
                                         </div>
                                     </div>
                                     <div class="flex gap-3">
                                         <div class="field-set w-1/2">
                                             <label>Kecamatan</label>
                                             <input type="text" name="district" id="district" class="form-control"
-                                                value="{{ $order->order_address->district()->name ?? '-' }}" disabled />
+                                                value="{{ $order->order_address?->district()->name ?? '-' }}" disabled />
                                         </div>
                                         <div class="field-set w-1/2">
                                             <label>Kelurahan</label>
                                             <input type="text" name="village" id="village" class="form-control"
-                                                value="{{ $order->order_address->village()->name ?? '-' }}" disabled />
+                                                value="{{ $order->order_address?->village()->name ?? '-' }}" disabled />
                                         </div>
                                     </div>
                                     <div class="flex gap-3">
@@ -259,7 +259,7 @@
                                         <div class="field-set w-1/3">
                                             <label>Kode Pos</label>
                                             <input type="text" name="post-code" id="post-code" class="form-control"
-                                                value="{{ $order->order_address->village()->postal_code ?? '-' }}" disabled />
+                                                value="{{ $order->order_address?->village()->postal_code ?? '-' }}" disabled />
                                         </div>
                                     </div>
                                     <div class="field-set">
