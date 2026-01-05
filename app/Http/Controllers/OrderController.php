@@ -21,7 +21,9 @@ class OrderController extends Controller
     {
         return view('orders', [
             "page" => "orders",
-            'orders' => Order::getAllMyOrders(Auth::user())
+            'orders' => Order::getAllMyOrders(Auth::user()),
+            'midtransClientKey' => config('app.midtrans_client_key'),
+            'isProduction' => config('app.midtrans_is_production'),
         ]);
     }
 
@@ -74,7 +76,9 @@ class OrderController extends Controller
         return view('order-detail', [
             'page' => 'order-detail',
             'order' => $order,
-            'order_status' => OrderStatusHistory::getLatestStatusOrder($order->id)
+            'order_status' => OrderStatusHistory::getLatestStatusOrder($order->id),
+            'midtransClientKey' => config('app.midtrans_client_key'),
+            'isProduction' => config('app.midtrans_is_production'),
         ]);
     }
 
@@ -198,11 +202,17 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
+    public function payment(Order $order)
     {
-        //
+        return response()->json(
+            Order::createOrGetPayment($order)
+        );
+    }
+
+    public function verifyPayment($orderId)
+    {
+        Order::verifyMidtransPayment($orderId);
+
+        return response()->json(['status' => 'ok']);
     }
 }

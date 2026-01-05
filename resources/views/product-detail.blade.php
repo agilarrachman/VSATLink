@@ -254,8 +254,8 @@
                     @csrf
                     <div class="mb-4 text-sm text-white/80">
                         <div class="myaddress flex items-center mb-2">
-                            <input class="form-check-input me-2" type="checkbox" value="" id="myaddress">
-                            <label class="form-check-label text-white" for="myaddress">
+                            <input class="form-check-input mt-0 me-2" type="checkbox" value="" id="myaddress">
+                            <label class="form-check-label text-white cursor-pointer" for="myaddress">
                                 Gunakan Alamat Saya
                             </label>
                         </div>

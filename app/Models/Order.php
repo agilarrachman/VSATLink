@@ -6,6 +6,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Midtrans\Config;
+use Midtrans\Notification;
+use Midtrans\Snap;
+use Midtrans\Transaction;
 
 class Order extends Model
 {
@@ -137,22 +141,26 @@ class Order extends Model
     {
         return match ($this->current_status_id) {
             1, 8 => [
+                'id' => 'detail-button',
                 'label' => 'Lihat Detail',
                 'url' => '/detail-pesanan/' . $this->unique_order,
                 'show_price' => false,
             ],
             2 => [
+                'id' => 'complete-button',
                 'label' => 'Lengkapi Pemesanan',
                 'url' => '/lengkapi-pesanan/' . $this->unique_order,
                 'show_price' => false,
             ],
             3 => [
+                'id' => 'pay-button',
                 'label' => 'Bayar Sekarang',
                 'url' => '#',
                 'show_price' => true,
                 'note' => '*Pesanan otomatis dibatalkan jika 2x24jam tidak dibayarkan',
             ],
             default => [
+                'id' => 'detail-button',
                 'label' => 'Lihat Detail',
                 'url' => '/detail-pesanan/' . $this->unique_order,
                 'show_price' => true,
@@ -209,5 +217,73 @@ class Order extends Model
         });
 
         return $order;
+    }
+
+    public static function createOrGetPayment(Order $order): array
+    {
+        Config::$serverKey = config('app.midtrans_server_key');
+        Config::$isProduction = false;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+
+        if ($order->payment_url) {
+            return [
+                'snap_token'   => $order->payment_url,
+                'unique_order' => $order->unique_order,
+            ];
+        }
+
+        $params = [
+            'transaction_details' => [
+                'order_id'     => $order->unique_order,
+                'gross_amount' => (int) $order->total_cost,
+            ],
+            'customer_details' => [
+                'first_name' => $order->customer->name,
+                'email'      => $order->customer->email,
+                'phone'      => $order->customer->phone ?? '',
+            ],
+            'callbacks' => [
+                'finish' => route('payment.finish')
+            ]
+        ];
+
+        $snapToken = Snap::getSnapToken($params);
+
+        $order->update([
+            'payment_url' => $snapToken,
+        ]);
+
+        return [
+            'snap_token'   => $snapToken,
+            'unique_order' => $order->unique_order,
+        ];
+    }
+
+
+    public static function verifyMidtransPayment(string $orderId): void
+    {
+        Config::$serverKey = config('app.midtrans_server_key');
+        Config::$isProduction = false;
+
+        $status = (object) Transaction::status($orderId);
+
+        $order = self::where('unique_order', $orderId)->firstOrFail();
+
+        if (in_array($status->transaction_status, ['settlement', 'capture'])) {
+            $order->update([
+                'payment_success'   => 1,
+                'payment_method'    => $status->payment_type,
+                'payment_date'      => now(),
+                'current_status_id' => 4,
+                'payment_url'       => null
+            ]);
+        }
+
+        if ($status->transaction_status === 'expire') {
+            $order->update([
+                'payment_url' => null
+            ]);
+        }
     }
 }
