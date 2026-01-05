@@ -76,13 +76,13 @@
                         <div class="field-set w-1/2">
                             <label>Provinsi</label>
                             <input type="text" name="province" class="form-control"
-                                value="{{ $provinces->firstWhere('code', $user->province_code)->name ?? 'Tidak Ditemukan' }}"
+                                value="{{ $user->province()->name ?? '-' }}"
                                 disabled />
                         </div>
                         <div class="field-set w-1/2">
                             <label>Kota</label>
                             <input type="text" name="province" class="form-control"
-                                value="{{ $cities->firstWhere('code', $user->city_code)->name ?? 'Tidak Ditemukan' }}"
+                                value="{{ $user->city()->name ?? '-' }}"
                                 disabled />
                         </div>
                     </div>
@@ -90,13 +90,13 @@
                         <div class="field-set w-1/2">
                             <label>Kecamatan</label>
                             <input type="text" name="district" class="form-control"
-                                value="{{ $districts->firstWhere('code', $user->district_code)->name ?? 'Tidak Ditemukan' }}"
+                                value="{{ $user->district()->name ?? '-' }}"
                                 disabled />
                         </div>
                         <div class="field-set w-1/2">
                             <label>Kelurahan</label>
                             <input type="text" name="village" class="form-control"
-                                value="{{ $villages->firstWhere('code', $user->village_code)->name ?? 'Tidak Ditemukan' }}"
+                                value="{{ $user->village()->name ?? '-' }}"
                                 disabled />
                         </div>
                     </div>
