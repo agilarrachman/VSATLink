@@ -225,24 +225,24 @@
                                         <div class="field-set w-1/2">
                                             <label>Provinsi</label>
                                             <input type="text" name="province" id="province" class="form-control"
-                                                value="{{ $order->order_address?->province ?? '-' }}" disabled />
+                                                value="{{ $order->order_address->province()->name ?? '-' }}" disabled />
                                         </div>
                                         <div class="field-set w-1/2">
                                             <label>Kota</label>
                                             <input type="text" name="city" id="city" class="form-control"
-                                                value="{{ $order->order_address?->city ?? '-' }}" disabled />
+                                                value="{{ $order->order_address->city()->name ?? '-' }}" disabled />
                                         </div>
                                     </div>
                                     <div class="flex gap-3">
                                         <div class="field-set w-1/2">
                                             <label>Kecamatan</label>
                                             <input type="text" name="district" id="district" class="form-control"
-                                                value="{{ $order->order_address?->district ?? '-' }}" disabled />
+                                                value="{{ $order->order_address->district()->name ?? '-' }}" disabled />
                                         </div>
                                         <div class="field-set w-1/2">
                                             <label>Kelurahan</label>
                                             <input type="text" name="village" id="village" class="form-control"
-                                                value="{{ $order->order_address?->village ?? '-' }}" disabled />
+                                                value="{{ $order->order_address->village()->name ?? '-' }}" disabled />
                                         </div>
                                     </div>
                                     <div class="flex gap-3">
@@ -259,7 +259,7 @@
                                         <div class="field-set w-1/3">
                                             <label>Kode Pos</label>
                                             <input type="text" name="post-code" id="post-code" class="form-control"
-                                                value="{{ $order->order_address?->postal_code ?? '-' }}" disabled />
+                                                value="{{ $order->order_address->village()->postal_code ?? '-' }}" disabled />
                                         </div>
                                     </div>
                                     <div class="field-set">
