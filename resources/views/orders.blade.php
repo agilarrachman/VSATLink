@@ -323,15 +323,10 @@
                 .then(data => {
                     window.snap.pay(data.snap_token, {
                         onSuccess: function(result) {
-                            fetch(`/pembayaran/verifikasi/${result.order_id}`, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': csrf,
-                                    'Accept': 'application/json'
-                                }
-                            }).then(() => {
-                                window.location.href = `/detail-pesanan/${result.order_id}`;
-                            });
+                            window.location.href = `/detail-pesanan/${result.order_id}`;
+                        },
+                        onPending: function(result) {
+                            window.location.href = `/detail-pesanan/${result.order_id}`;
                         },
                         onError: function(result) {
                             alert('Pembayaran gagal');

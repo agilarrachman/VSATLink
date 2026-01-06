@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Midtrans\Config;
-use Midtrans\Notification;
 use Midtrans\Snap;
 use Midtrans\Transaction;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class Order extends Model
 {
@@ -260,30 +262,56 @@ class Order extends Model
         ];
     }
 
-
-    public static function verifyMidtransPayment(string $orderId): void
+    public static function generateInvoicePdfStatic($order): string
     {
-        Config::$serverKey = config('app.midtrans_server_key');
-        Config::$isProduction = false;
+        $pdf = Pdf::loadView('pdf.invoice', [
+            'order' => $order
+        ]);
 
-        $status = (object) Transaction::status($orderId);
+        $fileName = 'INVOICE-' . $order->unique_order . '.pdf';
+        $databasePath = 'invoices/' . $fileName;
 
-        $order = self::where('unique_order', $orderId)->firstOrFail();
+        Storage::disk('public')->put($databasePath, $pdf->output());
 
-        if (in_array($status->transaction_status, ['settlement', 'capture'])) {
-            $order->update([
-                'payment_success'   => 1,
-                'payment_method'    => $status->payment_type,
-                'payment_date'      => now(),
-                'current_status_id' => 4,
-                'payment_url'       => null
-            ]);
+        return $databasePath;
+    }
+
+    public static function processPaymentSuccess($order, $paymentType)
+    {
+        $order->update([
+            'payment_success'   => 1,
+            'payment_method'    => $paymentType,
+            'payment_date'      => now(),
+            'current_status_id' => 4,
+        ]);
+
+        if (!$order->invoice_document_url) {
+            $invoiceUrl = self::generateInvoicePdfStatic($order);
+            $order->update(['invoice_document_url' => $invoiceUrl]);
         }
 
-        if ($status->transaction_status === 'expire') {
-            $order->update([
-                'payment_url' => null
-            ]);
-        }
+        OrderStatusHistory::create([
+            'order_status_id' => 4,
+            'order_id'        => $order->id,
+            'note'            => "Pesanan {$order->unique_order} telah dibayar dan invoice di-generate",
+        ]);
+    
+        Log::info("Midtrans Payment Success", [
+            'order_id' => $order->unique_order,
+            'payment_method' => $paymentType,
+            'invoice_url' => $order->invoice_document_url,
+            'payment_date' => $order->payment_date,
+        ]);
+    }
+
+    public static function processPaymentExpired($order)
+    {
+        $order->update([
+            'payment_url' => null,
+        ]);
+
+        Log::warning("Midtrans Payment Expired", [
+            'order_id' => $order->unique_order
+        ]);
     }
 }

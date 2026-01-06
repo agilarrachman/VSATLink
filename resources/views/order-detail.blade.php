@@ -180,7 +180,9 @@
                                                         <span>Bayar Sekarang</span>
                                                     </a>
                                                 @elseif ($order->current_status_id >= 4)
-                                                    <a class="btn-invoice mt-2" href="#">
+                                                    <a class="btn-invoice mt-2"
+                                                        href="{{ asset('storage/' . $order->invoice_document_url) }}"
+                                                        download="{{ 'INVOICE-' . $order->unique_order . '.pdf' }}">
                                                         <span>
                                                             <i class="fa-solid fa-download me-2"></i>
                                                             Unduh Invoice
@@ -367,15 +369,7 @@
                 .then(data => {
                     window.snap.pay(data.snap_token, {
                         onSuccess: function(result) {
-                            fetch(`/pembayaran/verifikasi/${result.order_id}`, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': csrf,
-                                    'Accept': 'application/json'
-                                }
-                            }).then(() => {
-                                window.location.href = `/detail-pesanan/${result.order_id}`;
-                            });
+                            window.location.href = `/detail-pesanan/${result.order_id}`;
                         },
                         onPending: function(result) {
                             window.location.href = `/detail-pesanan/${result.order_id}`;
