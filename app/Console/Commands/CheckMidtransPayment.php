@@ -34,8 +34,8 @@ class CheckMidtransPayment extends Command
         Config::$isSanitized  = true;
         Config::$is3ds        = true;
 
-        $orders = Order::where('current_status_id', 4)
-            // ->where('payment_success', 0)
+        $orders = Order::where('current_status_id', 3)
+            ->where('payment_success', 0)
             ->whereNotNull('payment_url')
             ->get();
 
