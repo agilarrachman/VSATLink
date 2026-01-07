@@ -369,10 +369,10 @@
                 .then(data => {
                     window.snap.pay(data.snap_token, {
                         onSuccess: function(result) {
-                            window.location.href = `/detail-pesanan/${result.order_id}`;
+                            window.location.reload();
                         },
                         onPending: function(result) {
-                            window.location.href = `/detail-pesanan/${result.order_id}`;
+                            window.snap.hide();
                         },
                         onError: function(result) {
                             alert('Pembayaran gagal');

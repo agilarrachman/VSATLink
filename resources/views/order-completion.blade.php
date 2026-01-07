@@ -426,6 +426,7 @@
                 const rt = $('#rt').val().trim();
                 const rw = $('#rw').val().trim();
                 const address = $('#address').val().trim();
+                const isPickup = $('#pickup').is(':checked');
 
                 if (!name) {
                     valid = false;
@@ -449,29 +450,26 @@
                     hideError('email');
                 }
 
-                if (!rt) {
-                    valid = false;
-                } else if (!isValidRTRW(rt)) {
-                    showError('rt', 'Harus 3 digit (contoh: 003)');
-                    valid = false;
-                } else {
-                    hideError('rt');
-                }
+                if (!isPickup) {
 
-                if (!rw) {
-                    valid = false;
-                } else if (!isValidRTRW(rw)) {
-                    showError('rw', 'Harus 3 digit (contoh: 010)');
-                    valid = false;
-                } else {
-                    hideError('rw');
-                }
+                    if (!rt || !isValidRTRW(rt)) {
+                        showError('rt', 'Harus 3 digit (contoh: 003)');
+                        valid = false;
+                    } else {
+                        hideError('rt');
+                    }
 
-                if (!address) {
-                    valid = false;
-                }
+                    if (!rw || !isValidRTRW(rw)) {
+                        showError('rw', 'Harus 3 digit (contoh: 005)');
+                        valid = false;
+                    } else {
+                        hideError('rw');
+                    }
 
-                if ($('#jne').is(':checked')) {
+                    if (!address) {
+                        valid = false;
+                    }
+
                     const selects = ['province', 'city', 'district', 'village'];
                     selects.forEach(id => {
                         if (!$(`#${id}`).val() || $(`#${id}`).prop('selectedIndex') === 0) {
@@ -723,16 +721,24 @@
 
                     resetAddressValue();
                     disableAddress();
+
+                    $('#my-address')
+                        .prop('checked', false)
+                        .prop('disabled', true);
                 }
 
                 if (selected === 'jne') {
                     resetAddressValue();
                     enableAddress();
 
+                    $('#my-address').prop('disabled', false);
+
                     $('#shipping_cost').text('Rp0');
                     $('#shipping-etd').text('Pilih alamat untuk melihat estimasi sampai');
                     updatePPNAndTotal();
                 }
+
+                toggleSubmitButton();
             });
             // Script Ambil di Tempat End
 

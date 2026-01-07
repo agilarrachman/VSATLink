@@ -209,6 +209,14 @@ class OrderController extends Controller
         );
     }
 
+    public function paymentFinish(Request $request)
+    {
+        $midtransOrderId = $request->order_id;
+        $order = Order::where('midtrans_order_id', $midtransOrderId)->firstOrFail();
+
+        return redirect('/detail-pesanan/' . $order->unique_order);
+    }
+
     public function verifyPayment($orderId)
     {
         Order::verifyMidtransPayment($orderId);

@@ -227,16 +227,18 @@ class Order extends Model
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
-        if ($order->payment_url) {
+        if ($order->payment_token) {
             return [
-                'snap_token'   => $order->payment_url,
+                'snap_token'   => $order->payment_token,
                 'unique_order' => $order->unique_order,
             ];
         }
 
+        $midtransOrderId = $order->unique_order . '-' . now()->timestamp;
+
         $params = [
             'transaction_details' => [
-                'order_id'     => $order->unique_order,
+                'order_id'     => $midtransOrderId,
                 'gross_amount' => (int) $order->total_cost,
             ],
             'customer_details' => [
@@ -245,19 +247,21 @@ class Order extends Model
                 'phone'      => $order->customer->phone ?? '',
             ],
             'callbacks' => [
-                'finish' => route('payment.finish')
-            ]
+                'finish' => route('pembayaran.selesai'),
+            ],
         ];
 
         $snapToken = Snap::getSnapToken($params);
 
         $order->update([
-            'payment_url' => $snapToken,
+            'payment_token'        => $snapToken,
+            'midtrans_order_id'    => $midtransOrderId,
         ]);
 
         return [
-            'snap_token'   => $snapToken,
-            'unique_order' => $order->unique_order,
+            'snap_token'        => $snapToken,
+            'unique_order'      => $order->unique_order,
+            'midtrans_order_id' => $midtransOrderId,
         ];
     }
 
@@ -294,7 +298,7 @@ class Order extends Model
             'order_id'        => $order->id,
             'note'            => "Pesanan {$order->unique_order} telah dibayar dan invoice di-generate",
         ]);
-    
+
         Log::info("Midtrans Payment Success", [
             'order_id' => $order->unique_order,
             'payment_method' => $paymentType,
@@ -306,7 +310,8 @@ class Order extends Model
     public static function processPaymentExpired($order)
     {
         $order->update([
-            'payment_url' => null,
+            'payment_token' => null,
+            'midtrans_order_id' => null,
         ]);
 
         Log::warning("Midtrans Payment Expired", [

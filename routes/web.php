@@ -28,9 +28,7 @@ Route::middleware(['auth'])->group(
         Route::put('/lengkapi-pesanan/{order}', [OrderController::class, 'update']);
         Route::get('/jne/tarif', [OrderController::class, 'getTariffJNE']);
         Route::post('/pembayaran/{order}', [OrderController::class, 'payment']);
-        Route::get('/payment/finish', function (Request $request) {
-            return redirect('/detail-pesanan/' . $request->order_id);
-        })->name('payment.finish');
+        Route::get('/pembayaran/selesai', [OrderController::class, 'paymentFinish'])->name('pembayaran.selesai');
         Route::post('/pembayaran/verifikasi/{orderId}', [OrderController::class, 'verifyPayment']);
         Route::get('/download/invoice/{filename}', [OrderController::class, 'downloadInvoice']);        
     }

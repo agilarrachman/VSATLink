@@ -36,7 +36,7 @@ class CheckMidtransPayment extends Command
 
         $orders = Order::where('current_status_id', 3)
             ->where('payment_success', 0)
-            ->whereNotNull('payment_url')
+            ->whereNotNull('payment_token')
             ->get();
 
         foreach ($orders as $order) {
