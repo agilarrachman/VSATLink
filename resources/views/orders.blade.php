@@ -31,7 +31,14 @@
                 <!-- Tab Filter -->
                 <div class="flex flex-wrap justify-center gap-2 mb-20">
                     @php
-                        $tabs = ['Semua', 'Menunggu Konfirmasi', 'Dikonfirmasi', 'Belum Dibayar', 'Sedang Diproses', 'Selesai'];
+                        $tabs = [
+                            'Semua',
+                            'Menunggu Konfirmasi',
+                            'Dikonfirmasi',
+                            'Belum Dibayar',
+                            'Sedang Diproses',
+                            'Selesai',
+                        ];
                         $currentTab = request()->get('status', 'Semua');
                     @endphp
                     @foreach ($tabs as $tab)
@@ -92,7 +99,7 @@
                     @endforeach
 
                     {{-- Dummy Orders Start --}}
-                    <div
+                    {{-- <div
                         class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
                         <div class="flex flex-col flex-md-row justify-between items-center">
                             <div class="detail flex flex-col flex-md-row items-center gap-4">
@@ -296,8 +303,12 @@
                                 </a>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     {{-- Dummy Orders End --}}
+                </div>
+
+                <div class="page mx-0 mt-5 px-3 rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
+                    {{ $orders->links('pagination::bootstrap-5') }}
                 </div>
             </div>
         </section>

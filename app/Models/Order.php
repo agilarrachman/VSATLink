@@ -187,7 +187,7 @@ class Order extends Model
             }
         }
 
-        return $query->latest()->get();
+        return $query->latest()->paginate(5)->withQueryString();
     }
 
     public static function completeOrder(Order $order, array $data)
