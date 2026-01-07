@@ -2941,8 +2941,11 @@ div.dt-container.dt-empty-footer tbody tr:last-child td {
     display: none;
 }
 
+.page .text-muted{
+    color: white !important;
+}
+
 .page-item.active .page-link {
-    text-decoration: underline !important;
     font-weight: bold !important;
     color: white !important;
 }

@@ -2,6 +2,13 @@
 
 @section('title', 'Pesanan Saya | VSATLink')
 
+@section('midtrans')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script
+        src="{{ $isProduction ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
+        data-client-key="{{ $midtransClientKey }}"></script>
+@endsection
+
 @section('content')
     <div class="no-bottom no-top" id="content">
         <div id="top"></div>
@@ -10,7 +17,7 @@
             <div class="de-gradient-edge-top"></div>
             <div class="de-gradient-edge-bottom"></div>
             <img src="/images/background/jarralax.png" class="jarallax-img" alt="" />
-            <div class="content z-1000 mt-14 mx-auto">
+            <div class="content-order z-1000 mt-14 mx-auto">
                 @if (session()->has('success'))
                     <div class="alert text-white bg-gray-900/40 backdrop-blur-md border !border-white/20 alert-dismissible fade show mb-5 text-left"
                         role="alert">
@@ -45,7 +52,8 @@
                                 <div class="summary my-3">
                                     <div class="flex justify-between">
                                         <h4>Jenis Pengiriman</h4>
-                                        <p class="text-right text-white">{{ $order->shipping ? $order->shipping : '-' }}</p>
+                                        <p class="text-right text-white">{{ $order->shipping ? $order->shipping : '-' }}
+                                        </p>
                                     </div>
                                     <div class="flex justify-between">
                                         <h4>Harga</h4>
@@ -157,13 +165,30 @@
                                         </div>
                                         <div class="content">
                                             <p
-                                                class="{{ $order->current_status_id >= 4 && $order->current_status_id < 8 ? '' : 'pt-3' }}">
+                                                class="{{ $order->current_status_id >= 3 && $order->current_status_id < 8 ? '' : 'pt-3' }}">
                                                 Pembayaran</p>
-                                            @if ($order->current_status_id >= 4 && $order->current_status_id < 8)
-                                                <p class="title">Rp123.456.000</p>
-                                                <a class="btn-invoice mt-2" href="#">
-                                                    <span><i class="fa-solid fa-download me-2"></i>Unduh Invoice</span>
-                                                </a>
+                                            @if ($order->current_status_id >= 3 && $order->current_status_id < 8)
+                                                <p class="title">
+                                                    {{ $order->total_cost ? 'Rp' . number_format($order->total_cost, 0, ',', '.') : '-' }}
+                                                </p>
+                                                @if ($order->current_status_id == 3)
+                                                    <p class="info">
+                                                        Pesanan otomatis dibatalkan jika 2x24 jam tidak dibayarkan
+                                                    </p>
+                                                    <a href="#" class="btn-main" id="pay-button"
+                                                        data-order-id="{{ $order->unique_order }}">
+                                                        <span>Bayar Sekarang</span>
+                                                    </a>
+                                                @elseif ($order->current_status_id >= 4)
+                                                    <a class="btn-invoice mt-2"
+                                                        href="{{ asset('storage/' . $order->invoice_document_url) }}"
+                                                        download="{{ 'INVOICE-' . $order->unique_order . '.pdf' }}">
+                                                        <span>
+                                                            <i class="fa-solid fa-download me-2"></i>
+                                                            Unduh Invoice
+                                                        </span>
+                                                    </a>
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
@@ -225,24 +250,24 @@
                                         <div class="field-set w-1/2">
                                             <label>Provinsi</label>
                                             <input type="text" name="province" id="province" class="form-control"
-                                                value="{{ $order->order_address->province()->name ?? '-' }}" disabled />
+                                                value="{{ $order->order_address?->province()->name ?? '-' }}" disabled />
                                         </div>
                                         <div class="field-set w-1/2">
                                             <label>Kota</label>
                                             <input type="text" name="city" id="city" class="form-control"
-                                                value="{{ $order->order_address->city()->name ?? '-' }}" disabled />
+                                                value="{{ $order->order_address?->city()->name ?? '-' }}" disabled />
                                         </div>
                                     </div>
                                     <div class="flex gap-3">
                                         <div class="field-set w-1/2">
                                             <label>Kecamatan</label>
                                             <input type="text" name="district" id="district" class="form-control"
-                                                value="{{ $order->order_address->district()->name ?? '-' }}" disabled />
+                                                value="{{ $order->order_address?->district()->name ?? '-' }}" disabled />
                                         </div>
                                         <div class="field-set w-1/2">
                                             <label>Kelurahan</label>
                                             <input type="text" name="village" id="village" class="form-control"
-                                                value="{{ $order->order_address->village()->name ?? '-' }}" disabled />
+                                                value="{{ $order->order_address?->village()->name ?? '-' }}" disabled />
                                         </div>
                                     </div>
                                     <div class="flex gap-3">
@@ -259,7 +284,8 @@
                                         <div class="field-set w-1/3">
                                             <label>Kode Pos</label>
                                             <input type="text" name="post-code" id="post-code" class="form-control"
-                                                value="{{ $order->order_address->village()->postal_code ?? '-' }}" disabled />
+                                                value="{{ $order->order_address?->village()->postal_code ?? '-' }}"
+                                                disabled />
                                         </div>
                                     </div>
                                     <div class="field-set">
@@ -324,5 +350,36 @@
             .bindPopup('Lokasi Anda')
             .openPopup();
         // === Script Preview Map End ===
+
+        // Script Payment Midtrans Start
+        document.getElementById('pay-button').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const orderId = this.dataset.orderId;
+            const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch(`/pembayaran/${orderId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrf,
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    window.snap.pay(data.snap_token, {
+                        onSuccess: function(result) {
+                            window.location.reload();
+                        },
+                        onPending: function(result) {
+                            window.snap.hide();
+                        },
+                        onError: function(result) {
+                            alert('Pembayaran gagal');
+                        }
+                    });
+                });
+        });
+        // Script Payment Midtrans End
     </script>
 @endsection

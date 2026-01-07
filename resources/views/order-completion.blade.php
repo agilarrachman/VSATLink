@@ -19,6 +19,17 @@
                     </div>
                 @endif
 
+                @if ($errors->any())
+                    <div class="alert text-white bg-gray-900/40 backdrop-blur-md border !border-white/20 alert-dismissible fade show mb-5 text-left"
+                        role="alert">
+                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                        @foreach ($errors->all() as $error)
+                            {{ $error }}<br />
+                        @endforeach
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
                 <div
                     class="container shadow-lg/10 rounded-10 bg-gray-900/40 backdrop-blur-md border !border-white/20 !p-10">
                     <h3 class="text-3xl text-center !mb-7">Lengkapi Pemesanan</h3>
@@ -108,7 +119,15 @@
 
                         <div class="col flex flex-col md:flex-row gap-9">
                             <div class="contact md:w-1/2">
-                                <h4>Narahubung</h4>
+                                <div class="flex justify-between">
+                                    <h4>Narahubung</h4>
+                                    <div class="my-contact">
+                                        <input class="form-check-input me-1" type="checkbox" value="" id="my-contact">
+                                        <label class="form-check-label text-white cursor-pointer" for="my-contact">
+                                            Gunakan Kontak Saya
+                                        </label>
+                                    </div>
+                                </div>
                                 <p class="!mb-4">Data ini digunakan untuk konfirmasi dan komunikasi pemesanan</p>
                                 <div class="form-border">
                                     <div class="field-set">
@@ -139,7 +158,16 @@
                                 </div>
                             </div>
                             <div class="address md:w-1/2">
-                                <h4>Alamat Pengiriman</h4>
+                                <div class="flex justify-between">
+                                    <h4>Alamat Pengiriman</h4>
+                                    <div class="my-address">
+                                        <input class="form-check-input me-1" type="checkbox" value=""
+                                            id="my-address">
+                                        <label class="form-check-label text-white cursor-pointer" for="my-address">
+                                            Gunakan Alamat Saya
+                                        </label>
+                                    </div>
+                                </div>
                                 <p class="!mb-4">Alamat ini digunakan sebagai tujuan pengiriman perangkat oleh tim
                                     logistik
                                 </p>
@@ -150,8 +178,7 @@
                                             <select id="province" name="province" class="form-select">
                                                 <option selected disabled>Pilih Provinsi</option>
                                                 @foreach ($provinces as $province)
-                                                    <option value="{{ $province->id }}"
-                                                        {{ old('province') == $province->id ? 'selected' : '' }}>
+                                                    <option value="{{ $province->id }}">
                                                         {{ $province->name }}
                                                     </option>
                                                 @endforeach
@@ -399,6 +426,7 @@
                 const rt = $('#rt').val().trim();
                 const rw = $('#rw').val().trim();
                 const address = $('#address').val().trim();
+                const isPickup = $('#pickup').is(':checked');
 
                 if (!name) {
                     valid = false;
@@ -422,29 +450,26 @@
                     hideError('email');
                 }
 
-                if (!rt) {
-                    valid = false;
-                } else if (!isValidRTRW(rt)) {
-                    showError('rt', 'Harus 3 digit (contoh: 003)');
-                    valid = false;
-                } else {
-                    hideError('rt');
-                }
+                if (!isPickup) {
 
-                if (!rw) {
-                    valid = false;
-                } else if (!isValidRTRW(rw)) {
-                    showError('rw', 'Harus 3 digit (contoh: 010)');
-                    valid = false;
-                } else {
-                    hideError('rw');
-                }
+                    if (!rt || !isValidRTRW(rt)) {
+                        showError('rt', 'Harus 3 digit (contoh: 003)');
+                        valid = false;
+                    } else {
+                        hideError('rt');
+                    }
 
-                if (!address) {
-                    valid = false;
-                }
+                    if (!rw || !isValidRTRW(rw)) {
+                        showError('rw', 'Harus 3 digit (contoh: 005)');
+                        valid = false;
+                    } else {
+                        hideError('rw');
+                    }
 
-                if ($('#jne').is(':checked')) {
+                    if (!address) {
+                        valid = false;
+                    }
+
                     const selects = ['province', 'city', 'district', 'village'];
                     selects.forEach(id => {
                         if (!$(`#${id}`).val() || $(`#${id}`).prop('selectedIndex') === 0) {
@@ -696,18 +721,140 @@
 
                     resetAddressValue();
                     disableAddress();
+
+                    $('#my-address')
+                        .prop('checked', false)
+                        .prop('disabled', true);
                 }
 
                 if (selected === 'jne') {
                     resetAddressValue();
                     enableAddress();
 
+                    $('#my-address').prop('disabled', false);
+
                     $('#shipping_cost').text('Rp0');
                     $('#shipping-etd').text('Pilih alamat untuk melihat estimasi sampai');
                     updatePPNAndTotal();
                 }
+
+                toggleSubmitButton();
             });
-            // Script Ambil di Tempat End            
+            // Script Ambil di Tempat End
+
+            // Script Gunakan Kontak Saya Start
+            const userContactName = @json(auth()->user()->contact_name);
+            const userContactEmail = @json(auth()->user()->contact_email);
+            const userContactPhone = @json(auth()->user()->contact_phone);
+            const myContactCheckbox = document.getElementById('my-contact');
+
+            myContactCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    if (!userContactName || !userContactEmail || !userContactPhone) {
+                        alert('Kontak Anda belum lengkap. Silakan lengkapi profil terlebih dahulu.');
+                        this.checked = false;
+                        return;
+                    }
+
+                    $('#name').val(userContactName);
+                    $('#email').val(userContactEmail);
+                    $('#phone').val(userContactPhone);
+
+                    toggleSubmitButton();
+                } else {
+                    $('#name').val('');
+                    $('#email').val('');
+                    $('#phone').val('');
+
+                    toggleSubmitButton();
+                }
+            });
+            // Script Gunakan Kontak Saya End
+
+            // Script Gunakan Alamat Saya Start
+            const userAddressProvince = @json(auth()->user()->province()?->id);
+            const userAddressCity = @json(auth()->user()->city()?->id);
+            const userAddressDistrict = @json(auth()->user()->district()?->id);
+            const userAddressVillage = @json(auth()->user()->village()?->id);
+
+            const userAddressRT = @json(auth()->user()->rt);
+            const userAddressRW = @json(auth()->user()->rw);
+            const userAddressPostalCode = @json(auth()->user()->village()?->postal_code);
+            const userAddressFullAddress = @json(auth()->user()->full_address);
+
+            const myAddressCheckbox = document.getElementById('my-address');
+
+
+            myAddressCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+
+                    if (!userAddressProvince || !userAddressCity || !userAddressDistrict || !
+                        userAddressVillage) {
+                        alert('Alamat Anda belum lengkap. Silakan lengkapi profil terlebih dahulu.');
+                        this.checked = false;
+                        return;
+                    }
+
+                    $('#province').val(userAddressProvince).trigger('change');
+
+                    $.get(`/cities/${userAddressProvince}`, function(cities) {
+                        $('#city').prop('disabled', false).empty().append(
+                            '<option>Pilih Kota</option>');
+                        cities.forEach(city => {
+                            $('#city').append(
+                                `<option value="${city.id}">${city.name}</option>`);
+                        });
+
+                        $('#city').val(userAddressCity).trigger('change');
+
+                        $.get(`/districts/${userAddressCity}`, function(districts) {
+                            $('#district').prop('disabled', false).empty().append(
+                                '<option>Pilih Kecamatan</option>');
+                            districts.forEach(district => {
+                                $('#district').append(
+                                    `<option value="${district.id}">${district.name}</option>`
+                                );
+                            });
+
+                            $('#district').val(userAddressDistrict).trigger('change');
+
+                            $.get(`/villages/${userAddressDistrict}`, function(villages) {
+                                $('#village').prop('disabled', false).empty()
+                                    .append('<option>Pilih Kelurahan</option>');
+                                villages.forEach(village => {
+                                    $('#village').append(
+                                        `<option value="${village.id}">${village.name}</option>`
+                                    );
+                                });
+
+                                $('#village').val(userAddressVillage).trigger(
+                                    'change');
+
+                                $('#rt').val(userAddressRT);
+                                $('#rw').val(userAddressRW);
+                                $('#postal-code').val(userAddressPostalCode);
+                                $('#address').val(userAddressFullAddress);
+
+                                toggleSubmitButton();
+                            });
+                        });
+                    });
+
+                } else {
+                    $('#province').prop('selectedIndex', 0).trigger('change');
+                    $('#city').html('<option selected>Pilih Kota</option>').prop('disabled', true);
+                    $('#district').html('<option selected>Pilih Kecamatan</option>').prop('disabled', true);
+                    $('#village').html('<option selected>Pilih Kelurahan</option>').prop('disabled', true);
+                    $('#rt, #rw, #postal-code, #address').val('');
+
+                    $('#shipping_cost').text('Rp0');
+                    $('#shipping-etd').text('Pilih alamat untuk melihat estimasi sampai');
+                    updatePPNAndTotal();
+
+                    toggleSubmitButton();
+                }
+            });
+            // Script Gunakan Alamat Saya End
 
             // Script Syarat dan Ketentuan Start
             const checkbox = document.getElementById('agreement');

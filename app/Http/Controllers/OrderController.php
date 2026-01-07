@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use Laravolt\Indonesia\Facade as Indonesia;
 
 class OrderController extends Controller
 {
@@ -21,9 +19,13 @@ class OrderController extends Controller
      */
     public function index()
     {
+        $status = request()->get('status', 'Semua');
+
         return view('orders', [
             "page" => "orders",
-            'orders' => Order::getAllMyOrders(Auth::user())
+            'orders' => Order::getAllMyOrders(Auth::user(), $status),
+            'midtransClientKey' => config('app.midtrans_client_key'),
+            'isProduction' => config('app.midtrans_is_production'),
         ]);
     }
 
@@ -76,7 +78,9 @@ class OrderController extends Controller
         return view('order-detail', [
             'page' => 'order-detail',
             'order' => $order,
-            'order_status' => OrderStatusHistory::getLatestStatusOrder($order->id)
+            'order_status' => OrderStatusHistory::getLatestStatusOrder($order->id),
+            'midtransClientKey' => config('app.midtrans_client_key'),
+            'isProduction' => config('app.midtrans_is_production'),
         ]);
     }
 
@@ -156,14 +160,18 @@ class OrderController extends Controller
                 'phone' => 'required|string|max:20',
 
                 // address
-                'province' => 'required_if:shipping,jne',
-                'city'     => 'required_if:shipping,jne',
-                'district' => 'required_if:shipping,jne',
-                'village'  => 'required_if:shipping,jne',
-                'rt'        => 'required_if:shipping,jne|string',
-                'rw'          => 'required_if:shipping,jne|string',
-                'postal-code' => 'required_if:shipping,jne|string',
-                'address'  => 'required_if:shipping,jne|string',
+                'province' => 'required_if:shipping,JNE',
+                'city'     => 'required_if:shipping,JNE',
+                'district' => 'required_if:shipping,JNE',
+                'village'  => 'required_if:shipping,JNE',
+                'rt'       => 'required_if:shipping,JNE|string',
+                'rw'       => 'required_if:shipping,JNE|string',
+                'postal-code' => 'required_if:shipping,JNE|string',
+                'address'  => 'required_if:shipping,JNE|string',
+            ], [
+                'email.email' => 'Format email tidak valid atau domain tidak ditemukan',
+                'email.dns' => 'Domain email tidak valid atau tidak dapat ditemukan',
+                'required_if' => 'Field :attribute wajib diisi ketika pengiriman menggunakan JNE',
             ]);
 
             Log::info('Mulai melengkapi pesanan', [
@@ -180,24 +188,50 @@ class OrderController extends Controller
             return redirect()
                 ->to("/detail-pesanan/{$order->unique_order}")
                 ->with('success', 'Pesanan berhasil dilengkapi silakan melakukan pembayaran!');
-        } catch (\Throwable $e) {
-            Log::error('Gagal melengkapi pesanan', [
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::warning('Validasi gagal', [
                 'order_id' => $order->id ?? null,
-                'message'  => $e->getMessage(),
-                'file'     => $e->getFile(),
-                'line'     => $e->getLine(),
+                'errors'   => $e->errors(),
             ]);
 
             return back()
+                ->withInput()
+                ->withErrors($e->validator);
+        } catch (\Throwable $e) {
+            return back()
+                ->withInput()
                 ->with('error', 'Terjadi kesalahan saat memproses pesanan');
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
+    public function payment(Order $order)
     {
-        //
+        return response()->json(
+            Order::createOrGetPayment($order)
+        );
+    }
+
+    public function paymentFinish(Request $request)
+    {
+        $midtransOrderId = $request->order_id;
+        $order = Order::where('midtrans_order_id', $midtransOrderId)->firstOrFail();
+
+        return redirect('/detail-pesanan/' . $order->unique_order);
+    }
+
+    public function verifyPayment($orderId)
+    {
+        Order::verifyMidtransPayment($orderId);
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function downloadInvoice($filename)
+    {
+        $path = storage_path('app/public/invoices/' . $filename);
+
+        abort_unless(file_exists($path), 404);
+
+        return response()->download($path);
     }
 }

@@ -6,6 +6,11 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Midtrans\Config;
+use Midtrans\Snap;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class Order extends Model
 {
@@ -137,22 +142,26 @@ class Order extends Model
     {
         return match ($this->current_status_id) {
             1, 8 => [
+                'id' => 'detail-button',
                 'label' => 'Lihat Detail',
                 'url' => '/detail-pesanan/' . $this->unique_order,
                 'show_price' => false,
             ],
             2 => [
+                'id' => 'complete-button',
                 'label' => 'Lengkapi Pemesanan',
                 'url' => '/lengkapi-pesanan/' . $this->unique_order,
                 'show_price' => false,
             ],
             3 => [
+                'id' => 'pay-button',
                 'label' => 'Bayar Sekarang',
                 'url' => '#',
                 'show_price' => true,
                 'note' => '*Pesanan otomatis dibatalkan jika 2x24jam tidak dibayarkan',
             ],
             default => [
+                'id' => 'detail-button',
                 'label' => 'Lihat Detail',
                 'url' => '/detail-pesanan/' . $this->unique_order,
                 'show_price' => true,
@@ -160,11 +169,25 @@ class Order extends Model
         };
     }
 
-    public static function getAllMyOrders($user)
+    public static function getAllMyOrders($user, ?string $status = null)
     {
-        return self::where('customer_id', $user->id)
-            ->latest()
-            ->get();
+        $query = self::where('customer_id', $user->id);
+
+        if ($status && $status !== 'Semua') {
+            $statusMap = [
+                'Menunggu Konfirmasi' => [1],
+                'Dikonfirmasi' => [2],
+                'Belum Dibayar' => [3],
+                'Sedang Diproses' => [4, 5, 6],
+                'Selesai' => [7, 8],
+            ];
+
+            if (isset($statusMap[$status])) {
+                $query->whereIn('current_status_id', $statusMap[$status]);
+            }
+        }
+
+        return $query->latest()->paginate(5)->withQueryString();
     }
 
     public static function completeOrder(Order $order, array $data)
@@ -209,5 +232,104 @@ class Order extends Model
         });
 
         return $order;
+    }
+
+    public static function createOrGetPayment(Order $order): array
+    {
+        Config::$serverKey = config('app.midtrans_server_key');
+        Config::$isProduction = false;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+
+        if ($order->payment_token) {
+            return [
+                'snap_token'   => $order->payment_token,
+                'unique_order' => $order->unique_order,
+            ];
+        }
+
+        $midtransOrderId = $order->unique_order . '-' . now()->timestamp;
+
+        $params = [
+            'transaction_details' => [
+                'order_id'     => $midtransOrderId,
+                'gross_amount' => (int) $order->total_cost,
+            ],
+            'customer_details' => [
+                'first_name' => $order->customer->name,
+                'email'      => $order->customer->email,
+                'phone'      => $order->customer->phone ?? '',
+            ],
+            'callbacks' => [
+                'finish' => route('pembayaran.selesai'),
+            ],
+        ];
+
+        $snapToken = Snap::getSnapToken($params);
+
+        $order->update([
+            'payment_token'        => $snapToken,
+            'midtrans_order_id'    => $midtransOrderId,
+        ]);
+
+        return [
+            'snap_token'        => $snapToken,
+            'unique_order'      => $order->unique_order,
+            'midtrans_order_id' => $midtransOrderId,
+        ];
+    }
+
+    public static function generateInvoicePdfStatic($order): string
+    {
+        $pdf = Pdf::loadView('pdf.invoice', [
+            'order' => $order
+        ]);
+
+        $fileName = 'INVOICE-' . $order->unique_order . '.pdf';
+        $databasePath = 'invoices/' . $fileName;
+
+        Storage::disk('public')->put($databasePath, $pdf->output());
+
+        return $databasePath;
+    }
+
+    public static function processPaymentSuccess($order, $paymentType)
+    {
+        $order->update([
+            'payment_success'   => 1,
+            'payment_method'    => $paymentType,
+            'payment_date'      => now(),
+            'current_status_id' => 4,
+        ]);
+
+        if (!$order->invoice_document_url) {
+            $invoiceUrl = self::generateInvoicePdfStatic($order);
+            $order->update(['invoice_document_url' => $invoiceUrl]);
+        }
+
+        OrderStatusHistory::create([
+            'order_status_id' => 4,
+            'order_id'        => $order->id,
+            'note'            => "Pesanan {$order->unique_order} telah dibayar dan invoice di-generate",
+        ]);
+
+        Log::info("Midtrans Payment Success", [
+            'order_id' => $order->unique_order,
+            'payment_method' => $paymentType,
+            'invoice_url' => $order->invoice_document_url,
+            'payment_date' => $order->payment_date,
+        ]);
+    }
+
+    public static function processPaymentExpired($order)
+    {
+        $order->update([
+            'payment_token' => null,
+            'midtrans_order_id' => null,
+        ]);
+
+        Log::warning("Midtrans Payment Expired", [
+            'order_id' => $order->unique_order
+        ]);
     }
 }
