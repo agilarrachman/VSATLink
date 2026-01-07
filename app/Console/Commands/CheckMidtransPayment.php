@@ -41,7 +41,7 @@ class CheckMidtransPayment extends Command
 
         foreach ($orders as $order) {
             try {
-                $status = (object) Transaction::status($order->unique_order);
+                $status = (object) Transaction::status($order->midtrans_order_id);
 
                 if (in_array($status->transaction_status, ['settlement', 'capture'])) {
                     Order::processPaymentSuccess($order, $status->payment_type);
