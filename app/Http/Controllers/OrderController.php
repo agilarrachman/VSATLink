@@ -19,9 +19,11 @@ class OrderController extends Controller
      */
     public function index()
     {
+        $status = request()->get('status', 'Semua');
+
         return view('orders', [
             "page" => "orders",
-            'orders' => Order::getAllMyOrders(Auth::user()),
+            'orders' => Order::getAllMyOrders(Auth::user(), $status),
             'midtransClientKey' => config('app.midtrans_client_key'),
             'isProduction' => config('app.midtrans_is_production'),
         ]);

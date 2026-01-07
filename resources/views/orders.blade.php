@@ -31,7 +31,7 @@
                 <!-- Tab Filter -->
                 <div class="flex flex-wrap justify-center gap-2 mb-20">
                     @php
-                        $tabs = ['Semua', 'Menunggu Konfirmasi', 'Belum Dibayar', 'Sedang Diproses', 'Selesai'];
+                        $tabs = ['Semua', 'Menunggu Konfirmasi', 'Dikonfirmasi', 'Belum Dibayar', 'Sedang Diproses', 'Selesai'];
                         $currentTab = request()->get('status', 'Semua');
                     @endphp
                     @foreach ($tabs as $tab)

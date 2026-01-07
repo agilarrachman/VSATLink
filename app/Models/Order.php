@@ -169,11 +169,25 @@ class Order extends Model
         };
     }
 
-    public static function getAllMyOrders($user)
+    public static function getAllMyOrders($user, ?string $status = null)
     {
-        return self::where('customer_id', $user->id)
-            ->latest()
-            ->get();
+        $query = self::where('customer_id', $user->id);
+
+        if ($status && $status !== 'Semua') {
+            $statusMap = [
+                'Menunggu Konfirmasi' => [1],
+                'Dikonfirmasi' => [2],
+                'Belum Dibayar' => [3],
+                'Sedang Diproses' => [4, 5, 6],
+                'Selesai' => [7, 8],
+            ];
+
+            if (isset($statusMap[$status])) {
+                $query->whereIn('current_status_id', $statusMap[$status]);
+            }
+        }
+
+        return $query->latest()->get();
     }
 
     public static function completeOrder(Order $order, array $data)
