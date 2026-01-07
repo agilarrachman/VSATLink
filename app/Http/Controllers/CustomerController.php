@@ -52,4 +52,13 @@ class CustomerController extends Controller
             'user' => Auth::user(),
         ]);
     }
+
+    public function downloadDocument($filename)
+    {
+        $path = storage_path('app/public/docs/' . $filename);
+
+        abort_unless(file_exists($path), 404);
+
+        return response()->download($path);
+    }
 }

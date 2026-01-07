@@ -14,6 +14,7 @@ Route::middleware(['auth'])->group(
     function () {
         Route::post('/logout', [CustomerController::class, 'logout']);
         Route::get('/profil', [CustomerController::class, 'profile']);
+        Route::get('/download/dokumen/{filename}', [CustomerController::class, 'downloadDocument']);
 
         Route::get('/cities/{province}', [RegionController::class, 'cities']);
         Route::get('/districts/{city}', [RegionController::class, 'districts']);
