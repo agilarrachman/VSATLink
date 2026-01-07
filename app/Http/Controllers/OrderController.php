@@ -215,4 +215,13 @@ class OrderController extends Controller
 
         return response()->json(['status' => 'ok']);
     }
+
+    public function downloadInvoice($filename)
+    {
+        $path = storage_path('app/public/invoices/' . $filename);
+
+        abort_unless(file_exists($path), 404);
+
+        return response()->download($path);
+    }
 }

@@ -32,5 +32,6 @@ Route::middleware(['auth'])->group(
             return redirect('/detail-pesanan/' . $request->order_id);
         })->name('payment.finish');
         Route::post('/pembayaran/verifikasi/{orderId}', [OrderController::class, 'verifyPayment']);
+        Route::get('/download/invoice/{filename}', [OrderController::class, 'downloadInvoice']);        
     }
 );
