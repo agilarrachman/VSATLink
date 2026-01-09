@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Admin;
 use App\Models\Order;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
 use Midtrans\Transaction;
+use Illuminate\Support\Facades\Mail;
 
 class CheckMidtransPayment extends Command
 {
@@ -45,6 +47,53 @@ class CheckMidtransPayment extends Command
 
                 if (in_array($status->transaction_status, ['settlement', 'capture'])) {
                     Order::processPaymentSuccess($order, $status->payment_type);
+
+                    $order->refresh();
+
+                    $invoicePath = storage_path(
+                        'app/public/' . $order->invoice_document_url
+                    );
+
+                    $dataOrder = [
+                        'order' => $order
+                    ];
+
+                    Mail::send('emails.invoice-paid-customer', $dataOrder, function ($message) use ($order, $invoicePath) {
+                        $message->to($order->customer->email)
+                            ->subject('[NOTIFIKASI] Invoice Pembayaran - ' . $order->unique_order);
+
+                        if (file_exists($invoicePath)) {
+                            $message->attach($invoicePath, [
+                                'as' => 'INVOICE-' . $order->unique_order . '.pdf',
+                                'mime' => 'application/pdf',
+                            ]);
+                        }
+                    });
+
+                    if (
+                        $order->customer->customer_type !== 'Perorangan'
+                        && $order->customer->contact_email
+                    ) {
+
+                        Mail::send('emails.invoice-paid-customer', $dataOrder, function ($message) use ($order, $invoicePath) {
+                            $message->to($order->customer->contact_email)
+                                ->subject('[NOTIFIKASI] Invoice Pembayaran - ' . $order->unique_order);
+
+                            if (file_exists($invoicePath)) {
+                                $message->attach($invoicePath, [
+                                    'as' => 'INVOICE-' . $order->unique_order . '.pdf',
+                                    'mime' => 'application/pdf',
+                                ]);
+                            }
+                        });
+                    }
+
+                    $logisticEmails = Admin::getAllLogicticEmail();
+
+                    Mail::send('emails.order-paid-logistic', $dataOrder, function ($message) use ($order, $logisticEmails) {
+                        $message->to($logisticEmails)
+                            ->subject('[NOTIFIKASI] Pembayaran Diterima - ' . $order->unique_order);
+                    });
                 }
 
                 if ($status->transaction_status === 'expire') {

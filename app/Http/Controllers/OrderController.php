@@ -174,16 +174,16 @@ class OrderController extends Controller
                 'required_if' => 'Field :attribute wajib diisi ketika pengiriman menggunakan JNE',
             ]);
 
-            Log::info('Mulai melengkapi pesanan', [
-                'order_id' => $order->id,
-                'payload'  => $validatedData,
-            ]);
+            // Log::info('Mulai melengkapi pesanan', [
+            //     'order_id' => $order->id,
+            //     'payload'  => $validatedData,
+            // ]);
 
             $order = Order::completeOrder($order, $validatedData);
 
-            Log::info('Pesanan berhasil dilengkapi', [
-                'order_id' => $order->id,
-            ]);
+            // Log::info('Pesanan berhasil dilengkapi', [
+            //     'order_id' => $order->id,
+            // ]);
 
             return redirect()
                 ->to("/detail-pesanan/{$order->unique_order}")
