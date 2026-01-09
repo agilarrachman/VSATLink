@@ -19,6 +19,10 @@ class Order extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'payment_date' => 'datetime',
+    ];
+
     public function getRouteKeyName()
     {
         return 'unique_order';
@@ -236,6 +240,7 @@ class Order extends Model
 
     public static function createOrGetPayment(Order $order): array
     {
+        Log::info(config('app.midtrans_server_key'));
         Config::$serverKey = config('app.midtrans_server_key');
         Config::$isProduction = false;
         Config::$isSanitized = true;
@@ -279,7 +284,7 @@ class Order extends Model
         ];
     }
 
-    public static function generateInvoicePdfStatic($order): string
+    public static function generateInvoicePdf($order): string
     {
         $pdf = Pdf::loadView('pdf.invoice', [
             'order' => $order
@@ -303,7 +308,7 @@ class Order extends Model
         ]);
 
         if (!$order->invoice_document_url) {
-            $invoiceUrl = self::generateInvoicePdfStatic($order);
+            $invoiceUrl = self::generateInvoicePdf($order);
             $order->update(['invoice_document_url' => $invoiceUrl]);
         }
 

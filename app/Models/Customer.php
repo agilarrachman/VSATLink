@@ -48,7 +48,7 @@ class Customer extends Authenticatable
 
     public function sales()
     {
-        return $this->belongsTo(Sales::class);
+        return $this->belongsTo(Admin::class);
     }
 
     public function orders()
