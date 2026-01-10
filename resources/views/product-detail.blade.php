@@ -118,6 +118,7 @@
                             <li>{{ $product->lnb }}</li>
                             <li>{{ $product->buc }}</li>
                             <li>{{ $product->modem }}</li>
+                            <li>{{ $product->adaptor }}</li>
                             @if ($product->access_point)
                                 <li>{{ $product->access_point }}</li>
                             @endif

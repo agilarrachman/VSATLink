@@ -146,26 +146,26 @@ class Order extends Model
     {
         return match ($this->current_status_id) {
             1, 8 => [
-                'id' => 'detail-button',
+                'type' => 'link',
                 'label' => 'Lihat Detail',
                 'url' => '/detail-pesanan/' . $this->unique_order,
                 'show_price' => false,
             ],
             2 => [
-                'id' => 'complete-button',
+                'type' => 'link',
                 'label' => 'Lengkapi Pemesanan',
                 'url' => '/lengkapi-pesanan/' . $this->unique_order,
                 'show_price' => false,
             ],
             3 => [
-                'id' => 'pay-button',
+                'type' => 'payment',
                 'label' => 'Bayar Sekarang',
                 'url' => '#',
                 'show_price' => true,
                 'note' => '*Pesanan otomatis dibatalkan jika 2x24jam tidak dibayarkan',
             ],
             default => [
-                'id' => 'detail-button',
+                'type' => 'link',
                 'label' => 'Lihat Detail',
                 'url' => '/detail-pesanan/' . $this->unique_order,
                 'show_price' => true,
