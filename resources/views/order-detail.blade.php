@@ -193,12 +193,57 @@
                                         </div>
                                     </div>
 
-                                    <div class="step">
+                                    <div
+                                        class="step {{ $order->current_status_id >= 5 && $order->current_status_id < 8 ? 'completed' : '-' }}">
                                         <div class="indicator">
-                                            <div class="dot"></div>
+                                            <div class="dot">
+                                                @if ($order->current_status_id >= 5 && $order->current_status_id < 8)
+                                                    <div class="circle">
+                                                        <i class="fa-solid fa-check"></i>
+                                                    </div>
+                                                @endif
+                                            </div>
                                         </div>
                                         <div class="content">
-                                            <p class="pt-3">Pengiriman</p>
+                                            <p>Pengiriman</p>
+                                            @if ($order->current_status_id >= 4)
+                                                @switch($order->current_status_id)
+                                                    @case(4)
+                                                        <p class="title">Pesanan sedang dipersiapkan oleh tim logistik</p>
+                                                    @break
+
+                                                    @case(5)
+                                                        <p class="title">Pesanan dalam proses pengiriman</p>
+                                                        <p class="info">Silakan unggah bukti pasanan diterima</p>
+                                                        <div class="upload-box my-2" onclick="triggerFile()">
+                                                            <input type="file" id="uploadInput" accept="image/*" hidden
+                                                                onchange="previewImage(event)" />
+
+                                                            <div class="upload-placeholder" id="placeholder">
+                                                                <i class="fa-solid fa-camera"></i>
+                                                            </div>
+
+                                                            <div class="preview-wrapper" id="previewWrapper">
+                                                                <img id="previewImage" />
+                                                                <span class="remove-btn" onclick="removeImage(event)">
+                                                                    <i class="fa-solid fa-xmark"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <a class="btn-main mt-2" href="#">
+                                                            <span>Konfirmasi</span>
+                                                        </a>
+                                                    @break
+
+                                                    @case(6)
+                                                        <p class="title">Pesanan Anda siap diambil</p>
+                                                        <p class="info">Silakan ambil pesanan di</p>
+                                                        <p class="info !font-bold !text-lg">Warehouse VSATLink</p>
+                                                        <p class="info"> Jl. Sholeh Iskandar No. KM 6, RT.04/RW.01,
+                                                            Cibadak, Kec. Tanah Sereal, Kota Bogor, Jawa Barat 16166</p>
+                                                    @break
+                                                @endswitch
+                                            @endif
                                         </div>
                                     </div>
 
