@@ -65,51 +65,48 @@ class Order extends Model
 
     public static function createOrder($user, $productId, $latitude, $longitude)
     {
-        return DB::transaction(function () use ($user, $productId, $latitude, $longitude) {
+        $today = Carbon::now()->format('Ymd');
 
-            $today = Carbon::now()->format('Ymd');
+        $lastOrder = self::whereDate('created_at', Carbon::today())
+            ->lockForUpdate()
+            ->orderBy('id', 'desc')
+            ->first();
 
-            $lastOrder = self::whereDate('created_at', Carbon::today())
-                ->lockForUpdate()
-                ->orderBy('id', 'desc')
-                ->first();
+        if ($lastOrder) {
+            $lastIncrement = (int) substr($lastOrder->unique_order, -4);
+            $increment = $lastIncrement + 1;
+        } else {
+            $increment = 1;
+        }
 
-            if ($lastOrder) {
-                $lastIncrement = (int) substr($lastOrder->unique_order, -4);
-                $increment = $lastIncrement + 1;
-            } else {
-                $increment = 1;
-            }
+        $uniqueOrder = 'VSL-' . $today . '-' . str_pad($increment, 4, '0', STR_PAD_LEFT);
 
-            $uniqueOrder = 'VSL-' . $today . '-' . str_pad($increment, 4, '0', STR_PAD_LEFT);
+        $activationAddress = ActivationAddress::create([
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'google_maps_url' => "https://www.google.com/maps?q={$latitude},{$longitude}",
+        ]);
 
-            $activationAddress = ActivationAddress::create([
-                'latitude' => $latitude,
-                'longitude' => $longitude,
-                'google_maps_url' => "https://www.google.com/maps?q={$latitude},{$longitude}",
-            ]);
+        $product = Product::findOrFail($productId);
 
-            $product = Product::findOrFail($productId);
+        $order = self::create([
+            'customer_id' => $user->id,
+            'product_id' => $productId,
+            'current_status_id' => 1,
+            'order_contact_id' => null,
+            'order_address_id' => null,
+            'unique_order' => $uniqueOrder,
+            'activation_address_id' => $activationAddress->id,
+            'product_cost' => $product->otc_cost,
+        ]);
 
-            $order = self::create([
-                'customer_id' => $user->id,
-                'product_id' => $productId,
-                'current_status_id' => 1,
-                'order_contact_id' => null,
-                'order_address_id' => null,
-                'unique_order' => $uniqueOrder,
-                'activation_address_id' => $activationAddress->id,
-                'product_cost' => $product->otc_cost,
-            ]);
+        OrderStatusHistory::create([
+            'order_status_id' => 1,
+            'order_id' => $order->id,
+            'note' => "Pesanan {$uniqueOrder} berhasil dibuat oleh {$user->name} dan menunggu verifikasi pesanan.",
+        ]);
 
-            OrderStatusHistory::create([
-                'order_status_id' => 1,
-                'order_id' => $order->id,
-                'note' => "Pesanan {$uniqueOrder} berhasil dibuat oleh {$user->name} dan menunggu verifikasi pesanan.",
-            ]);
-
-            return $order;
-        });
+        return $order;
     }
 
     public function statusBadge(): array
@@ -196,44 +193,42 @@ class Order extends Model
 
     public static function completeOrder(Order $order, array $data)
     {
-        DB::transaction(function () use ($order, $data) {
-            $contact = OrderContact::create([
-                'name'  => $data['name'],
-                'email' => $data['email'],
-                'phone' => $data['phone'],
+        $contact = OrderContact::create([
+            'name'  => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+        ]);
+
+        $address = null;
+
+        if ($data['shipping'] === 'JNE') {
+            $address = OrderAddress::create([
+                'province_id' => $data['province'],
+                'city_id'     => $data['city'],
+                'district_id' => $data['district'],
+                'village_id'  => $data['village'],
+                'rt'          => $data['rt'] ?? null,
+                'rw'          => $data['rw'] ?? null,
+                'postal_code' => $data['postal-code'] ?? null,
+                'full_address' => $data['address'],
             ]);
+        }
 
-            $address = null;
+        $order->update([
+            'shipping'   => $data['shipping'],
+            'shipping_cost'     => $data['shipping_cost'],
+            'tax_cost'          => $data['tax_cost'],
+            'total_cost'        => $data['total_cost'],
+            'order_contact_id'  => $contact->id,
+            'order_address_id'  => $address?->id,
+            'current_status_id' => 3,
+        ]);
 
-            if ($data['shipping'] === 'JNE') {
-                $address = OrderAddress::create([
-                    'province_id' => $data['province'],
-                    'city_id'     => $data['city'],
-                    'district_id' => $data['district'],
-                    'village_id'  => $data['village'],
-                    'rt'          => $data['rt'] ?? null,
-                    'rw'          => $data['rw'] ?? null,
-                    'postal_code' => $data['postal-code'] ?? null,
-                    'full_address' => $data['address'],
-                ]);
-            }
-
-            $order->update([
-                'shipping'   => $data['shipping'],
-                'shipping_cost'     => $data['shipping_cost'],
-                'tax_cost'          => $data['tax_cost'],
-                'total_cost'        => $data['total_cost'],
-                'order_contact_id'  => $contact->id,
-                'order_address_id'  => $address?->id,
-                'current_status_id' => 3,
-            ]);
-
-            OrderStatusHistory::create([
-                'order_status_id' => 3,
-                'order_id'        => $order->id,
-                'note'            => "Pesanan {$order->unique_order} telah dilengkapi",
-            ]);
-        });
+        OrderStatusHistory::create([
+            'order_status_id' => 3,
+            'order_id'        => $order->id,
+            'note'            => "Pesanan {$order->unique_order} telah dilengkapi",
+        ]);
 
         return $order;
     }
