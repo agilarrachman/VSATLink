@@ -28,4 +28,12 @@ class OrderStatusHistory extends Model
             ->latest()
             ->first();
     }
+
+    public static function getStatusCompletedOrder($orderId)
+    {
+        return self::where('order_id', $orderId)
+            ->where('order_status_id', 3)
+            ->orderBy('created_at')
+            ->first();
+    }
 }

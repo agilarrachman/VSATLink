@@ -5,12 +5,12 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Midtrans\Config;
 use Midtrans\Snap;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
 
 class Order extends Model
 {
@@ -291,7 +291,7 @@ class Order extends Model
         Storage::disk('public')->put($databasePath, $pdf->output());
 
         return $databasePath;
-    }
+    }    
 
     public static function processPaymentSuccess($order, $paymentType)
     {
@@ -331,5 +331,26 @@ class Order extends Model
         Log::warning("Midtrans Payment Expired", [
             'order_id' => $order->unique_order
         ]);
+    }
+
+    public static function cancelExpiredOrder($orderId)
+    {
+        $order = self::findOrFail($orderId);
+
+        if ($order->current_status_id == 8) {
+            return $order;
+        }
+
+        $order->update([
+            'current_status_id' => 8,
+        ]);
+
+        OrderStatusHistory::create([
+            'order_id' => $order->id,
+            'order_status_id' => 8,
+            'note' => "Pesanan {$order->unique_order} dibatalkan otomatis karena pembayaran tidak dilakukan dalam 2 hari.",
+        ]);
+
+        return $order;
     }
 }
