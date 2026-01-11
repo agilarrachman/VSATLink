@@ -88,11 +88,18 @@
                                             @endisset
                                         </div>
                                     @endif
-                                    <a class="btn-primary !rounded-md py-2 !w-full md:!w-fit flex justify-center"
-                                        href="{{ $action['url'] }}" id="{{ $action['id'] }}"
-                                        data-order-id="{{ $order->unique_order }}">
-                                        <span>{{ $action['label'] }}</span>
-                                    </a>
+                                    @if ($action['type'] === 'payment')
+                                        <a href="#"
+                                            class="btn-primary pay-button !rounded-md py-2 !w-full md:!w-fit flex justify-center"
+                                            data-order-id="{{ $order->unique_order }}">
+                                            <span>{{ $action['label'] }}</span>
+                                        </a>
+                                    @else
+                                        <a href="{{ $action['url'] }}"
+                                            class="btn-primary !rounded-md py-2 !w-full md:!w-fit flex justify-center">
+                                            <span>{{ $action['label'] }}</span>
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -307,7 +314,8 @@
                     {{-- Dummy Orders End --}}
                 </div>
 
-                <div class="page mx-0 mt-5 px-3 rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
+                <div
+                    class="page mx-0 mt-5 px-3 rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20">
                     {{ $orders->links('pagination::bootstrap-5') }}
                 </div>
             </div>
@@ -316,34 +324,36 @@
 
     <script>
         // Script Payment Midtrans Start
-        document.getElementById('pay-button').addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+        document.querySelectorAll('.pay-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
 
-            const orderId = this.dataset.orderId;
-            const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const orderId = this.dataset.orderId;
+                const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            fetch(`/pembayaran/${orderId}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrf,
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    window.snap.pay(data.snap_token, {
-                        onSuccess: function(result) {
-                            window.location.href = `/detail-pesanan/${result.order_id}`;
-                        },
-                        onPending: function(result) {
-                            window.location.href = `/detail-pesanan/${result.order_id}`;
-                        },
-                        onError: function(result) {
-                            alert('Pembayaran gagal');
+                fetch(`/pembayaran/${orderId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrf,
+                            'Accept': 'application/json'
                         }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        window.snap.pay(data.snap_token, {
+                            onSuccess: function(result) {
+                                window.location.reload();
+                            },
+                            onPending: function(result) {
+                                window.snap.hide();
+                            },
+                            onError: function(result) {
+                                alert('Pembayaran gagal');
+                            }
+                        });
                     });
-                });
+            });
         });
         // Script Payment Midtrans End
     </script>
