@@ -28351,7 +28351,7 @@ img {
 
 .step {
     display: flex;
-    align-items: start;
+    align-items: center;
     gap: 24px;
     margin-bottom: 16px;
 }
@@ -28360,8 +28360,8 @@ img {
     content: "";
     position: absolute;
     left: 30px;
-    top: 50px;
-    bottom: 10px;
+    top: 60px;
+    bottom: 40px;
     width: 1px;
     background: #adadad;
     z-index: 10;

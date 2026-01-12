@@ -119,7 +119,8 @@
                                                     Hubungi Sales
                                                 </a>
                                             @elseif ($order->current_status_id > 1)
-                                                <p class="title">Pesanan dikonfirmasi pada 23 Desember 2025</p>
+                                                <p class="title">Pesanan dikonfirmasi pada,</p>
+                                                <p class="title">{{ $confirmed_order_date }}</p>
 
                                                 @if ($order->current_status_id == 2)
                                                     <a class="btn-main mt-2"
@@ -160,9 +161,7 @@
                                             </div>
                                         </div>
                                         <div class="content">
-                                            <p
-                                                class="{{ $order->current_status_id >= 3 && $order->current_status_id < 8 ? '' : 'pt-3' }}">
-                                                Pembayaran</p>
+                                            <p>Pembayaran</p>
                                             @if ($order->current_status_id == 8 && $cancel_step === 'pembayaran')
                                                 <p class="title">{{ $order_status->note }}</p>
                                             @elseif ($order->current_status_id >= 3 && $order->current_status_id < 8)
@@ -204,62 +203,64 @@
                                         </div>
                                         <div class="content">
                                             <p>Pengiriman</p>
-                                            @if ($order->current_status_id >= 4)
-                                                @switch($order->current_status_id)
-                                                    @case(4)
-                                                        <p class="title">Pesanan sedang dipersiapkan oleh tim logistik</p>
-                                                    @break
+                                            @if ($order->current_status_id >= 4 && $order->current_status_id < 8)
+                                                @if ($order->current_status_id == 4)
+                                                    <p class="title">Pesanan sedang dipersiapkan oleh tim logistik</p>
+                                                @elseif ($order->current_status_id == 5)
+                                                    <p class="title">Pesanan dalam proses pengiriman</p>
+                                                    <p class="info">Silakan unggah bukti pesanan diterima</p>
 
-                                                    @case(5)
-                                                        <p class="title">Pesanan dalam proses pengiriman</p>
-                                                        <p class="info">Silakan unggah bukti pasanan diterima</p>
-                                                        <div class="upload-box my-2" onclick="triggerFile()">
-                                                            <input type="file" id="uploadInput" accept="image/*" hidden
-                                                                onchange="previewImage(event)" />
+                                                    <div class="upload-box my-2" onclick="triggerFile()">
+                                                        <input type="file" id="uploadInput" accept="image/*" hidden
+                                                            onchange="previewImage(event)" />
 
-                                                            <div class="upload-placeholder" id="placeholder">
-                                                                <i class="fa-solid fa-camera"></i>
-                                                            </div>
-
-                                                            <div class="preview-wrapper" id="previewWrapper">
-                                                                <img id="previewImage" />
-                                                                <span class="remove-btn" onclick="removeImage(event)">
-                                                                    <i class="fa-solid fa-xmark"></i>
-                                                                </span>
-                                                            </div>
+                                                        <div class="upload-placeholder" id="placeholder">
+                                                            <i class="fa-solid fa-camera"></i>
                                                         </div>
-                                                        <a class="btn-main mt-2" href="#">
-                                                            <span>Konfirmasi</span>
-                                                        </a>
-                                                    @break
 
-                                                    @case(6)
-                                                        <p class="title">Pesanan Anda siap diambil</p>
-                                                        <p class="info">Silakan ambil pesanan di</p>
-                                                        <p class="info !font-bold !text-lg">Warehouse VSATLink</p>
-                                                        <p class="info"> Jl. Sholeh Iskandar No. KM 6, RT.04/RW.01,
-                                                            Cibadak, Kec. Tanah Sereal, Kota Bogor, Jawa Barat 16166</p>
-                                                    @break
-                                                @endswitch
+                                                        <div class="preview-wrapper" id="previewWrapper">
+                                                            <img id="previewImage" />
+                                                            <span class="remove-btn" onclick="removeImage(event)">
+                                                                <i class="fa-solid fa-xmark"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <a class="btn-main mt-2" href="#">
+                                                        <span>Konfirmasi</span>
+                                                    </a>
+                                                @elseif ($order->current_status_id >= 6)
+                                                    <p class="title">Pesanan Anda siap diambil</p>
+                                                    <p class="info">Silakan ambil pesanan di</p>
+                                                    <p class="info !font-bold !text-lg">Warehouse VSATLink</p>
+                                                    <p class="info">
+                                                        Jl. Sholeh Iskandar No. KM 6, RT.04/RW.01,
+                                                        Cibadak, Kec. Tanah Sereal, Kota Bogor, Jawa Barat 16166
+                                                    </p>
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
 
-                                    <div class="step">
+                                    <div class="step last {{ $order->current_status_id == 7 ? 'completed' : '-' }}">
                                         <div class="indicator">
-                                            <div class="dot"></div>
+                                            <div class="dot">
+                                                @if ($order->current_status_id == 7)
+                                                    <div class="circle">
+                                                        <i class="fa-solid fa-check"></i>
+                                                    </div>
+                                                @endif
+                                            </div>
                                         </div>
                                         <div class="content">
-                                            <p class="pt-3">Pesanan Diterima</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="step last">
-                                        <div class="indicator">
-                                            <div class="dot"></div>
-                                        </div>
-                                        <div class="content">
-                                            <p class="pt-3">Aktivasi Perangkat</p>
+                                            <p>Pesanan
+                                                Diterima</p>
+                                            @if ($order->current_status_id == 7)
+                                                <p class="title">{{ $received_status_order_note }}</p>
+                                                <a class="btn-main mt-2" href="#">
+                                                    <span>Lanjut aktivasi perangkat sekarang</span>
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
