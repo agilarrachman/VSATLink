@@ -353,4 +353,24 @@ class Order extends Model
 
         return $order;
     }
+
+    public static function markAsReceived($orderId, $path)
+    {
+        $order = self::findOrFail($orderId);
+
+        $order->update([
+            'current_status_id' => 7,
+            'proof_of_delivery_image_url' => $path,
+        ]);
+
+        $timestamp = Carbon::now()->translatedFormat('d F Y H:i');
+
+        OrderStatusHistory::create([
+            'order_status_id' => 7,
+            'order_id' => $order->id,
+            'note' => "Pesanan {$order->unique_order} telah diterima pada {$timestamp}.",
+        ]);
+
+        return $order;
+    }
 }

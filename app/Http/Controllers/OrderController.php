@@ -75,9 +75,17 @@ class OrderController extends Controller
             abort(403, 'Anda bukan pemilik pesanan ini.');
         }
 
+        $confirmedStatusOrder = OrderStatusHistory::getConfirmedStatusOrder($order->id);
+        $confirmedOrderDate = $confirmedStatusOrder ? $confirmedStatusOrder->created_at->translatedFormat('d F Y, H:i') : null;
+
+        $receivedStatusOrder = OrderStatusHistory::getReceivedStatusOrder($order->id);
+        $receivedStatusOrderNote = $receivedStatusOrder ? $receivedStatusOrder->note : null;
+
         return view('order-detail', [
             'page' => 'order-detail',
             'order' => $order,
+            'confirmed_order_date' => $confirmedOrderDate,
+            'received_status_order_note' => $receivedStatusOrderNote,
             'order_status' => OrderStatusHistory::getLatestStatusOrder($order->id),
             'cancel_step' => OrderStatusHistory::getCancelStep($order->id),
             'midtransClientKey' => config('app.midtrans_client_key'),
@@ -234,5 +242,17 @@ class OrderController extends Controller
         abort_unless(file_exists($path), 404);
 
         return response()->download($path);
+    }
+
+    public function markAsReceived(Request $request, Order $order)
+    {
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $path = $file->store('proof_of_deliveries', 'public');
+
+            Order::markAsReceived($order->id, $path);
+        }
+
+        return redirect()->back();
     }
 }

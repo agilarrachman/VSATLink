@@ -32,5 +32,7 @@ Route::middleware(['auth'])->group(
         Route::get('/pembayaran/selesai', [OrderController::class, 'paymentFinish'])->name('pembayaran.selesai');
         Route::post('/pembayaran/verifikasi/{orderId}', [OrderController::class, 'verifyPayment']);
         Route::get('/download/invoice/{filename}', [OrderController::class, 'downloadInvoice']);        
+
+        Route::post('/konfirmasi-diterima/{order}', [OrderController::class, 'markAsReceived']);
     }
 );

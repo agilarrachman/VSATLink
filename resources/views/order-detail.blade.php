@@ -119,7 +119,8 @@
                                                     Hubungi Sales
                                                 </a>
                                             @elseif ($order->current_status_id > 1)
-                                                <p class="title">Pesanan dikonfirmasi pada 23 Desember 2025</p>
+                                                <p class="title">Pesanan dikonfirmasi pada,</p>
+                                                <p class="title">{{ $confirmed_order_date }}</p>
 
                                                 @if ($order->current_status_id == 2)
                                                     <a class="btn-main mt-2"
@@ -160,9 +161,7 @@
                                             </div>
                                         </div>
                                         <div class="content">
-                                            <p
-                                                class="{{ $order->current_status_id >= 3 && $order->current_status_id < 8 ? '' : 'pt-3' }}">
-                                                Pembayaran</p>
+                                            <p>Pembayaran</p>
                                             @if ($order->current_status_id == 8 && $cancel_step === 'pembayaran')
                                                 <p class="title">{{ $order_status->note }}</p>
                                             @elseif ($order->current_status_id >= 3 && $order->current_status_id < 8)
@@ -204,18 +203,19 @@
                                         </div>
                                         <div class="content">
                                             <p>Pengiriman</p>
-                                            @if ($order->current_status_id >= 4)
-                                                @switch($order->current_status_id)
-                                                    @case(4)
-                                                        <p class="title">Pesanan sedang dipersiapkan oleh tim logistik</p>
-                                                    @break
-
-                                                    @case(5)
+                                            @if ($order->current_status_id >= 4 && $order->current_status_id < 8)
+                                                @if ($order->current_status_id == 4)
+                                                    <p class="title">Pesanan sedang dipersiapkan oleh tim logistik</p>
+                                                @elseif ($order->current_status_id >= 5 && $order->shipping == 'JNE' && $order->current_status_id < 7)
+                                                    <form action="/konfirmasi-diterima/{{ $order->unique_order }}"
+                                                        method="POST" enctype="multipart/form-data">
+                                                        @csrf
                                                         <p class="title">Pesanan dalam proses pengiriman</p>
-                                                        <p class="info">Silakan unggah bukti pasanan diterima</p>
+                                                        <p class="info">Silakan unggah bukti pesanan diterima</p>
+
                                                         <div class="upload-box my-2" onclick="triggerFile()">
-                                                            <input type="file" id="uploadInput" accept="image/*" hidden
-                                                                onchange="previewImage(event)" />
+                                                            <input type="file" id="uploadInput" name="image"
+                                                                accept="image/*" hidden />
 
                                                             <div class="upload-placeholder" id="placeholder">
                                                                 <i class="fa-solid fa-camera"></i>
@@ -228,38 +228,51 @@
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <a class="btn-main mt-2" href="#">
-                                                            <span>Konfirmasi</span>
-                                                        </a>
-                                                    @break
 
-                                                    @case(6)
-                                                        <p class="title">Pesanan Anda siap diambil</p>
-                                                        <p class="info">Silakan ambil pesanan di</p>
-                                                        <p class="info !font-bold !text-lg">Warehouse VSATLink</p>
-                                                        <p class="info"> Jl. Sholeh Iskandar No. KM 6, RT.04/RW.01,
-                                                            Cibadak, Kec. Tanah Sereal, Kota Bogor, Jawa Barat 16166</p>
-                                                    @break
-                                                @endswitch
+                                                        <button type="submit" class="btn-main mt-2">
+                                                            Konfirmasi
+                                                        </button>
+                                                    </form>
+                                                @elseif ($order->current_status_id == 7 && $order->shipping == 'JNE')
+                                                    <p class="title">Pesanan telah diterima</p>
+                                                    <div class="upload-box my-2">
+                                                        <div class="preview-wrapper" style="display:block;">
+                                                            <img id="previewImage"
+                                                                src="/storage/{{ $order->proof_of_delivery_image_url }}" />
+                                                        </div>
+                                                    </div>
+                                                @elseif ($order->current_status_id >= 6 && $order->shipping == 'Ambil Ditempat')
+                                                    <p class="title">Pesanan Anda siap diambil</p>
+                                                    <p class="info">Silakan ambil pesanan di</p>
+                                                    <p class="info !font-bold !text-lg">Warehouse VSATLink</p>
+                                                    <p class="info">
+                                                        Jl. Sholeh Iskandar No. KM 6, RT.04/RW.01,
+                                                        Cibadak, Kec. Tanah Sereal, Kota Bogor, Jawa Barat 16166
+                                                    </p>
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
 
-                                    <div class="step">
+                                    <div class="step last {{ $order->current_status_id == 7 ? 'completed' : '-' }}">
                                         <div class="indicator">
-                                            <div class="dot"></div>
+                                            <div class="dot">
+                                                @if ($order->current_status_id == 7)
+                                                    <div class="circle">
+                                                        <i class="fa-solid fa-check"></i>
+                                                    </div>
+                                                @endif
+                                            </div>
                                         </div>
                                         <div class="content">
-                                            <p class="pt-3">Pesanan Diterima</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="step last">
-                                        <div class="indicator">
-                                            <div class="dot"></div>
-                                        </div>
-                                        <div class="content">
-                                            <p class="pt-3">Aktivasi Perangkat</p>
+                                            <p>Pesanan
+                                                Diterima</p>
+                                            @if ($order->current_status_id == 7)
+                                                <p class="title">{{ $received_status_order_note }}</p>
+                                                <a class="btn-main mt-2" href="#">
+                                                    <span>Lanjut aktivasi perangkat sekarang</span>
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -354,34 +367,49 @@
 
     <script>
         // === Script Upload File Start ===
-        function triggerFile() {
-            document.getElementById('uploadInput').click();
+        const uploadInput = document.getElementById('uploadInput');
+        const uploadBox = document.querySelector('.upload-box');
+        const removeBtn = document.querySelector('.remove-btn');
+
+        if (uploadInput) {
+            uploadInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const placeholder = document.getElementById('placeholder');
+                    const previewWrapper = document.getElementById('previewWrapper');
+
+                    if (placeholder) placeholder.style.display = 'none';
+                    if (previewWrapper) previewWrapper.style.display = 'block';
+                    document.getElementById('previewImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
         }
 
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('previewImage').src = e.target.result;
-                document.getElementById('placeholder').style.display = 'none';
-                document.getElementById('previewWrapper').style.display = 'block';
-            };
-            reader.readAsDataURL(file);
+        if (uploadBox) {
+            uploadBox.addEventListener('click', function() {
+                if (uploadInput) uploadInput.click();
+            });
         }
 
-        function removeImage(event) {
-            event.stopPropagation();
-            document.getElementById('uploadInput').value = '';
-            document.getElementById('previewWrapper').style.display = 'none';
-            document.getElementById('placeholder').style.display = 'block';
+        if (removeBtn) {
+            removeBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                if (uploadInput) uploadInput.value = '';
+                const previewWrapper = document.getElementById('previewWrapper');
+                const placeholder = document.getElementById('placeholder');
+                if (previewWrapper) previewWrapper.style.display = 'none';
+                if (placeholder) placeholder.style.display = 'block';
+            });
         }
         // === Script Upload File End ===
 
         // === Script Preview Map Start ===
-        const lat = {{ $order->activation_address?->latitude ?? '-' }};
-        const lng = {{ $order->activation_address?->longitude ?? '-' }};
+        const lat = {{ $order->activation_address?->latitude ?? 'null' }};
+        const lng = {{ $order->activation_address?->longitude ?? 'null' }};
         const map = L.map('map').setView([lat, lng], 15);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

@@ -29,6 +29,20 @@ class OrderStatusHistory extends Model
             ->first();
     }
 
+    public static function getConfirmedStatusOrder($order)
+    {
+        return self::where('order_id', $order)
+            ->where('order_status_id', 2)
+            ->first();
+    }
+
+    public static function getReceivedStatusOrder($order)
+    {
+        return self::where('order_id', $order)
+            ->where('order_status_id', 7)
+            ->first();
+    }
+
     public static function getStatusCompletedOrder($orderId)
     {
         return self::where('order_id', $orderId)
