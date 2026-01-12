@@ -10,3 +10,5 @@ Artisan::command('inspire', function () {
 
 Schedule::command('app:check-midtrans-payment')
     ->everyMinute();
+Schedule::command('app:cancel-expired-orders')
+    ->everyMinute();

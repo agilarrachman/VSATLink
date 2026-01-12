@@ -28,4 +28,31 @@ class OrderStatusHistory extends Model
             ->latest()
             ->first();
     }
+
+    public static function getStatusCompletedOrder($orderId)
+    {
+        return self::where('order_id', $orderId)
+            ->where('order_status_id', 3)
+            ->orderBy('created_at')
+            ->first();
+    }
+
+    public static function getCancelStep($orderId)
+    {
+        $statusIds = self::where('order_id', $orderId)
+            ->pluck('order_status_id')
+            ->toArray();
+
+        if (!in_array(8, $statusIds)) {
+            return null;
+        }
+
+        sort($statusIds);
+
+        return match (true) {
+            $statusIds === [1, 8] => 'konfirmasi',
+            $statusIds === [1, 2, 3, 8] => 'pembayaran',
+            default => null,
+        };
+    }
 }

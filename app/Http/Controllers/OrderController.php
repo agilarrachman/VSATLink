@@ -79,6 +79,7 @@ class OrderController extends Controller
             'page' => 'order-detail',
             'order' => $order,
             'order_status' => OrderStatusHistory::getLatestStatusOrder($order->id),
+            'cancel_step' => OrderStatusHistory::getCancelStep($order->id),
             'midtransClientKey' => config('app.midtrans_client_key'),
             'isProduction' => config('app.midtrans_is_production'),
         ]);

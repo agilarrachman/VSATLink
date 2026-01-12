@@ -94,10 +94,11 @@
                             <div class="status">
                                 <h4 class="!mb-8">Status Pesanan</h4>
                                 <div class="flow relative">
-                                    <div class="step first {{ $order->current_status_id > 1 ? 'completed' : '-' }}">
+                                    <div
+                                        class="step first {{ $order->current_status_id > 1 && !($order->current_status_id == 8 && $cancel_step === 'konfirmasi') ? 'completed' : '-' }}">
                                         <div class="indicator">
                                             <div class="dot">
-                                                @if ($order->current_status_id > 1)
+                                                @if ($order->current_status_id > 1 && !($order->current_status_id == 8 && $cancel_step === 'konfirmasi'))
                                                     <div class="circle">
                                                         <i class="fa-solid fa-check"></i>
                                                     </div>
@@ -106,19 +107,10 @@
                                         </div>
                                         <div class="content">
                                             <p>Konfirmasi Pesanan</p>
-                                            @if ($order->current_status_id > 1 && $order->current_status_id < 8)
-                                                <p class="title">Pesanan dikonfirmasi pada 23 Desember 2025</p>
-                                                @if ($order->current_status_id == 2)
-                                                    <a class="btn-main mt-2"
-                                                        href="/lengkapi-pesanan/{{ $order->unique_order }}">
-                                                        <span>Lengkapi Pesanan</span>
-                                                    </a>
-                                                @endif
-                                            @elseif ($order->current_status_id == 8)
+                                            @if ($order->current_status_id == 8 && $cancel_step === 'konfirmasi')
                                                 <p class="title">{{ $order_status->note }}</p>
                                                 <p class="text-sm text-gray-400 mb-2">
-                                                    Jika membutuhkan informasi lebih
-                                                    lanjut, silakan hubungi sales Anda.
+                                                    Jika membutuhkan informasi lebih lanjut, silakan hubungi sales Anda.
                                                 </p>
 
                                                 <a href="https://wa.me/{{ auth()->user()->sales->phone }}" target="_blank"
@@ -126,20 +118,24 @@
                                                     <i class="fab fa-whatsapp me-2"></i>
                                                     Hubungi Sales
                                                 </a>
+                                            @elseif ($order->current_status_id > 1)
+                                                <p class="title">Pesanan dikonfirmasi pada 23 Desember 2025</p>
+
+                                                @if ($order->current_status_id == 2)
+                                                    <a class="btn-main mt-2"
+                                                        href="/lengkapi-pesanan/{{ $order->unique_order }}">
+                                                        <span>Lengkapi Pesanan</span>
+                                                    </a>
+                                                @endif
                                             @else
                                                 <div class="w-75">
-                                                    <p class="title mb-2">Pesanan Anda sedang dalam proses konfirmasi oleh
-                                                        tim
-                                                        kami</p>
+                                                    <p class="title mb-2">
+                                                        Pesanan Anda sedang dalam proses konfirmasi oleh tim kami
+                                                    </p>
 
                                                     <p class="text-sm text-gray-400 mb-4">
                                                         Mohon periksa email secara berkala untuk mendapatkan notifikasi
                                                         selanjutnya.
-                                                    </p>
-
-                                                    <p class="text-sm text-gray-400 mb-2">
-                                                        Jika mengalami kendala atau membutuhkan informasi lebih
-                                                        lanjut, silakan hubungi sales Anda.
                                                     </p>
 
                                                     <a href="https://wa.me/{{ auth()->user()->sales->phone }}"
@@ -167,14 +163,18 @@
                                             <p
                                                 class="{{ $order->current_status_id >= 3 && $order->current_status_id < 8 ? '' : 'pt-3' }}">
                                                 Pembayaran</p>
-                                            @if ($order->current_status_id >= 3 && $order->current_status_id < 8)
+                                            @if ($order->current_status_id == 8 && $cancel_step === 'pembayaran')
+                                                <p class="title">{{ $order_status->note }}</p>
+                                            @elseif ($order->current_status_id >= 3 && $order->current_status_id < 8)
                                                 <p class="title">
                                                     {{ $order->total_cost ? 'Rp' . number_format($order->total_cost, 0, ',', '.') : '-' }}
                                                 </p>
+
                                                 @if ($order->current_status_id == 3)
                                                     <p class="info">
                                                         Pesanan otomatis dibatalkan jika 2x24 jam tidak dibayarkan
                                                     </p>
+
                                                     <a href="#" class="btn-main" id="pay-button"
                                                         data-order-id="{{ $order->unique_order }}">
                                                         <span>Bayar Sekarang</span>
@@ -183,10 +183,8 @@
                                                     <a class="btn-invoice mt-2"
                                                         href="{{ asset('storage/' . $order->invoice_document_url) }}"
                                                         download="{{ 'INVOICE-' . $order->unique_order . '.pdf' }}">
-                                                        <span>
-                                                            <i class="fa-solid fa-download me-2"></i>
-                                                            Unduh Invoice
-                                                        </span>
+                                                        <i class="fa-solid fa-download me-2"></i>
+                                                        Unduh Invoice
                                                     </a>
                                                 @endif
                                             @endif
