@@ -243,4 +243,16 @@ class OrderController extends Controller
 
         return response()->download($path);
     }
+
+    public function markAsReceived(Request $request, Order $order)
+    {
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $path = $file->store('proof_of_deliveries', 'public');
+
+            Order::markAsReceived($order->id, $path);
+        }
+
+        return redirect()->back();
+    }
 }
