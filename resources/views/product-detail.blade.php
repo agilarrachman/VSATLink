@@ -303,8 +303,8 @@
         const cancelBtn = document.getElementById('cancelBtn');
         const submitBtn = document.getElementById('submitOrderBtn');
 
-        const userLat = @json(auth()->user()->latitude);
-        const userLng = @json(auth()->user()->longitude);
+        const userLat = @json(optional(auth()->user())->latitude);
+        const userLng = @json(optional(auth()->user())->longitude);
         const myAddressCheckbox = document.getElementById('myaddress');
 
         const latText = document.getElementById('latText');
