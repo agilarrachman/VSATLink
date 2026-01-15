@@ -12,6 +12,16 @@ class ActivationNota extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'installation_date' => 'datetime',
+        'online_date' => 'datetime',
+    ];
+
+    public function order()
+    {
+        return $this->hasOne(Order::class);
+    }
+
     public function activation_statuses()
     {
         return $this->belongsTo(ActivationStatus::class, 'current_status_id');

@@ -58,6 +58,11 @@ class Order extends Model
         return $this->belongsTo(OrderAddress::class);
     }
 
+    public function activation_nota()
+    {
+        return $this->belongsTo(ActivationNota::class);
+    }
+
     public function activation_address()
     {
         return $this->belongsTo(ActivationAddress::class);
@@ -291,7 +296,7 @@ class Order extends Model
         Storage::disk('public')->put($databasePath, $pdf->output());
 
         return $databasePath;
-    }    
+    }
 
     public static function processPaymentSuccess($order, $paymentType)
     {
