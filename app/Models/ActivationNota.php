@@ -40,30 +40,34 @@ class ActivationNota extends Model
                 'class' => 'bg-[#ff3e1d] text-white',
             ],
             2 => [
+                'label' => 'Belum Dijadwalkan',
+                'class' => 'bg-[#ff3e1d] text-white',
+            ],
+            3 => [
                 'label' => 'Sudah Dijadwalkan',
                 'class' => 'bg-[#ffab00] text-white',
             ],
-            3 => [
+            4 => [
                 'label' => 'Siap Instalasi',
                 'class' => 'bg-[#03c3ec] text-white',
             ],
-            4 => [
+            5 => [
                 'label' => 'Teknisi Dalam Perjalanan',
                 'class' => 'bg-[#03c3ec] text-white',
             ],
-            5 => [
+            6 => [
                 'label' => 'Teknisi Tiba Di Lokasi',
                 'class' => 'bg-[#03c3ec] text-white',
             ],
-            6 => [
+            7 => [
                 'label' => 'Request Aktivasi',
                 'class' => 'bg-gray-300 text-[var(--primary-color)]',
             ],
-            7 => [
+            8 => [
                 'label' => 'Aktivasi Terverifikasi',
                 'class' => 'bg-[#71dd37] text-white',
             ],
-            8 => [
+            9 => [
                 'label' => 'SPA Ditandatangani',
                 'class' => 'bg-[#71dd37] text-white',
             ]
@@ -78,11 +82,11 @@ class ActivationNota extends Model
 
         if ($status && $status !== 'Semua') {
             $statusMap = [
-                'Sudah Dijadwalkan' => [2, 3],
-                'Perjalan Teknisi' => [4, 5],
-                'Sedang Diproses' => [6],
-                'Belum Ditandatangani' => [7],
-                'Selesai' => [8],
+                'Sudah Dijadwalkan' => [3],
+                'Perjalan Teknisi' => [5, 6],
+                'Sedang Diproses' => [7],
+                'Belum Ditandatangani' => [8],
+                'Selesai' => [9],
             ];
 
             if (isset($statusMap[$status])) {

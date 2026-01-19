@@ -76,10 +76,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="activate-step {{ $nota->current_status_id >= 3 ? 'completed' : '-' }}">
+                                    <div class="activate-step {{ $nota->current_status_id >= 4 ? 'completed' : '-' }}">
                                         <div class="indicator">
                                             <div class="dot">
-                                                @if ($nota->current_status_id >= 3)
+                                                @if ($nota->current_status_id >= 4)
                                                     <div class="circle">
                                                         <i class="fa-solid fa-check"></i>
                                                     </div>
@@ -91,10 +91,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="activate-step {{ $nota->current_status_id >= 5 ? 'completed' : '-' }}">
+                                    <div class="activate-step {{ $nota->current_status_id >= 6 ? 'completed' : '-' }}">
                                         <div class="indicator">
                                             <div class="dot">
-                                                @if ($nota->current_status_id >= 5)
+                                                @if ($nota->current_status_id >= 6)
                                                     <div class="circle">
                                                         <i class="fa-solid fa-check"></i>
                                                     </div>
@@ -106,10 +106,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="activate-step last {{ $nota->current_status_id == 8 ? 'completed' : '-' }}">
+                                    <div class="activate-step last {{ $nota->current_status_id == 9 ? 'completed' : '-' }}">
                                         <div class="indicator">
                                             <div class="dot">
-                                                @if ($nota->current_status_id == 8)
+                                                @if ($nota->current_status_id == 9)
                                                     <div class="circle">
                                                         <i class="fa-solid fa-check"></i>
                                                     </div>
