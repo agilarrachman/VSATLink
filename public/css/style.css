@@ -21371,11 +21371,6 @@ a.btn-main:hover,
       }
 /* de-number close */
 
-#recaptcha {
-    width: 304px;
-    margin: 0 auto;
-}
-
 
 .carousel-indicators [data-mdb-target]{
   background: none !important;

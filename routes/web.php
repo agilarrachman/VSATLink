@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivationNotaController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -32,7 +33,8 @@ Route::middleware(['auth'])->group(
         Route::get('/pembayaran/selesai', [OrderController::class, 'paymentFinish'])->name('pembayaran.selesai');
         Route::post('/pembayaran/verifikasi/{orderId}', [OrderController::class, 'verifyPayment']);
         Route::get('/download/invoice/{filename}', [OrderController::class, 'downloadInvoice']);        
-
         Route::post('/konfirmasi-diterima/{order}', [OrderController::class, 'markAsReceived']);
+
+        Route::get('/aktivasi', [ActivationNotaController::class, 'index']);
     }
 );

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ActivationNota;
 use App\Http\Requests\StoreActivationNotaRequest;
 use App\Http\Requests\UpdateActivationNotaRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ActivationNotaController extends Controller
 {
@@ -13,7 +14,12 @@ class ActivationNotaController extends Controller
      */
     public function index()
     {
-        //
+        $status = request()->get('status', 'Semua');
+
+        return view('activations', [
+            "page" => "activations",
+            'notas' => ActivationNota::getAllMyActivations(Auth::user(), $status)
+        ]);
     }
 
     /**
