@@ -36,5 +36,6 @@ Route::middleware(['auth'])->group(
         Route::post('/konfirmasi-diterima/{order}', [OrderController::class, 'markAsReceived']);
 
         Route::get('/aktivasi', [ActivationNotaController::class, 'index']);
+        Route::get('/detail-aktivasi/{nota}', [ActivationNotaController::class, 'show']);
     }
 );

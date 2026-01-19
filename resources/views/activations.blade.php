@@ -67,7 +67,7 @@
                                     </div>
                                 </div>
                                 <div class="action flex flex-col items-end w-full md:w-auto">
-                                    <a href="/aktivasi/{{ $nota->id }}"
+                                    <a href="/detail-aktivasi/{{ $nota->id }}"
                                         class="btn-primary !rounded-md py-2 !w-full md:!w-fit flex justify-center">
                                         <span>Lihat Detail</span>
                                     </a>

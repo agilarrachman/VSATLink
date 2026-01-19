@@ -80,7 +80,7 @@ class ActivationNota extends Model
             $statusMap = [
                 'Sudah Dijadwalkan' => [2, 3],
                 'Perjalan Teknisi' => [4, 5],
-                'Sedang Diproses' => [6, 7],
+                'Sedang Diproses' => [6],
                 'Belum Ditandatangani' => [7],
                 'Selesai' => [8],
             ];
