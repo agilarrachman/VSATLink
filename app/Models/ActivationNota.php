@@ -40,34 +40,38 @@ class ActivationNota extends Model
                 'class' => 'bg-[#ff3e1d] text-white',
             ],
             2 => [
-                'label' => 'Belum Dijadwalkan',
+                'label' => 'Konfirmasi Jadwal',
                 'class' => 'bg-[#ff3e1d] text-white',
             ],
             3 => [
-                'label' => 'Sudah Dijadwalkan',
-                'class' => 'bg-[#ffab00] text-white',
+                'label' => 'Belum Dijadwalkan',
+                'class' => 'bg-[#ff3e1d] text-white',
             ],
             4 => [
+                'label' => 'Sudah Dijadwalkan',
+                'class' => 'bg-[#ff3e1d] text-white',
+            ],
+            5 => [
                 'label' => 'Siap Instalasi',
                 'class' => 'bg-[#03c3ec] text-white',
             ],
-            5 => [
+            6 => [
                 'label' => 'Teknisi Dalam Perjalanan',
                 'class' => 'bg-[#03c3ec] text-white',
             ],
-            6 => [
+            7 => [
                 'label' => 'Teknisi Tiba Di Lokasi',
                 'class' => 'bg-[#03c3ec] text-white',
             ],
-            7 => [
+            8 => [
                 'label' => 'Request Aktivasi',
                 'class' => 'bg-gray-300 text-[var(--primary-color)]',
             ],
-            8 => [
+            9 => [
                 'label' => 'Aktivasi Terverifikasi',
                 'class' => 'bg-[#71dd37] text-white',
             ],
-            9 => [
+            10 => [
                 'label' => 'SPA Ditandatangani',
                 'class' => 'bg-[#71dd37] text-white',
             ]

@@ -46,7 +46,7 @@
                 <div class="notas flex flex-col gap-3">
                     @foreach ($notas as $nota)
                         <div role="link" tabindex="0"
-                            onclick="window.location.href='{{ url('/detail-pesanan/' . $nota->order->unique_order) }}'"
+                            onclick="window.location.href='{{ url('/detail-aktivasi/' . $nota->id) }}'"
                             class="padding40 wow fadeInUp rounded-10 shadow-lg/10 bg-gray-900/40 backdrop-blur-md border !border-white/20 cursor-pointer">
                             <div class="flex flex-col flex-md-row justify-between items-center">
                                 <div class="detail flex flex-col flex-md-row items-center gap-4">
@@ -61,8 +61,14 @@
                                             Kode Pesanan: {{ $nota->order->unique_order }}
                                         </p>
                                         <h3 class="mb-0">{{ $nota->order->product->name }}</h3>
-                                        <p class="mb-0 text-sm">
-                                            {{ $nota->installation_date ? 'Jadwal Instalasi pada tanggal ' . $nota->installation_date->translatedFormat('d F Y, H:i') : 'Belum dijadwalkan' }}
+                                        <p class="mb-0 text-sm text-white">
+                                            @if ($nota->installation_date)
+                                                Jadwal Instalasi pada tanggal
+                                                {{ $nota->installation_date->translatedFormat('d F Y') }} |
+                                                {{ $nota->installation_session === 'Pagi' ? 'Pagi (08.00 - 11.00)' : 'Siang (13.00 - 17.00)' }}
+                                            @else
+                                                Belum dijadwalkan
+                                            @endif
                                         </p>
                                     </div>
                                 </div>
@@ -83,5 +89,5 @@
                 </div>
             </div>
         </section>
-    </div>    
+    </div>
 @endsection

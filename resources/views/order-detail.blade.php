@@ -269,7 +269,7 @@
                                                 Diterima</p>
                                             @if ($order->current_status_id == 7)
                                                 <p class="title">{{ $received_status_order_note }}</p>
-                                                <a class="btn-main mt-2" href="#">
+                                                <a class="btn-main mt-2" href="/detail-aktivasi/{{ $order->activation_nota_id }}">
                                                     <span>Lanjut aktivasi perangkat sekarang</span>
                                                 </a>
                                             @endif

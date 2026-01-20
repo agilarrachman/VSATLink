@@ -55,7 +55,7 @@ class ActivationNotaController extends Controller
         // $receivedStatusOrderNote = $receivedStatusOrder ? $receivedStatusOrder->note : null;
 
         return view('activation-detail', [
-            'page' => 'activation-detail',
+            'page' => 'activations',
             'nota' => $nota,
             // 'confirmed_order_date' => $confirmedOrderDate,
             // 'received_status_order_note' => $receivedStatusOrderNote,
