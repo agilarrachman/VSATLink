@@ -6,6 +6,7 @@ use App\Models\ActivationNota;
 use App\Http\Requests\StoreActivationNotaRequest;
 use App\Http\Requests\UpdateActivationNotaRequest;
 use App\Models\ActivationStatusHistory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ActivationNotaController extends Controller
@@ -64,12 +65,28 @@ class ActivationNotaController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ActivationNota $activationNota)
+    public function confirmSchedule(ActivationNota $nota)
     {
-        //
+        ActivationNota::confirmSchedule($nota->id);
+
+        return back()->with(
+            'success',
+            'Jadwal instalasi dan aktivasi layanan Anda telah berhasil dikonfirmasi. Tim kami akan melakukan instalasi sesuai dengan jadwal yang telah ditentukan.'
+        );
+    }
+
+    public function rejectSchedule(Request $request, ActivationNota $nota)
+    {
+        $request->validate([
+            'reject_reason' => 'required',
+        ]);
+
+        ActivationNota::rejectSchedule($nota->id, $request->reject_reason);
+
+        return back()->with(
+            'success',
+            'Penolakan jadwal instalasi berhasil dikirim. Tim kami akan meninjau alasan penolakan dan mengatur ulang jadwal instalasi Anda.'
+        );
     }
 
     /**

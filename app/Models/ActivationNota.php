@@ -49,7 +49,7 @@ class ActivationNota extends Model
             ],
             4 => [
                 'label' => 'Sudah Dijadwalkan',
-                'class' => 'bg-[#ff3e1d] text-white',
+                'class' => 'bg-[#ffab00] text-white',
             ],
             5 => [
                 'label' => 'Siap Instalasi',
@@ -99,5 +99,39 @@ class ActivationNota extends Model
         }
 
         return $query->latest()->paginate(5)->withQueryString();
+    }
+
+    public static function confirmSchedule($activationNotaId)
+    {
+        $activationNota = self::findOrFail($activationNotaId);
+
+        $activationNota->update([
+            'current_status_id'  => 4,
+        ]);
+
+        ActivationStatusHistory::create([
+            'activation_status_id' => 4,
+            'activation_nota_id'   => $activationNota->id,
+            'note' => 'Pelanggan telah mengonfirmasi jadwal instalasi dan aktivasi layanan',
+        ]);
+
+        return $activationNota;
+    }
+
+    public static function rejectSchedule($activationNotaId, $rejectReason)
+    {
+        $activationNota = self::findOrFail($activationNotaId);
+
+        $activationNota->update([
+            'current_status_id'  => 3,
+        ]);
+
+        ActivationStatusHistory::create([
+            'activation_status_id' => 3,
+            'activation_nota_id'   => $activationNota->id,
+            'note' => 'Jadwal instalasi ditolak oleh pelanggan dengan alasan: ' . $rejectReason,
+        ]);
+
+        return $activationNota;
     }
 }

@@ -34,8 +34,10 @@ Route::middleware(['auth'])->group(
         Route::post('/pembayaran/verifikasi/{orderId}', [OrderController::class, 'verifyPayment']);
         Route::get('/download/invoice/{filename}', [OrderController::class, 'downloadInvoice']);        
         Route::post('/konfirmasi-diterima/{order}', [OrderController::class, 'markAsReceived']);
-
+        
         Route::get('/aktivasi', [ActivationNotaController::class, 'index']);
         Route::get('/detail-aktivasi/{nota}', [ActivationNotaController::class, 'show']);
+        Route::post('/confirm-schedule/{nota}', [ActivationNotaController::class, 'confirmSchedule']);
+        Route::post('/reject-schedule/{nota}', [ActivationNotaController::class, 'rejectSchedule']);
     }
 );
