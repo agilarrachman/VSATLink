@@ -21,4 +21,12 @@ class Admin extends Model
             ->pluck('email')
             ->toArray();
     }
+
+    public static function getAllInstallationCoordinatorEmail()
+    {
+        return self::where('role', 'Service Operation Admin')
+            ->where('position', 'Installation Coordinator')
+            ->pluck('email')
+            ->toArray();
+    }
 }

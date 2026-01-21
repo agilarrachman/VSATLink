@@ -6,8 +6,10 @@ use App\Models\ActivationNota;
 use App\Http\Requests\StoreActivationNotaRequest;
 use App\Http\Requests\UpdateActivationNotaRequest;
 use App\Models\ActivationStatusHistory;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class ActivationNotaController extends Controller
 {
@@ -81,7 +83,23 @@ class ActivationNotaController extends Controller
             'reject_reason' => 'required',
         ]);
 
-        ActivationNota::rejectSchedule($nota->id, $request->reject_reason);
+        $activationNota = ActivationNota::rejectSchedule($nota->id, $request->reject_reason);
+
+        $data = [
+            'customer_name' => $activationNota->order->customer->name,
+            'unique_order'  => $activationNota->order->unique_order,
+            'product_name'  => $activationNota->order->product->name,
+            'installation_date'  => $activationNota->installation_date->translatedFormat('d F Y'),
+            'installation_session'  => $activationNota->installation_session === 'Pagi' ? 'Pagi (08.00-11.00)' : 'Siang (13.00-17.00)',
+            'reject_reason' => $request->reject_reason,
+        ];
+
+        $installationCoordinatorEmails = Admin::getAllInstallationCoordinatorEmail();
+
+        Mail::send('emails.schedule-rejected', $data, function ($message) use ($installationCoordinatorEmails) {
+            $message->to($installationCoordinatorEmails)
+                ->subject('[NOTIFIKASI] Permohonan Penjadwalan Ulang Instalasi & Aktivasi');
+        });;
 
         return back()->with(
             'success',
