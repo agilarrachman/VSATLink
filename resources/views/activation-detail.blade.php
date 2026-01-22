@@ -127,10 +127,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="activate-step {{ $nota->current_status_id >= 6 ? 'completed' : '-' }}">
+                                    <div class="activate-step {{ $nota->current_status_id >= 7 ? 'completed' : '-' }}">
                                         <div class="indicator">
                                             <div class="dot">
-                                                @if ($nota->current_status_id >= 6)
+                                                @if ($nota->current_status_id >= 7)
                                                     <div class="circle">
                                                         <i class="fa-solid fa-check"></i>
                                                     </div>
@@ -139,13 +139,18 @@
                                         </div>
                                         <div class="content">
                                             <p>Perjalanan Teknisi</p>
+                                            @if ($nota->current_status_id >= 6)
+                                                <p class="title">
+                                                    {{ $activation_status->note }}
+                                                </p>
+                                            @endif
                                         </div>
                                     </div>
 
-                                    <div class="activate-step {{ $nota->current_status_id >= 6 ? 'completed' : '-' }}">
+                                    <div class="activate-step {{ $nota->current_status_id >= 9 ? 'completed' : '-' }}">
                                         <div class="indicator">
                                             <div class="dot">
-                                                @if ($nota->current_status_id >= 6)
+                                                @if ($nota->current_status_id >= 9)
                                                     <div class="circle">
                                                         <i class="fa-solid fa-check"></i>
                                                     </div>

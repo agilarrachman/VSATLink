@@ -52,7 +52,7 @@ class ActivationNota extends Model
                 'class' => 'bg-[#ffab00] text-white',
             ],
             5 => [
-                'label' => 'Siap Instalasi',
+                'label' => 'Menunggu Instalasi',
                 'class' => 'bg-[#03c3ec] text-white',
             ],
             6 => [
