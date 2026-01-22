@@ -64,11 +64,11 @@ class ActivationNota extends Model
                 'class' => 'bg-[#03c3ec] text-white',
             ],
             8 => [
-                'label' => 'Request Aktivasi',
+                'label' => 'Dalam Proses',
                 'class' => 'bg-gray-300 text-[var(--primary-color)]',
             ],
             9 => [
-                'label' => 'Aktivasi Terverifikasi',
+                'label' => 'Berhasil Diaktivasi',
                 'class' => 'bg-[#71dd37] text-white',
             ],
             10 => [

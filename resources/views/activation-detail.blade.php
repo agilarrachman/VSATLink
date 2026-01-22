@@ -159,6 +159,11 @@
                                         </div>
                                         <div class="content">
                                             <p>Proses Instalasi & Aktivasi</p>
+                                            @if ($nota->current_status_id >= 7)
+                                                <p class="title">
+                                                    Proses instalasi dan aktivasi layanan sedang berlangsung
+                                                </p>
+                                            @endif
                                         </div>
                                     </div>
 
