@@ -183,7 +183,7 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="content">
+                                        <div class="content" style="margin: auto 0;">
                                             <p>Dokumen Legalitas</p>
                                             @if ($nota->current_status_id == 9 && $nota->activation_document_url != null)
                                                 <p class="title">

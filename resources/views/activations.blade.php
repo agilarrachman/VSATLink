@@ -26,6 +26,7 @@
                     @php
                         $tabs = [
                             'Semua',
+                            'Konfirmasi Jadwal',
                             'Sudah Dijadwalkan',
                             'Perjalan Teknisi',
                             'Sedang Diproses',

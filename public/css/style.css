@@ -28550,12 +28550,16 @@ img {
     margin-bottom: 16px;
 }
 
+.activate-step.last {
+    align-items: end;
+}
+
 .activate-step::before {
     content: "";
     position: absolute;
     left: 30px;
     top: 75px;
-    bottom: 100px;
+    bottom: 40px;
     width: 1px;
     background: #adadad;
     z-index: 10;

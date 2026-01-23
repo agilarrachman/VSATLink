@@ -90,15 +90,16 @@ class ActivationNota extends Model
 
         if ($status && $status !== 'Semua') {
             $statusMap = [
-                'Sudah Dijadwalkan' => [3],
-                'Perjalan Teknisi' => [5, 6],
-                'Sedang Diproses' => [7],
-                'Belum Ditandatangani' => [8],
-                'Selesai' => [9],
+                'Konfirmasi Jadwal' => [2],
+                'Sudah Dijadwalkan' => [4],
+                'Perjalan Teknisi' => [6],
+                'Sedang Diproses' => [7, 8, 9],
+                'Belum Ditandatangani' => [9],
+                'Selesai' => [10],
             ];
 
             if (isset($statusMap[$status])) {
-                $query->whereIn('current_status_id', $statusMap[$status]);
+                $query->whereIn('activation_notas.current_status_id', $statusMap[$status]);
             }
         }
 
