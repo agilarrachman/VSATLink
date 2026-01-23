@@ -40,5 +40,6 @@ Route::middleware(['auth'])->group(
         Route::post('/confirm-schedule/{nota}', [ActivationNotaController::class, 'confirmSchedule']);
         Route::post('/reject-schedule/{nota}', [ActivationNotaController::class, 'rejectSchedule']);
         Route::post('/signing/{nota}', [ActivationNotaController::class, 'signingActivationDocument']);
+        Route::get('/download/spa/{filename}', [ActivationNotaController::class, 'downloadSPA']);        
     }
 );

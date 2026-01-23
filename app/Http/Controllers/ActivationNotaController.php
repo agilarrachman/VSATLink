@@ -7,6 +7,7 @@ use App\Models\ActivationStatusHistory;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class ActivationNotaController extends Controller
@@ -95,5 +96,14 @@ class ActivationNotaController extends Controller
             'success',
             'Dokumen Surat Pernyataan Aktivasi berhasil ditandatangani.'
         );
+    }
+
+    public function downloadSPA($filename)
+    {
+        $path = storage_path('app/public/activation_documents/' . $filename);
+
+        abort_unless(file_exists($path), 404);
+
+        return response()->download($path);
     }
 }
