@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log as Log;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class ActivationNota extends Model
 {
@@ -133,5 +137,53 @@ class ActivationNota extends Model
         ]);
 
         return $activationNota;
+    }
+
+    public static function generateActivationDocument($nota)
+    {
+        $pdf = Pdf::loadView('pdf.activation-document', [
+            'nota' => $nota
+        ]);
+
+        $fileName = 'SPA-' . $nota->order->unique_order . '.pdf';
+        $databasePath = 'activation_documents/' . $fileName;
+
+        Storage::disk('public')->put($databasePath, $pdf->output());
+
+        $nota->update(['activation_document_url' => $databasePath]);
+        Log::info("Generate Activation Document Success", [
+            'order_id' => $nota->order->unique_order,
+            'activation_document_url' => $nota->activation_document_url,
+            'online_date' => $nota->online_date,
+        ]);
+    }
+
+    public static function signingActivationDocument($nota, $signatureBase64)
+    {
+        Storage::disk('public')->delete($nota->activation_document_url);
+
+        $pdf = Pdf::loadView('pdf.signed-activation-document', [
+            'nota' => $nota,
+            'signatureCustomer' => $signatureBase64
+        ]);
+
+        $fileName = 'SPA-' . $nota->order->unique_order . '.pdf';
+        $databasePath = 'activation_documents/' . $fileName;
+
+        Storage::disk('public')->put($databasePath, $pdf->output());
+
+        $nota->update([
+            'current_status_id'  => 10,
+            'activation_document_url' => $databasePath,
+            'is_document_signed' => true,
+        ]);
+
+        $timestamp = Carbon::now()->translatedFormat('d F Y H:i');
+
+        ActivationStatusHistory::create([
+            'activation_status_id' => 10,
+            'activation_nota_id'   => $nota->id,
+            'note' => "Dokumen SPA telah ditandatangani oleh pelanggan pada {$timestamp}",
+        ]);
     }
 }

@@ -159,19 +159,24 @@
                                         </div>
                                         <div class="content">
                                             <p>Proses Instalasi & Aktivasi</p>
-                                            @if ($nota->current_status_id >= 7)
+                                            @if ($nota->current_status_id >= 7 && $nota->current_status_id < 9)
                                                 <p class="title">
                                                     Proses instalasi dan aktivasi layanan sedang berlangsung
+                                                </p>
+                                            @elseif ($nota->current_status_id >= 9)
+                                                <p class="title">
+                                                    Layanan Anda telah berhasil diaktivasi pada
+                                                    {{ $nota->online_date->translatedFormat('H:i | d F Y') }}
                                                 </p>
                                             @endif
                                         </div>
                                     </div>
 
                                     <div
-                                        class="activate-step last {{ $nota->current_status_id == 9 ? 'completed' : '-' }}">
+                                        class="activate-step last {{ $nota->current_status_id == 10 ? 'completed' : '-' }}">
                                         <div class="indicator">
                                             <div class="dot">
-                                                @if ($nota->current_status_id == 9)
+                                                @if ($nota->current_status_id == 10)
                                                     <div class="circle">
                                                         <i class="fa-solid fa-check"></i>
                                                     </div>
@@ -180,6 +185,58 @@
                                         </div>
                                         <div class="content">
                                             <p>Dokumen Legalitas</p>
+                                            @if ($nota->current_status_id == 9 && $nota->activation_document_url != null)
+                                                <p class="title">
+                                                    Tanda tangani Surat Pernyataan Aktivasi Anda
+                                                </p>
+
+                                                <form action="/signing/{{ $nota->id }}" method="POST"
+                                                    enctype="multipart/form-data">
+                                                    @csrf
+                                                    <p class="info">Silakan unggah tanda tangan Anda (latar belakang
+                                                        putih)</p>
+
+                                                    <div class="upload-box my-2" onclick="triggerFile()">
+                                                        <input type="file" id="uploadInput" name="image"
+                                                            accept="image/*" hidden />
+
+                                                        <div class="upload-placeholder" id="placeholder">
+                                                            <i class="fa-solid fa-camera"></i>
+                                                        </div>
+
+                                                        <div class="preview-wrapper" id="previewWrapper">
+                                                            <img id="previewImage" />
+                                                            <span class="remove-btn" onclick="removeImage(event)">
+                                                                <i class="fa-solid fa-xmark"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="flex gap-3">
+                                                        <button type="submit" class="btn-disabled mt-2"
+                                                            id="submitSignBtn" disabled>
+                                                            Tandatangani
+                                                        </button>
+
+                                                        <a class="btn-spa mt-2"
+                                                            href="{{ asset('storage/' . $nota->activation_document_url) }}"
+                                                            download="{{ 'SPA-' . $nota->order->unique_order . '.pdf' }}">
+                                                            <i class="fa-solid fa-download me-2"></i>
+                                                            Unduh Preview
+                                                        </a>
+                                                    </div>
+                                                </form>
+                                            @elseif ($nota->current_status_id == 10)
+                                                <p class="title">
+                                                    Anda telah menandatangani Surat Pernyataan Aktivasi
+                                                </p>
+                                                <a class="btn-spa mt-2"
+                                                    href="{{ asset('storage/' . $nota->activation_document_url) }}"
+                                                    download="{{ 'SPA-' . $nota->order->unique_order . '.pdf' }}">
+                                                    <i class="fa-solid fa-download me-2"></i>
+                                                    Unduh SPA
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -287,7 +344,9 @@
         const cancelBtn = document.getElementById('cancelBtn');
         const submitBtn = document.getElementById('submitRejectBtn');
 
-        rejectBtn.addEventListener('click', openModal);
+        if (rejectBtn) {
+            rejectBtn.addEventListener('click', openModal);
+        }
 
         function openModal() {
             modal.classList.remove('hidden');
@@ -314,5 +373,69 @@
             }
         });
         // === Script Reject Jadwal Instalasi End ===
+
+        // === Script Upload File Start ===
+        const uploadInput = document.getElementById('uploadInput');
+        const uploadBox = document.querySelector('.upload-box');
+        const removeBtn = document.querySelector('.remove-btn');
+        const submitSignBtn = document.getElementById('submitSignBtn');
+
+        function enableSubmit() {
+            submitSignBtn.disabled = false;
+            submitSignBtn.classList.remove('btn-disabled');
+            submitSignBtn.classList.add('btn-main');
+        }
+
+        function disableSubmit() {
+            submitSignBtn.disabled = true;
+            submitSignBtn.classList.add('btn-disabled');
+            submitSignBtn.classList.remove('btn-main');
+        }
+
+        if (uploadInput) {
+            uploadInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+
+                if (!file) {
+                    disableSubmit();
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const placeholder = document.getElementById('placeholder');
+                    const previewWrapper = document.getElementById('previewWrapper');
+
+                    if (placeholder) placeholder.style.display = 'none';
+                    if (previewWrapper) previewWrapper.style.display = 'block';
+
+                    document.getElementById('previewImage').src = e.target.result;
+                    enableSubmit();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        if (uploadBox) {
+            uploadBox.addEventListener('click', function() {
+                if (uploadInput) uploadInput.click();
+            });
+        }
+
+        if (removeBtn) {
+            removeBtn.addEventListener('click', function(event) {
+                event.stopPropagation();
+                if (uploadInput) uploadInput.value = '';
+
+                const previewWrapper = document.getElementById('previewWrapper');
+                const placeholder = document.getElementById('placeholder');
+
+                if (previewWrapper) previewWrapper.style.display = 'none';
+                if (placeholder) placeholder.style.display = 'block';
+
+                disableSubmit();
+            });
+        }
+        // === Script Upload File End ===
     </script>
 @endsection

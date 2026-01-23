@@ -39,5 +39,6 @@ Route::middleware(['auth'])->group(
         Route::get('/detail-aktivasi/{nota}', [ActivationNotaController::class, 'show']);
         Route::post('/confirm-schedule/{nota}', [ActivationNotaController::class, 'confirmSchedule']);
         Route::post('/reject-schedule/{nota}', [ActivationNotaController::class, 'rejectSchedule']);
+        Route::post('/signing/{nota}', [ActivationNotaController::class, 'signingActivationDocument']);
     }
 );

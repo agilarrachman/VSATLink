@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActivationNota;
-use App\Http\Requests\StoreActivationNotaRequest;
-use App\Http\Requests\UpdateActivationNotaRequest;
 use App\Models\ActivationStatusHistory;
 use App\Models\Admin;
 use Illuminate\Http\Request;
@@ -13,9 +11,6 @@ use Illuminate\Support\Facades\Mail;
 
 class ActivationNotaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $status = request()->get('status', 'Semua');
@@ -26,44 +21,16 @@ class ActivationNotaController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreActivationNotaRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(ActivationNota $nota)
     {
         if ($nota->order->customer_id !== Auth::id()) {
             abort(403, 'Anda bukan pemilik data aktivasi ini.');
         }
 
-        // $confirmedStatusOrder = OrderStatusHistory::getConfirmedStatusOrder($nota->id);
-        // $confirmedOrderDate = $confirmedStatusOrder ? $confirmedStatusOrder->created_at->translatedFormat('d F Y, H:i') : null;
-
-        // $receivedStatusOrder = OrderStatusHistory::getReceivedStatusOrder($nota->id);
-        // $receivedStatusOrderNote = $receivedStatusOrder ? $receivedStatusOrder->note : null;
-
         return view('activation-detail', [
             'page' => 'activations',
             'nota' => $nota,
-            // 'confirmed_order_date' => $confirmedOrderDate,
-            // 'received_status_order_note' => $receivedStatusOrderNote,
             'activation_status' => ActivationStatusHistory::getLatestStatusActivation($nota->id),
-            // 'cancel_step' => OrderStatusHistory::getCancelStep($nota->id),
         ]);
     }
 
@@ -107,19 +74,26 @@ class ActivationNotaController extends Controller
         );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateActivationNotaRequest $request, ActivationNota $activationNota)
+    public function signingActivationDocument(Request $request, ActivationNota $nota)
     {
-        //
-    }
+        $request->validate([
+            'image' => 'required|image|max:2048',
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ActivationNota $activationNota)
-    {
-        //
+        $signatureBase64 = null;
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+
+            $signatureBase64 = 'data:' . $file->getMimeType() . ';base64,' .
+                base64_encode(file_get_contents($file));
+        }
+
+        ActivationNota::signingActivationDocument($nota, $signatureBase64);
+
+        return back()->with(
+            'success',
+            'Dokumen Surat Pernyataan Aktivasi berhasil ditandatangani.'
+        );
     }
 }

@@ -28316,7 +28316,7 @@ img {
     background: #68707d;
 }
 
-.btn-invoice{
+.btn-invoice, .btn-spa{
     display: inline-block;
     font-family: var(--title-font);
     text-align: center;
@@ -28335,7 +28335,7 @@ img {
     background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
 }
 
-.btn-invoice:hover{   
+.btn-invoice:hover, .btn-spa:hover{   
     color: #fff;    
     transform: scale(1.05);
 }
@@ -28555,7 +28555,7 @@ img {
     position: absolute;
     left: 30px;
     top: 75px;
-    bottom: 40px;
+    bottom: 100px;
     width: 1px;
     background: #adadad;
     z-index: 10;
