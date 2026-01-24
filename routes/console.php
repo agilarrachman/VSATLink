@@ -14,3 +14,5 @@ Schedule::command('app:cancel-expired-orders')
     ->everyMinute();
 Schedule::command('app:generate-activation-document')
     ->everyMinute();
+Schedule::command('app:auto-sign-activation-documents')
+    ->everyMinute();

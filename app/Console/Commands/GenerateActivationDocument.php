@@ -75,5 +75,7 @@ class GenerateActivationDocument extends Command
                 });
             }
         }
+
+        return Command::SUCCESS;
     }
 }

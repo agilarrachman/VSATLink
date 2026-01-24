@@ -131,6 +131,12 @@
             vertical-align: top;
         }
 
+        .auto-sign-img {
+            display: block;
+            margin: 16px auto;
+            height: 30px;
+        }
+
         .sign-img {
             display: block;
             margin: 16px auto;
@@ -223,7 +229,10 @@
                     <div class="signature-customer">
                         <strong>Pelanggan</strong>
                     </div>
-                    <img src="{{ $signatureCustomer }}" class="sign-img">
+                    <img src="{{ public_path('/images/vsatlink.png') }}" class="auto-sign-img">
+                    <div style="font-size:8pt;color:#888;">
+                        Ditandatangani otomatis oleh sistem
+                    </div>
                     <div class="signature-line"></div>
                     <div class="signature-name">{{ $nota->order->customer->name }}</div>
                     <div>Tanggal: {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</div>
