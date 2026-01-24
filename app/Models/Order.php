@@ -10,7 +10,6 @@ use Midtrans\Snap;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Collection;
 
 class Order extends Model
 {
@@ -56,6 +55,11 @@ class Order extends Model
     public function order_address()
     {
         return $this->belongsTo(OrderAddress::class);
+    }
+
+    public function activation_nota()
+    {
+        return $this->belongsTo(ActivationNota::class);
     }
 
     public function activation_address()
@@ -291,7 +295,7 @@ class Order extends Model
         Storage::disk('public')->put($databasePath, $pdf->output());
 
         return $databasePath;
-    }    
+    }
 
     public static function processPaymentSuccess($order, $paymentType)
     {
@@ -358,7 +362,18 @@ class Order extends Model
     {
         $order = self::findOrFail($orderId);
 
+        $activationNota = ActivationNota::create([
+            'current_status_id' => 1,
+        ]);
+
+        ActivationStatusHistory::create([
+            'activation_status_id' => 1,
+            'activation_nota_id' => $activationNota->id,
+            'note' => "Pesanan {$order->unique_order} siap dilakukan penjadwalan instalasi dan aktivasi.",
+        ]);
+
         $order->update([
+            'activation_nota_id' => $activationNota->id,
             'current_status_id' => 7,
             'proof_of_delivery_image_url' => $path,
         ]);

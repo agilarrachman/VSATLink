@@ -21371,11 +21371,6 @@ a.btn-main:hover,
       }
 /* de-number close */
 
-#recaptcha {
-    width: 304px;
-    margin: 0 auto;
-}
-
 
 .carousel-indicators [data-mdb-target]{
   background: none !important;
@@ -28321,7 +28316,7 @@ img {
     background: #68707d;
 }
 
-.btn-invoice{
+.btn-invoice, .btn-spa{
     display: inline-block;
     font-family: var(--title-font);
     text-align: center;
@@ -28340,7 +28335,7 @@ img {
     background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
 }
 
-.btn-invoice:hover{   
+.btn-invoice:hover, .btn-spa:hover{   
     color: #fff;    
     transform: scale(1.05);
 }
@@ -28546,4 +28541,52 @@ img {
 
 .form-control:disabled, .form-control[readonly] {
     background-color: transparent !important;
+}
+
+.activate-step {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 16px;
+}
+
+.activate-step.last {
+    align-items: end;
+}
+
+.activate-step::before {
+    content: "";
+    position: absolute;
+    left: 30px;
+    top: 75px;
+    bottom: 40px;
+    width: 1px;
+    background: #adadad;
+    z-index: 10;
+}
+
+.activate-step.completed::before {
+    background: #5623d8;
+}
+
+.activate-step.last::before {
+    display: none;
+}
+
+.activate-step.last .indicator::after {
+    display: none;
+}
+
+.activate-step.completed .dot {
+    background: #31215d;
+    width: 60px;
+    height: 60px;
+}
+
+.activate-step.completed .dot i {
+    color: #ffffff;
+}
+
+.activate-step.completed .indicator::after {
+    background: #5623d8;
 }

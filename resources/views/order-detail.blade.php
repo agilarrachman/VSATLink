@@ -213,7 +213,7 @@
                                                         <p class="title">Pesanan dalam proses pengiriman</p>
                                                         <p class="info">Silakan unggah bukti pesanan diterima</p>
 
-                                                        <div class="upload-box my-2" onclick="triggerFile()">
+                                                        <div class="upload-box my-2">
                                                             <input type="file" id="uploadInput" name="image"
                                                                 accept="image/*" hidden />
 
@@ -229,7 +229,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <button type="submit" class="btn-main mt-2">
+                                                        <button type="submit" class="btn-disabled mt-2" id="submitReceivedBtn" disabled>
                                                             Konfirmasi
                                                         </button>
                                                     </form>
@@ -269,7 +269,8 @@
                                                 Diterima</p>
                                             @if ($order->current_status_id == 7)
                                                 <p class="title">{{ $received_status_order_note }}</p>
-                                                <a class="btn-main mt-2" href="#">
+                                                <a class="btn-main mt-2"
+                                                    href="/detail-aktivasi/{{ $order->activation_nota_id }}">
                                                     <span>Lanjut aktivasi perangkat sekarang</span>
                                                 </a>
                                             @endif
@@ -370,11 +371,28 @@
         const uploadInput = document.getElementById('uploadInput');
         const uploadBox = document.querySelector('.upload-box');
         const removeBtn = document.querySelector('.remove-btn');
+        const submitReceivedBtn = document.getElementById('submitReceivedBtn');
+
+        function enableSubmit() {
+            submitReceivedBtn.disabled = false;
+            submitReceivedBtn.classList.remove('btn-disabled');
+            submitReceivedBtn.classList.add('btn-main');
+        }
+
+        function disableSubmit() {
+            submitReceivedBtn.disabled = true;
+            submitReceivedBtn.classList.add('btn-disabled');
+            submitReceivedBtn.classList.remove('btn-main');
+        }
 
         if (uploadInput) {
             uploadInput.addEventListener('change', function(event) {
                 const file = event.target.files[0];
-                if (!file) return;
+                
+                if (!file) {
+                    disableSubmit();
+                    return;
+                }
 
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -384,6 +402,7 @@
                     if (placeholder) placeholder.style.display = 'none';
                     if (previewWrapper) previewWrapper.style.display = 'block';
                     document.getElementById('previewImage').src = e.target.result;
+                    enableSubmit();
                 };
                 reader.readAsDataURL(file);
             });
@@ -403,6 +422,8 @@
                 const placeholder = document.getElementById('placeholder');
                 if (previewWrapper) previewWrapper.style.display = 'none';
                 if (placeholder) placeholder.style.display = 'block';
+
+                disableSubmit();
             });
         }
         // === Script Upload File End ===

@@ -18,14 +18,15 @@
                     <div class="de-flex-col header-col-mid">
                         <ul id="mainmenu">
                             <li><a class="menu-item {{ $page === 'home' ? 'active' : '' }}"
-                                    href="{{ $page === 'home' ? '#hero' : '/' }}">Beranda</a></li>
+                                    href="{{ $page === 'home' ? '#swiper' : '/' }}">Beranda</a></li>
                             <li><a class="menu-item" href="{{ $page === 'home' ? '' : '/' }}#tentang">Tentang</a></li>
                             <li><a class="menu-item" href="{{ $page === 'home' ? '' : '/' }}#produk">Produk</a></li>
                             <li><a class="menu-item" href="{{ $page === 'home' ? '' : '/' }}#faq">FAQ</a></li>
                             @auth
-                                <li><a class="menu-item {{ $page === 'login' ? 'd-none' : '' }}" href="/pesanan">Pesanan</a>
+                                <li><a class="menu-item {{ $page === 'orders' ? 'active' : '' }}"
+                                        href="/pesanan">Pesanan</a>
                                 </li>
-                                <li><a class="menu-item {{ $page === 'login' ? 'd-none' : '' }}"
+                                <li><a class="menu-item {{ $page === 'activations' ? 'active' : '' }}"
                                         href="/aktivasi">Aktivasi</a></li>
                                 <li class="md:!hidden"><a class="menu-item" href="/profil">Profil</a></li>
                                 <li class="md:!hidden"><a class="menu-item" href="/logout">Logout</a></li>

@@ -30,8 +30,7 @@
 
         <section class="no-top no-bottom position-relative z-1000" id="swiper">
             <div class="v-center">
-                <div id="hero" class="swiper">
-                    <!-- Additional required wrapper -->
+                <div class="swiper">                    
                     <div class="swiper-wrapper">
                         <!-- Slides -->
                         @foreach ($promo_products as $promo_product)
@@ -69,14 +68,12 @@
                             </div>
                         @endforeach
                     </div>
-                    <!-- If we need pagination -->
+
                     <div class="swiper-pagination"></div>
 
-                    <!-- If we need navigation buttons -->
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-button-next"></div>
 
-                    <!-- If we need scrollbar -->
                     <div class="swiper-scrollbar"></div>
                 </div>
             </div>

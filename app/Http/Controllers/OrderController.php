@@ -82,7 +82,7 @@ class OrderController extends Controller
         $receivedStatusOrderNote = $receivedStatusOrder ? $receivedStatusOrder->note : null;
 
         return view('order-detail', [
-            'page' => 'order-detail',
+            'page' => 'orders',
             'order' => $order,
             'confirmed_order_date' => $confirmedOrderDate,
             'received_status_order_note' => $receivedStatusOrderNote,

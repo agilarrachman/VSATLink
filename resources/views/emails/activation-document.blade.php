@@ -9,11 +9,8 @@
                 <tr>
                     <td style="background-color:#5623d8; text-align:center; padding:20px;">
                         <h1 style="color:#ffffff; margin:0; font-size:22px;">
-                            Notifikasi Aktivasi VSATLink
+                            Notifikasi VSATLink
                         </h1>
-                        <p style="color:#e6dcff; margin:5px 0 0; font-size:14px;">
-                            Layanan VSAT Anda Telah Aktif
-                        </p>
                     </td>
                 </tr>
 
@@ -21,12 +18,12 @@
                 <tr>
                     <td style="padding:30px; color:#333333;">
                         <p style="margin-top:0; font-size:15px;">
-                            Yth. <strong>Bapak/Ibu {{ $order->customer->name }}</strong>,
+                            Yth. <strong>Bapak/Ibu {{ $nota->order->customer->name }}</strong>,
                         </p>
 
                         <p style="font-size:15px; line-height:1.6;">
                             Kami informasikan bahwa layanan <strong>VSATLink</strong> untuk pesanan
-                            <strong>{{ $order->unique_order }}</strong> telah berhasil
+                            <strong>{{ $nota->order->unique_order }}</strong> telah berhasil
                             <strong>diaktivasi</strong>.
                         </p>
 
@@ -36,8 +33,8 @@
                             <tr>
                                 <td style="font-size:14px; line-height:1.8;">
                                     <strong>Detail Aktivasi</strong><br><br>
-                                    <strong>SID:</strong> {{ $nota->sid }}<br>
-                                    <strong>Produk:</strong> {{ $order->product->name }}<br>
+                                    <strong>ID Pesanan:</strong> {{ $nota->order->unique_order }}<br>
+                                    <strong>Produk:</strong> {{ $nota->order->product->name }}<br>
                                     <strong>Tanggal Instalasi:</strong>
                                     {{ \Carbon\Carbon::parse($nota->installation_date)->translatedFormat('d F Y') }}<br>
                                     <strong>Status Monitoring:</strong> {{ $nota->sensor_status }}<br>
@@ -48,27 +45,21 @@
                         </table>
 
                         <p style="font-size:14px; line-height:1.6;">
-                            Bersama email ini, kami lampirkan atau sediakan
-                            <strong>Surat Pernyataan Aktivasi</strong> sebagai dokumen resmi
-                            bahwa layanan telah aktif dan dapat digunakan.
+                            Bersama email ini, kami sampaikan
+                            <strong>Surat Pernyataan Aktivasi</strong> dalam bentuk
+                            <strong>preview</strong> untuk ditinjau oleh Bapak/Ibu.
                         </p>
 
-                        <!-- CTA Button -->
-                        <table cellpadding="0" cellspacing="0" style="margin:25px 0;">
-                            <tr>
-                                <td align="center">
-                                    <a href="{{ $nota->activation_document_url }}"
-                                        style="background-color:#5623d8; color:#ffffff; text-decoration:none;
-                                        padding:12px 22px; border-radius:6px; font-size:14px; display:inline-block;">
-                                        Lihat Surat Pernyataan Aktivasi
-                                    </a>
-                                </td>
-                            </tr>
-                        </table>
+                        <p style="font-size:14px; line-height:1.6;">
+                            Untuk melakukan <strong>finalisasi aktivasi layanan</strong>,
+                            kami mohon kesediaan Bapak/Ibu untuk memberikan
+                            <strong>tanda tangan persetujuan</strong> pada
+                            Surat Pernyataan Aktivasi melalui website kami.
+                        </p>
 
                         <p style="font-size:14px; line-height:1.6;">
-                            Apabila terdapat pertanyaan lebih lanjut terkait layanan atau dokumen aktivasi,
-                            silakan menghubungi tim <strong>VSATLink</strong>.
+                            Setelah dokumen ditandatangani, status aktivasi akan kami
+                            tetapkan sebagai <strong>final</strong> dan berlaku secara resmi.
                         </p>
 
                         <p style="margin-top:25px; font-size:14px;">
@@ -80,7 +71,8 @@
 
                 <!-- Footer -->
                 <tr>
-                    <td style="background-color:#f0f0f0; padding:15px; text-align:center; font-size:12px; color:#777777;">
+                    <td
+                        style="background-color:#f0f0f0; padding:15px; text-align:center; font-size:12px; color:#777777;">
                         Email ini dikirim secara otomatis oleh sistem VSATLink.<br>
                         Mohon tidak membalas email ini.
                     </td>

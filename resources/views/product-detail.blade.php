@@ -298,8 +298,6 @@
 
     <script>
         const modal = document.getElementById('mapModal');
-        const openBtnTop = document.getElementById('openMapBtnTop');
-        const openBtnBottom = document.getElementById('openMapBtnBottom');
         const cancelBtn = document.getElementById('cancelBtn');
         const submitBtn = document.getElementById('submitOrderBtn');
 
