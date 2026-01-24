@@ -194,7 +194,7 @@
                                                     enctype="multipart/form-data">
                                                     @csrf
                                                     <p class="info">Silakan unggah tanda tangan Anda (latar belakang
-                                                        putih)</p>
+                                                        putih/transparan)</p>
 
                                                     <div class="upload-box my-2" onclick="triggerFile()">
                                                         <input type="file" id="uploadInput" name="image"
@@ -225,6 +225,11 @@
                                                             Unduh Preview
                                                         </a>
                                                     </div>
+
+                                                    <p class="info mt-2">
+                                                        *Dokumen otomatis ditandatangani jika 2x24 jam tidak ditandatangani
+                                                        secara manual.
+                                                    </p>
                                                 </form>
                                             @elseif ($nota->current_status_id == 10)
                                                 <p class="title">

@@ -187,4 +187,32 @@ class ActivationNota extends Model
             'note' => "Dokumen SPA telah ditandatangani oleh pelanggan pada {$timestamp}",
         ]);
     }
+
+    public static function AutoSignActivationDocument($nota)
+    {
+        Storage::disk('public')->delete($nota->activation_document_url);
+
+        $pdf = Pdf::loadView('pdf.auto-signed-activation-document', [
+            'nota' => $nota
+        ]);
+
+        $fileName = 'SPA-' . $nota->order->unique_order . '.pdf';
+        $databasePath = 'activation_documents/' . $fileName;
+
+        Storage::disk('public')->put($databasePath, $pdf->output());
+
+        $nota->update([
+            'current_status_id'  => 10,
+            'activation_document_url' => $databasePath,
+            'is_document_signed' => true,
+        ]);
+
+        $timestamp = Carbon::now()->translatedFormat('d F Y H:i');
+
+        ActivationStatusHistory::create([
+            'activation_status_id' => 10,
+            'activation_nota_id'   => $nota->id,
+            'note' => "Dokumen SPA telah ditandatangani secara otomatis oleh sistem pada {$timestamp}",
+        ]);
+    }
 }
