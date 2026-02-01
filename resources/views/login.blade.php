@@ -21,10 +21,10 @@
                                     satelit terbaik dan kelola pesanan Anda
                                 </p>
                                 @if (session()->has('loginError'))
-                                    <div class="alert alert-danger alert-dismissible fade show mt-3 text-left"
+                                    <div class="alert text-white bg-gray-900/40 backdrop-blur-md border !border-white/20 alert-dismissible fade show mt-3 text-left"
                                         role="alert">
                                         {{ session('loginError') }}
-                                        <button type="button" class="btn-close custom-close" data-bs-dismiss="alert"
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
                                             aria-label="Close"></button>
                                     </div>
                                 @endif
@@ -64,8 +64,8 @@
                                 </div>
                                 <div class="spacer-20"></div>
                                 <div id="submit">
-                                    <input type="submit" id="send_message" value="Sign In"
-                                        class="btn-main btn-fullwidth rounded-3" />
+                                    <input type="submit" id="submitBtn" value="Masuk"
+                                        class="btn-disabled btn-fullwidth rounded-3" disabled />
                                 </div>
                             </form>
                         </div>
@@ -74,7 +74,8 @@
             </div>
         </section>
     </div>
-
+@endsection
+@push('scripts')
     <script>
         function togglePassword() {
             const password = document.getElementById("password");
@@ -90,5 +91,34 @@
                 eyeIcon.classList.add("fa-eye");
             }
         }
+
+        function isFormValid() {
+            const username = $('#username').val().trim();
+            const password = $('#password').val().trim();
+
+            return username !== '' && password !== '';
+        }
+
+        function toggleSubmitButton() {
+            const btn = $('#submitBtn');
+
+            if (isFormValid()) {
+                btn.prop('disabled', false)
+                    .removeClass('btn-disabled')
+                    .addClass('btn-main');
+            } else {
+                btn.prop('disabled', true)
+                    .removeClass('btn-main')
+                    .addClass('btn-disabled');
+            }
+        }
+
+        $('#username, #password').on('input', function() {
+            toggleSubmitButton();
+        });
+
+        $(document).ready(function() {
+            toggleSubmitButton();
+        });
     </script>
-@endsection
+@endpush

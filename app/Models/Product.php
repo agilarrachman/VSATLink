@@ -15,6 +15,11 @@ class Product extends Model
         return 'slug';
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
     public static function getAllProducts()
     {
         return self::all();

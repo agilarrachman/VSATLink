@@ -253,6 +253,6 @@ class OrderController extends Controller
             Order::markAsReceived($order->id, $path);
         }
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Pesanan Anda telah diterima!');;
     }
 }

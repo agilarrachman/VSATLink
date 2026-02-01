@@ -23,10 +23,9 @@ class CustomerController extends Controller
     {
         $credentials = $request->validate([
             'username' => 'required',
-            'password' => 'required|min:3|max:12'
+            'password' => 'required'
         ]);
 
-        // Periksa apakah checkbox "Remember Me" dicentang
         $remember = $request->has('remember-me');
 
         if (Auth::attempt($credentials, $remember)) {
@@ -34,7 +33,7 @@ class CustomerController extends Controller
             return redirect()->intended('/');
         }
 
-        return back()->with('loginError', 'Login Gagal! Username atau password salah.');
+        return back()->with('loginError', 'Username atau password salah!');
     }
 
     public function logout()
