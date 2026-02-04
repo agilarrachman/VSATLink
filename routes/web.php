@@ -12,11 +12,14 @@ Route::get('/', [ProductController::class, 'index']);
 Route::get('/detail-produk/{product}', [ProductController::class, 'show']);
 Route::get('/login', [CustomerController::class, 'login'])->name('login');
 Route::post('/login', [CustomerController::class, 'authenticate']);
+Route::get('/download/dokumen/{filename}', [CustomerController::class, 'downloadDocument']);
+Route::get('/download/invoice/{filename}', [OrderController::class, 'downloadInvoice']);
+Route::get('/download/spa/{filename}', [ActivationNotaController::class, 'downloadSPA']);
+
 Route::middleware(['auth'])->group(
     function () {
         Route::post('/logout', [CustomerController::class, 'logout']);
         Route::get('/profil', [CustomerController::class, 'profile']);
-        Route::get('/download/dokumen/{filename}', [CustomerController::class, 'downloadDocument']);
 
         Route::get('/cities/{province}', [RegionController::class, 'cities']);
         Route::get('/districts/{city}', [RegionController::class, 'districts']);
@@ -32,14 +35,12 @@ Route::middleware(['auth'])->group(
         Route::post('/pembayaran/{order}', [OrderController::class, 'payment']);
         Route::get('/pembayaran/selesai', [OrderController::class, 'paymentFinish'])->name('pembayaran.selesai');
         Route::post('/pembayaran/verifikasi/{orderId}', [OrderController::class, 'verifyPayment']);
-        Route::get('/download/invoice/{filename}', [OrderController::class, 'downloadInvoice']);        
         Route::post('/konfirmasi-diterima/{order}', [OrderController::class, 'markAsReceived']);
         
         Route::get('/aktivasi', [ActivationNotaController::class, 'index']);
         Route::get('/detail-aktivasi/{nota}', [ActivationNotaController::class, 'show']);
         Route::post('/confirm-schedule/{nota}', [ActivationNotaController::class, 'confirmSchedule']);
         Route::post('/reject-schedule/{nota}', [ActivationNotaController::class, 'rejectSchedule']);
-        Route::post('/signing/{nota}', [ActivationNotaController::class, 'signingActivationDocument']);
-        Route::get('/download/spa/{filename}', [ActivationNotaController::class, 'downloadSPA']);        
+        Route::post('/signing/{nota}', [ActivationNotaController::class, 'signingActivationDocument']);        
     }
 );

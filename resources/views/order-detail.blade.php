@@ -95,12 +95,22 @@
                                 <h4 class="!mb-8">Status Pesanan</h4>
                                 <div class="flow relative">
                                     <div
-                                        class="step first {{ $order->current_status_id > 1 && !($order->current_status_id == 8 && $cancel_step === 'konfirmasi') ? 'completed' : '-' }}">
+                                        class="step first
+                                        {{ $order->current_status_id == 8
+                                            ? 'canceled'
+                                            : ($order->current_status_id > 1 && !($cancel_step === 'konfirmasi')
+                                                ? 'completed'
+                                                : '') }}">
                                         <div class="indicator">
                                             <div class="dot">
                                                 @if ($order->current_status_id > 1 && !($order->current_status_id == 8 && $cancel_step === 'konfirmasi'))
                                                     <div class="circle">
                                                         <i class="fa-solid fa-check"></i>
+                                                    </div>
+                                                @endif
+                                                @if ($order->current_status_id == 8)
+                                                    <div class="circle-cancel">
+                                                        <i class="fa-solid fa-xmark"></i>
                                                     </div>
                                                 @endif
                                             </div>
@@ -109,23 +119,15 @@
                                             <p>Konfirmasi Pesanan</p>
                                             @if ($order->current_status_id == 8 && $cancel_step === 'konfirmasi')
                                                 <p class="title">{{ $order_status->note }}</p>
-                                                <p class="text-sm text-gray-400 mb-2">
-                                                    Jika membutuhkan informasi lebih lanjut, silakan hubungi sales Anda.
-                                                </p>
-
-                                                <a href="https://wa.me/{{ auth()->user()->sales->phone }}" target="_blank"
-                                                    class="btn-invoice">
-                                                    <i class="fab fa-whatsapp me-2"></i>
-                                                    Hubungi Sales
-                                                </a>
                                             @elseif ($order->current_status_id > 1)
                                                 <p class="title">Pesanan dikonfirmasi pada,</p>
                                                 <p class="title">{{ $confirmed_order_date }}</p>
 
                                                 @if ($order->current_status_id == 2)
-                                                    <a class="btn-main mt-2"
+                                                    <a class="btn-complete-order my-2"
                                                         href="/lengkapi-pesanan/{{ $order->unique_order }}">
                                                         <span>Lengkapi Pesanan</span>
+                                                        <i class="fa fa-arrow-right ms-2"></i>
                                                     </a>
                                                 @endif
                                             @else
@@ -138,14 +140,17 @@
                                                         Mohon periksa email secara berkala untuk mendapatkan notifikasi
                                                         selanjutnya.
                                                     </p>
-
-                                                    <a href="https://wa.me/{{ auth()->user()->sales->phone }}"
-                                                        target="_blank" class="btn-invoice">
-                                                        <i class="fab fa-whatsapp me-2"></i>
-                                                        Hubungi Sales
-                                                    </a>
                                                 </div>
                                             @endif
+                                            <p class="text-sm text-gray-400 mb-2">
+                                                Jika membutuhkan informasi lebih lanjut, silakan hubungi sales Anda.
+                                            </p>
+
+                                            <a href="https://wa.me/{{ auth()->user()->sales->phone }}" target="_blank"
+                                                class="btn-invoice">
+                                                <i class="fab fa-whatsapp me-2"></i>
+                                                Hubungi Sales
+                                            </a>
                                         </div>
                                     </div>
 
@@ -229,7 +234,8 @@
                                                             </div>
                                                         </div>
 
-                                                        <button type="submit" class="btn-disabled mt-2" id="submitReceivedBtn" disabled>
+                                                        <button type="submit" class="btn-disabled mt-2"
+                                                            id="submitReceivedBtn" disabled>
                                                             Konfirmasi
                                                         </button>
                                                     </form>
@@ -271,7 +277,7 @@
                                                 <p class="title">{{ $received_status_order_note }}</p>
                                                 <a class="btn-main mt-2"
                                                     href="/detail-aktivasi/{{ $order->activation_nota_id }}">
-                                                    <span>Lanjut aktivasi perangkat sekarang</span>
+                                                    <span>Lihat status aktivasi perangkat</span>
                                                 </a>
                                             @endif
                                         </div>
@@ -388,7 +394,7 @@
         if (uploadInput) {
             uploadInput.addEventListener('change', function(event) {
                 const file = event.target.files[0];
-                
+
                 if (!file) {
                     disableSubmit();
                     return;

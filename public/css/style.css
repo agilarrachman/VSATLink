@@ -28316,6 +28316,25 @@ img {
     background: #68707d;
 }
 
+.btn-complete-order{
+    display: inline-block;
+    font-family: var(--title-font);
+    text-align: center;
+    color: #5A38DF;
+    outline: 0;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 3px 20px 2px 20px;
+    font-size: 14px;
+    border: none;
+    text-transform: uppercase;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    overflow: hidden;
+    background: #D1D5DC;
+}
+
 .btn-invoice, .btn-spa{
     display: inline-block;
     font-family: var(--title-font);
@@ -28349,6 +28368,10 @@ img {
     align-items: center;
     gap: 24px;
     margin-bottom: 16px;
+}
+
+.step.first {
+    align-items: start;
 }
 
 .step::before {
@@ -28405,6 +28428,16 @@ img {
     justify-content: center;
 }
 
+.circle-cancel {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #FF3E1D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .content p {
     color: #ffffff;
 }
@@ -28431,6 +28464,16 @@ img {
 
 .step.completed .indicator::after {
     background: #5623d8;
+}
+
+.step.canceled .dot {
+    background: #7B2314;
+    width: 60px;
+    height: 60px;
+}
+
+.step.canceled .dot i {
+    color: #ffffff;
 }
 
 .preview-box {
