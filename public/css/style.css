@@ -28374,6 +28374,10 @@ img {
     align-items: start;
 }
 
+.step.last {
+    align-items: end;
+}
+
 .step::before {
     content: "";
     position: absolute;
@@ -28597,7 +28601,7 @@ img {
     content: "";
     position: absolute;
     left: 30px;
-    top: 75px;
+    top: 30px;
     bottom: 40px;
     width: 1px;
     background: #adadad;

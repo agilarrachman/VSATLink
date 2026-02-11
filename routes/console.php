@@ -16,3 +16,5 @@ Schedule::command('app:generate-activation-document')
     ->everyMinute();
 Schedule::command('app:auto-sign-activation-documents')
     ->everyMinute();
+Schedule::command('app:auto-confirm-expedition-order')
+    ->everyMinute();

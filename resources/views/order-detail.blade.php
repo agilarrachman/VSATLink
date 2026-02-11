@@ -216,6 +216,9 @@
                                                         method="POST" enctype="multipart/form-data">
                                                         @csrf
                                                         <p class="title">Pesanan dalam proses pengiriman</p>
+                                                        <p class="title">Estimasi diterima:
+                                                            {{ $order->estimated_arrival_date->translatedFormat('d F Y') }}
+                                                        </p>
                                                         <p class="info">Silakan unggah bukti pesanan diterima</p>
 
                                                         <div class="upload-box my-2">
@@ -234,19 +237,36 @@
                                                             </div>
                                                         </div>
 
-                                                        <button type="submit" class="btn-disabled mt-2"
+                                                        <button type="submit" class="btn-disabled my-2"
                                                             id="submitReceivedBtn" disabled>
                                                             Konfirmasi
                                                         </button>
+
+                                                        <p class="info leading-4">
+                                                            Jika dalam 3 x 24 jam setelah estimasi tanggal diterima tidak
+                                                            ada konfirmasi, sistem akan secara otomatis menyelesaikan
+                                                            pesanan dan dianggap
+                                                            telah diterima.
+                                                        </p>
                                                     </form>
                                                 @elseif ($order->current_status_id == 7 && $order->shipping == 'JNE')
-                                                    <p class="title">Pesanan telah diterima</p>
-                                                    <div class="upload-box my-2">
-                                                        <div class="preview-wrapper" style="display:block;">
-                                                            <img id="previewImage"
-                                                                src="/storage/{{ $order->proof_of_delivery_image_url }}" />
+                                                    @if ($order->proof_of_delivery_image_url)
+                                                        <p class="title">Pesanan telah diterima</p>
+                                                        <div class="upload-box my-2">
+                                                            <div class="preview-wrapper" style="display:block;">
+                                                                <img id="previewImage"
+                                                                    src="/storage/{{ $order->proof_of_delivery_image_url }}" />
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    @else
+                                                        <p class="title">
+                                                            Estimasi pengiriman:
+                                                            {{ $order->estimated_arrival_date->translatedFormat('d F Y') }}
+                                                        </p>
+                                                        <p class="info">
+                                                            Batas waktu konfirmasi telah terlewati.
+                                                        </p>
+                                                    @endif
                                                 @elseif ($order->current_status_id >= 6 && $order->shipping == 'Ambil Ditempat')
                                                     <p class="title">Pesanan Anda siap diambil</p>
                                                     <p class="info">Silakan ambil pesanan di</p>
@@ -270,11 +290,17 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="content">
-                                            <p>Pesanan
-                                                Diterima</p>
+                                        <div class="content" style="margin: auto 0;">
+                                            <p>Pesanan Diterima</p>
                                             @if ($order->current_status_id == 7)
-                                                <p class="title">{{ $received_status_order_note }}</p>
+                                                @if ($order->proof_of_delivery_image_url)
+                                                    <p class="title">{{ $received_status_order_note }}</p>
+                                                @else
+                                                    <p class="title">Pesanan Anda Otamatis Diterima</p>
+                                                    <p class="info leading-4">
+                                                        {{ $received_status_order_note }}
+                                                    </p>
+                                                @endif
                                                 <a class="btn-main mt-2"
                                                     href="/detail-aktivasi/{{ $order->activation_nota_id }}">
                                                     <span>Lihat status aktivasi perangkat</span>

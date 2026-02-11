@@ -20,6 +20,7 @@ class Order extends Model
 
     protected $casts = [
         'payment_date' => 'datetime',
+        'estimated_arrival_date' => 'datetime',
     ];
 
     public function getRouteKeyName()
@@ -384,6 +385,37 @@ class Order extends Model
             'order_status_id' => 7,
             'order_id' => $order->id,
             'note' => "Pesanan {$order->unique_order} telah diterima pada {$timestamp}.",
+        ]);
+
+        return $order;
+    }
+
+    public static function autoConfirmExpeditionOrder($orderId)
+    {
+        $order = self::findOrFail($orderId);
+
+        $activationNota = ActivationNota::create([
+            'current_status_id' => 1,
+        ]);
+
+        ActivationStatusHistory::create([
+            'activation_status_id' => 1,
+            'activation_nota_id' => $activationNota->id,
+            'note' => "Pesanan {$order->unique_order} siap dilakukan penjadwalan instalasi dan aktivasi.",
+        ]);
+
+        $order->update([
+            'activation_nota_id' => $activationNota->id,
+            'current_status_id' => 7,
+        ]);
+
+        $estimatedDate = $order->estimated_arrival_date->translatedFormat('d F Y');
+        $autoConfirmDate = now()->translatedFormat('d F Y H:i');
+
+        OrderStatusHistory::create([
+            'order_status_id' => 7,
+            'order_id' => $order->id,
+            'note' => "Pesanan {$order->unique_order} dikonfirmasi diterima secara otomatis oleh sistem pada {$autoConfirmDate} karena melewati batas waktu konfirmasi (3 hari setelah estimasi kedatangan {$estimatedDate}) dan tidak terdapat bukti serah terima dari pelanggan.",
         ]);
 
         return $order;
