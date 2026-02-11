@@ -28,7 +28,7 @@
                         <strong>Nama Customer:</strong> {{ $customer_name }}<br>
                         <strong>Kode Pesanan:</strong> {{ $unique_order }}<br>
                         <strong>Produk:</strong> {{ $product_name }}<br>
-                        <strong>Jadwal Sebelumnya:</strong> ({{ $installation_session }}) | {{ $installation_date }}
+                        <strong>Jadwal Sebelumnya:</strong> {{ $installation_date }}
                     </td>
                 </tr>
             </table>

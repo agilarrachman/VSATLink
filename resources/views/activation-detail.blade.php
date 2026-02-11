@@ -40,8 +40,7 @@
                                         <p class="mb-0 text-sm text-white">
                                             @if ($nota->current_status_id >= 4)
                                                 Jadwal Instalasi pada tanggal
-                                                {{ $nota->installation_date->translatedFormat('d F Y') }} |
-                                                {{ $nota->installation_session === 'Pagi' ? 'Pagi (08.00 - 11.00)' : 'Siang (13.00 - 17.00)' }}
+                                                {{ $nota->installation_date->translatedFormat('d F Y') }}
                                             @else
                                                 Belum dijadwalkan
                                             @endif
@@ -83,8 +82,7 @@
                                             @elseif ($nota->current_status_id == 2)
                                                 <p class="title">
                                                     Dijadwalkan pada tanggal
-                                                    {{ $nota->installation_date->translatedFormat('d F Y') }} |
-                                                    {{ $nota->installation_session === 'Pagi' ? 'Pagi (08.00 - 11.00)' : 'Siang (13.00 - 17.00)' }}
+                                                    {{ $nota->installation_date->translatedFormat('d F Y') }}
                                                 </p>
                                                 <p class="text-base text-gray-400 mb-2">
                                                     Mohon konfirmasi kesediaan Anda terhadap jadwal instalasi tersebut.
@@ -120,8 +118,7 @@
                                             @else
                                                 <p class="title">
                                                     Dijadwalkan pada tanggal
-                                                    {{ $nota->installation_date->translatedFormat('d F Y') }} |
-                                                    {{ $nota->installation_session === 'Pagi' ? 'Pagi (08.00 - 11.00)' : 'Siang (13.00 - 17.00)' }}
+                                                    {{ $nota->installation_date->translatedFormat('d F Y') }}
                                                 </p>
                                             @endif
                                         </div>

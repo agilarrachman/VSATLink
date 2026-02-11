@@ -202,10 +202,6 @@
                 <td width="70%">{{ \Carbon\Carbon::parse($nota->installation_date)->translatedFormat('d F Y') }}</td>
             </tr>
             <tr>
-                <td><strong>Status Monitoring</strong></td>
-                <td>{{ $nota->sensor_status }}</td>
-            </tr>
-            <tr>
                 <td width="30%"><strong>Waktu Aktivasi Berhasil</strong></td>
                 <td width="70%">{{ \Carbon\Carbon::parse($nota->online_date)->translatedFormat('H:i | d F Y') }}</td>
             </tr>

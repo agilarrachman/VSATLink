@@ -37,7 +37,6 @@
                                     <strong>Produk:</strong> {{ $nota->order->product->name }}<br>
                                     <strong>Tanggal Instalasi:</strong>
                                     {{ \Carbon\Carbon::parse($nota->installation_date)->translatedFormat('d F Y') }}<br>
-                                    <strong>Status Monitoring:</strong> {{ $nota->sensor_status }}<br>
                                     <strong>Waktu Online:</strong>
                                     {{ \Carbon\Carbon::parse($nota->online_date)->translatedFormat('d F Y H:i') }}
                                 </td>
