@@ -415,7 +415,7 @@ class Order extends Model
         OrderStatusHistory::create([
             'order_status_id' => 7,
             'order_id' => $order->id,
-            'note' => "Pesanan {$order->unique_order} dikonfirmasi diterima secara otomatis oleh sistem pada {$autoConfirmDate} karena melewati batas waktu konfirmasi (3 hari setelah estimasi kedatangan {$estimatedDate}) dan tidak terdapat bukti serah terima dari pelanggan.",
+            'note' => "Pesanan {$order->unique_order} dikonfirmasi diterima secara otomatis oleh sistem pada {$autoConfirmDate} karena melewati batas waktu konfirmasi (7 hari setelah estimasi kedatangan {$estimatedDate}) dan tidak terdapat bukti serah terima dari pelanggan.",
         ]);
 
         return $order;

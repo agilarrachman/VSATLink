@@ -34,7 +34,7 @@ class AutoConfirmExpeditionOrder extends Command
 
         foreach ($orders as $order) {
             $estimatedReceivedAt = $order->estimated_arrival_date;
-            $autoConfirmAt = $estimatedReceivedAt->addDays(2);
+            $autoConfirmAt = $estimatedReceivedAt->addDays(7);
 
             if (now()->greaterThan($autoConfirmAt)) {
                 Order::autoConfirmExpeditionOrder($order->id);
