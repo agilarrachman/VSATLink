@@ -217,7 +217,7 @@
                                                         @csrf
                                                         <p class="title">Pesanan dalam proses pengiriman</p>
                                                         <p class="title">Estimasi diterima:
-                                                            {{ $order->estimated_arrival_date->translatedFormat('d F Y') }}
+                                                            {{ $order->estimated_arrival_date?->translatedFormat('d F Y') }}
                                                         </p>
                                                         <p class="info">Silakan unggah bukti pesanan diterima</p>
 
@@ -243,7 +243,7 @@
                                                         </button>
 
                                                         <p class="info leading-4">
-                                                            Jika dalam 3 x 24 jam setelah estimasi tanggal diterima tidak
+                                                            Jika dalam 7 x 24 jam setelah estimasi tanggal diterima tidak
                                                             ada konfirmasi, sistem akan secara otomatis menyelesaikan
                                                             pesanan dan dianggap
                                                             telah diterima.
