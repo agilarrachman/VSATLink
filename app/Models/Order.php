@@ -240,9 +240,17 @@ class Order extends Model
 
     public static function createOrGetPayment(Order $order): array
     {
-        Log::info(config('app.midtrans_server_key'));
-        Config::$serverKey = config('app.midtrans_server_key');
-        Config::$isProduction = false;
+        $isProduction = config('app.midtrans_is_production');
+
+        $serverKey = $isProduction
+            ? config('app.midtrans_server_key_production')
+            : config('app.midtrans_server_key');
+
+        Log::info('Midtrans Mode: ' . ($isProduction ? 'PRODUCTION' : 'SANDBOX'));
+        Log::info('Server Key: ' . $serverKey);
+
+        Config::$serverKey = $serverKey;
+        Config::$isProduction = $isProduction;
         Config::$isSanitized = true;
         Config::$is3ds = true;
 

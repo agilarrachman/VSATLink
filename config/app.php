@@ -127,7 +127,9 @@ return [
     'username_jne' => env('API_USERNAME_JNE_PROD', ''),
     'api_key_jne' => env('API_KEY_JNE_PROD', ''),
 
-    'midtrans_server_key' => env('MIDTRANS_SERVER_KEY', ''),
-    'midtrans_client_key' => env('MIDTRANS_CLIENT_KEY', ''),
     'midtrans_is_production' => env('MIDTRANS_IS_PRODUCTION', ''),
+    'midtrans_client_key' => env('MIDTRANS_CLIENT_KEY', ''),
+    'midtrans_server_key' => env('MIDTRANS_SERVER_KEY', ''),
+    'midtrans_client_key_production' => env('MIDTRANS_CLIENT_KEY_PRODUCTION', ''),
+    'midtrans_server_key_production' => env('MIDTRANS_SERVER_KEY_PRODUCTION', ''),
 ];
