@@ -96,7 +96,7 @@
                                 <div class="flow relative">
                                     <div
                                         class="step first
-                                        {{ $order->current_status_id == 8
+                                        {{ $order->current_status_id == 8 && $cancel_step === 'konfirmasi'
                                             ? 'canceled'
                                             : ($order->current_status_id > 1 && !($cancel_step === 'konfirmasi')
                                                 ? 'completed'
@@ -107,8 +107,7 @@
                                                     <div class="circle">
                                                         <i class="fa-solid fa-check"></i>
                                                     </div>
-                                                @endif
-                                                @if ($order->current_status_id == 8)
+                                                @elseif ($order->current_status_id == 8 && $cancel_step === 'konfirmasi')
                                                     <div class="circle-cancel">
                                                         <i class="fa-solid fa-xmark"></i>
                                                     </div>
@@ -155,12 +154,20 @@
                                     </div>
 
                                     <div
-                                        class="step {{ $order->current_status_id >= 4 && $order->current_status_id < 8 ? 'completed' : '-' }}">
+                                        class="step {{ $order->current_status_id == 8 && $cancel_step === 'pembayaran'
+                                            ? 'canceled'
+                                            : ($order->current_status_id >= 4 && $order->current_status_id < 8
+                                                ? 'completed'
+                                                : '') }}">
                                         <div class="indicator">
                                             <div class="dot">
                                                 @if ($order->current_status_id >= 4 && $order->current_status_id < 8)
                                                     <div class="circle">
                                                         <i class="fa-solid fa-check"></i>
+                                                    </div>
+                                                @elseif ($order->current_status_id == 8 && $cancel_step === 'pembayaran')
+                                                    <div class="circle-cancel">
+                                                        <i class="fa-solid fa-xmark"></i>
                                                     </div>
                                                 @endif
                                             </div>
