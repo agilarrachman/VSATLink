@@ -65,8 +65,7 @@
                                         <p class="mb-0 text-sm text-white">
                                             @if ($nota->installation_date)
                                                 Jadwal Instalasi pada tanggal
-                                                {{ $nota->installation_date->translatedFormat('d F Y') }} |
-                                                {{ $nota->installation_session === 'Pagi' ? 'Pagi (08.00 - 11.00)' : 'Siang (13.00 - 17.00)' }}
+                                                {{ $nota->installation_date->translatedFormat('d F Y') }}
                                             @else
                                                 Belum dijadwalkan
                                             @endif

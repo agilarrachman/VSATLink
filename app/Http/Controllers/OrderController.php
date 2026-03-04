@@ -21,11 +21,17 @@ class OrderController extends Controller
     {
         $status = request()->get('status', 'Semua');
 
+        $isProduction = config('app.midtrans_is_production');
+
+        $midtransClientKey = $isProduction
+            ? config('app.midtrans_client_key_production')
+            : config('app.midtrans_client_key');
+
         return view('orders', [
             "page" => "orders",
             'orders' => Order::getAllMyOrders(Auth::user(), $status),
-            'midtransClientKey' => config('app.midtrans_client_key'),
-            'isProduction' => config('app.midtrans_is_production'),
+            'midtransClientKey' => $midtransClientKey,
+            'isProduction' => $isProduction,
         ]);
     }
 

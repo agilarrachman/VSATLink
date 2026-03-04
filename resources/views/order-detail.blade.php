@@ -95,12 +95,21 @@
                                 <h4 class="!mb-8">Status Pesanan</h4>
                                 <div class="flow relative">
                                     <div
-                                        class="step first {{ $order->current_status_id > 1 && !($order->current_status_id == 8 && $cancel_step === 'konfirmasi') ? 'completed' : '-' }}">
+                                        class="step first
+                                        {{ $order->current_status_id == 8 && $cancel_step === 'konfirmasi'
+                                            ? 'canceled'
+                                            : ($order->current_status_id > 1 && !($cancel_step === 'konfirmasi')
+                                                ? 'completed'
+                                                : '') }}">
                                         <div class="indicator">
                                             <div class="dot">
                                                 @if ($order->current_status_id > 1 && !($order->current_status_id == 8 && $cancel_step === 'konfirmasi'))
                                                     <div class="circle">
                                                         <i class="fa-solid fa-check"></i>
+                                                    </div>
+                                                @elseif ($order->current_status_id == 8 && $cancel_step === 'konfirmasi')
+                                                    <div class="circle-cancel">
+                                                        <i class="fa-solid fa-xmark"></i>
                                                     </div>
                                                 @endif
                                             </div>
@@ -109,23 +118,15 @@
                                             <p>Konfirmasi Pesanan</p>
                                             @if ($order->current_status_id == 8 && $cancel_step === 'konfirmasi')
                                                 <p class="title">{{ $order_status->note }}</p>
-                                                <p class="text-sm text-gray-400 mb-2">
-                                                    Jika membutuhkan informasi lebih lanjut, silakan hubungi sales Anda.
-                                                </p>
-
-                                                <a href="https://wa.me/{{ auth()->user()->sales->phone }}" target="_blank"
-                                                    class="btn-invoice">
-                                                    <i class="fab fa-whatsapp me-2"></i>
-                                                    Hubungi Sales
-                                                </a>
                                             @elseif ($order->current_status_id > 1)
                                                 <p class="title">Pesanan dikonfirmasi pada,</p>
                                                 <p class="title">{{ $confirmed_order_date }}</p>
 
                                                 @if ($order->current_status_id == 2)
-                                                    <a class="btn-main mt-2"
+                                                    <a class="btn-complete-order my-2"
                                                         href="/lengkapi-pesanan/{{ $order->unique_order }}">
                                                         <span>Lengkapi Pesanan</span>
+                                                        <i class="fa fa-arrow-right ms-2"></i>
                                                     </a>
                                                 @endif
                                             @else
@@ -138,24 +139,35 @@
                                                         Mohon periksa email secara berkala untuk mendapatkan notifikasi
                                                         selanjutnya.
                                                     </p>
-
-                                                    <a href="https://wa.me/{{ auth()->user()->sales->phone }}"
-                                                        target="_blank" class="btn-invoice">
-                                                        <i class="fab fa-whatsapp me-2"></i>
-                                                        Hubungi Sales
-                                                    </a>
                                                 </div>
                                             @endif
+                                            <p class="text-sm text-gray-400 mb-2">
+                                                Jika membutuhkan informasi lebih lanjut, silakan hubungi sales Anda.
+                                            </p>
+
+                                            <a href="https://wa.me/{{ auth()->user()->sales->phone }}" target="_blank"
+                                                class="btn-invoice">
+                                                <i class="fab fa-whatsapp me-2"></i>
+                                                Hubungi Sales
+                                            </a>
                                         </div>
                                     </div>
 
                                     <div
-                                        class="step {{ $order->current_status_id >= 4 && $order->current_status_id < 8 ? 'completed' : '-' }}">
+                                        class="step {{ $order->current_status_id == 8 && $cancel_step === 'pembayaran'
+                                            ? 'canceled'
+                                            : ($order->current_status_id >= 4 && $order->current_status_id < 8
+                                                ? 'completed'
+                                                : '') }}">
                                         <div class="indicator">
                                             <div class="dot">
                                                 @if ($order->current_status_id >= 4 && $order->current_status_id < 8)
                                                     <div class="circle">
                                                         <i class="fa-solid fa-check"></i>
+                                                    </div>
+                                                @elseif ($order->current_status_id == 8 && $cancel_step === 'pembayaran')
+                                                    <div class="circle-cancel">
+                                                        <i class="fa-solid fa-xmark"></i>
                                                     </div>
                                                 @endif
                                             </div>
@@ -211,6 +223,9 @@
                                                         method="POST" enctype="multipart/form-data">
                                                         @csrf
                                                         <p class="title">Pesanan dalam proses pengiriman</p>
+                                                        <p class="title">Estimasi diterima:
+                                                            {{ $order->estimated_arrival_date?->translatedFormat('d F Y') }}
+                                                        </p>
                                                         <p class="info">Silakan unggah bukti pesanan diterima</p>
 
                                                         <div class="upload-box my-2">
@@ -229,18 +244,36 @@
                                                             </div>
                                                         </div>
 
-                                                        <button type="submit" class="btn-disabled mt-2" id="submitReceivedBtn" disabled>
+                                                        <button type="submit" class="btn-disabled my-2"
+                                                            id="submitReceivedBtn" disabled>
                                                             Konfirmasi
                                                         </button>
+
+                                                        <p class="info leading-4">
+                                                            Jika dalam 7 x 24 jam setelah estimasi tanggal diterima tidak
+                                                            ada konfirmasi, sistem akan secara otomatis menyelesaikan
+                                                            pesanan dan dianggap
+                                                            telah diterima.
+                                                        </p>
                                                     </form>
                                                 @elseif ($order->current_status_id == 7 && $order->shipping == 'JNE')
-                                                    <p class="title">Pesanan telah diterima</p>
-                                                    <div class="upload-box my-2">
-                                                        <div class="preview-wrapper" style="display:block;">
-                                                            <img id="previewImage"
-                                                                src="/storage/{{ $order->proof_of_delivery_image_url }}" />
+                                                    @if ($order->proof_of_delivery_image_url)
+                                                        <p class="title">Pesanan telah diterima</p>
+                                                        <div class="upload-box my-2">
+                                                            <div class="preview-wrapper" style="display:block;">
+                                                                <img id="previewImage"
+                                                                    src="/storage/{{ $order->proof_of_delivery_image_url }}" />
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    @else
+                                                        <p class="title">
+                                                            Estimasi pengiriman:
+                                                            {{ $order->estimated_arrival_date->translatedFormat('d F Y') }}
+                                                        </p>
+                                                        <p class="info">
+                                                            Batas waktu konfirmasi telah terlewati.
+                                                        </p>
+                                                    @endif
                                                 @elseif ($order->current_status_id >= 6 && $order->shipping == 'Ambil Ditempat')
                                                     <p class="title">Pesanan Anda siap diambil</p>
                                                     <p class="info">Silakan ambil pesanan di</p>
@@ -264,14 +297,20 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="content">
-                                            <p>Pesanan
-                                                Diterima</p>
+                                        <div class="content" style="margin: auto 0;">
+                                            <p>Pesanan Diterima</p>
                                             @if ($order->current_status_id == 7)
-                                                <p class="title">{{ $received_status_order_note }}</p>
+                                                @if ($order->proof_of_delivery_image_url)
+                                                    <p class="title">{{ $received_status_order_note }}</p>
+                                                @else
+                                                    <p class="title">Pesanan Anda Otamatis Diterima</p>
+                                                    <p class="info leading-4">
+                                                        {{ $received_status_order_note }}
+                                                    </p>
+                                                @endif
                                                 <a class="btn-main mt-2"
                                                     href="/detail-aktivasi/{{ $order->activation_nota_id }}">
-                                                    <span>Lanjut aktivasi perangkat sekarang</span>
+                                                    <span>Lihat status aktivasi perangkat</span>
                                                 </a>
                                             @endif
                                         </div>
@@ -388,7 +427,7 @@
         if (uploadInput) {
             uploadInput.addEventListener('change', function(event) {
                 const file = event.target.files[0];
-                
+
                 if (!file) {
                     disableSubmit();
                     return;

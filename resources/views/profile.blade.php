@@ -57,8 +57,18 @@
                 <h4 class="!mb-3">Informasi Akun</h4>
                 <div class="form-border !h-fit grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div class="field-set">
-                        <label>Sales Pendamping</label>
+                        <label>Nama Sales Pendamping</label>
                         <input type="text" name="am_name" class="form-control" value="{{ $user->sales->name }}"
+                            disabled />
+                    </div>
+                    <div class="field-set">
+                        <label>Nomor Telepon Sales Pendamping</label>
+                        <input type="text" name="am_phone" class="form-control" value="{{ $user->sales->phone }}"
+                            disabled />
+                    </div>
+                    <div class="field-set">
+                        <label>Email Sales Pendamping</label>
+                        <input type="text" name="am_email" class="form-control" value="{{ $user->sales->email }}"
                             disabled />
                     </div>
                     <div class="field-set">

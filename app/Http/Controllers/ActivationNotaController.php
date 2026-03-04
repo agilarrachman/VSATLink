@@ -58,7 +58,6 @@ class ActivationNotaController extends Controller
             'unique_order'  => $activationNota->order->unique_order,
             'product_name'  => $activationNota->order->product->name,
             'installation_date'  => $activationNota->installation_date->translatedFormat('d F Y'),
-            'installation_session'  => $activationNota->installation_session === 'Pagi' ? 'Pagi (08.00-11.00)' : 'Siang (13.00-17.00)',
             'reject_reason' => $request->reject_reason,
         ];
 
