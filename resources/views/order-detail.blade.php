@@ -300,13 +300,17 @@
                                         <div class="content" style="margin: auto 0;">
                                             <p>Pesanan Diterima</p>
                                             @if ($order->current_status_id == 7)
-                                                @if ($order->proof_of_delivery_image_url)
-                                                    <p class="title">{{ $received_status_order_note }}</p>
+                                                @if ($order->shipping == 'JNE')
+                                                    @if ($order->proof_of_delivery_image_url)
+                                                        <p class="title">{{ $received_status_order_note }}</p>
+                                                    @else
+                                                        <p class="title">Pesanan Anda Otamatis Diterima</p>
+                                                        <p class="info leading-4">
+                                                            {{ $received_status_order_note }}
+                                                        </p>
+                                                    @endif
                                                 @else
-                                                    <p class="title">Pesanan Anda Otamatis Diterima</p>
-                                                    <p class="info leading-4">
-                                                        {{ $received_status_order_note }}
-                                                    </p>
+                                                    <p class="title">{{ $received_status_order_note }}</p>
                                                 @endif
                                                 <a class="btn-main mt-2"
                                                     href="/detail-aktivasi/{{ $order->activation_nota_id }}">
