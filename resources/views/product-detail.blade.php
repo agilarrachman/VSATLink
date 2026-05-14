@@ -315,13 +315,32 @@
         }
 
         let map, marker;
+        let indonesiaGeoJson = null;
+
+        async function loadIndonesiaGeoJSON() {
+            const response = await fetch('/geojson/indonesia_provinces.json');
+            indonesiaGeoJson = await response.json();
+        }
+
+        function isPointInIndonesia(lat, lng) {
+            if (!indonesiaGeoJson) return false;
+
+            const point = turf.point([lng, lat]);
+
+            return indonesiaGeoJson.features.some(feature => {
+                return turf.booleanPointInPolygon(point, feature);
+            });
+        }
 
         document.getElementById('openMapBtnTop').addEventListener('click', openModal);
         document.getElementById('openMapBtnBottom').addEventListener('click', openModal);
 
-        function openModal() {
+        async function openModal() {
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            if (!indonesiaGeoJson) {
+                await loadIndonesiaGeoJSON();
+            }
             setTimeout(initMap, 100);
         }
 
@@ -346,9 +365,22 @@
 
             updateLatLng(defaultLat, defaultLng);
 
-            map.on('click', function(e) {
+            map.on('click', async function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+
+                const insideIndonesia = isPointInIndonesia(lat, lng);
+
+                if (!insideIndonesia) {
+                    alert(
+                        'Lokasi yang dipilih berada di luar wilayah Indonesia atau bukan area daratan. Silakan pilih lokasi instalasi yang valid.');
+                    return;
+                }
+
                 marker.setLatLng(e.latlng);
-                updateLatLng(e.latlng.lat, e.latlng.lng);
+
+                updateLatLng(lat, lng);
+
                 myAddressCheckbox.checked = false;
             });
         }

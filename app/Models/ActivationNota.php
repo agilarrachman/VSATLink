@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log as Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class ActivationNota extends Model
@@ -109,6 +110,9 @@ class ActivationNota extends Model
     public static function confirmSchedule($activationNotaId)
     {
         $activationNota = self::findOrFail($activationNotaId);
+        $order = Order::where('activation_nota_id', $activationNotaId)->firstOrFail();
+
+        $timestamp = Carbon::now()->translatedFormat('d F Y H:i');
 
         $activationNota->update([
             'current_status_id'  => 4,
@@ -119,6 +123,18 @@ class ActivationNota extends Model
             'activation_nota_id'   => $activationNota->id,
             'note' => 'Pelanggan telah mengonfirmasi jadwal instalasi dan aktivasi layanan',
         ]);
+
+        $dataOrder = [
+            'order' => $order,
+            'installation_date' => $timestamp,
+        ];
+
+        $provisioningEmails = Admin::getAllProvisioningEmail();
+
+        Mail::send('emails.schedule-confirmed', $dataOrder, function ($message) use ($provisioningEmails) {
+            $message->to($provisioningEmails)
+                ->subject('[NOTIFIKASI] Jadwal Instalasi Telah Ditetapkan');
+        });;
 
         return $activationNota;
     }

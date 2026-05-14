@@ -11,7 +11,7 @@
     <tr>
         <td style="padding:30px; color:#333333;">
             <p style="margin-top:0; font-size:15px;">
-                Yth. <strong>Tim Teknisi VSATLink</strong>,
+                Yth. <strong>Tim Instalasi VSATLink</strong>,
             </p>
 
             <p style="font-size:15px; line-height:1.6;">
@@ -44,7 +44,7 @@
             </table>
 
             <p style="font-size:14px; line-height:1.6;">
-                Mohon bantuan Tim Teknisi untuk <strong>mengatur jadwal instalasi dan aktivasi yang baru</strong>
+                Mohon bantuan Tim Instalasi untuk <strong>mengatur jadwal instalasi dan aktivasi yang baru</strong>
                 berdasarkan ketersediaan tim, agar dapat segera ditindaklanjuti oleh tim terkait.
             </p>
 

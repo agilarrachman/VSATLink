@@ -9,6 +9,7 @@ use Midtrans\Config;
 use Midtrans\Snap;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class Order extends Model
@@ -395,6 +396,18 @@ class Order extends Model
             'note' => "Pesanan {$order->unique_order} telah diterima pada {$timestamp}.",
         ]);
 
+        $dataOrder = [
+            'order' => $order,
+            'received_date' => $timestamp,
+        ];
+
+        $installationCoordinatorEmails = Admin::getAllInstallationCoordinatorEmail();
+
+        Mail::send('emails.order-received', $dataOrder, function ($message) use ($installationCoordinatorEmails) {
+            $message->to($installationCoordinatorEmails)
+                ->subject('[NOTIFIKASI] Pesanan Telah Diterima Customer');
+        });;
+
         return $order;
     }
 
@@ -425,6 +438,18 @@ class Order extends Model
             'order_id' => $order->id,
             'note' => "Pesanan {$order->unique_order} dikonfirmasi diterima secara otomatis oleh sistem pada {$autoConfirmDate} karena melewati batas waktu konfirmasi (7 hari setelah estimasi kedatangan {$estimatedDate}) dan tidak terdapat bukti serah terima dari pelanggan.",
         ]);
+
+        $dataOrder = [
+            'order' => $order,
+            'received_date' => $autoConfirmDate,
+        ];
+
+        $installationCoordinatorEmails = Admin::getAllInstallationCoordinatorEmail();
+
+        Mail::send('emails.order-received', $dataOrder, function ($message) use ($installationCoordinatorEmails) {
+            $message->to($installationCoordinatorEmails)
+                ->subject('[NOTIFIKASI] Pesanan Telah Diterima Customer');
+        });;
 
         return $order;
     }
