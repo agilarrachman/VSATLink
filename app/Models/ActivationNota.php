@@ -112,8 +112,6 @@ class ActivationNota extends Model
         $activationNota = self::findOrFail($activationNotaId);
         $order = Order::where('activation_nota_id', $activationNotaId)->firstOrFail();
 
-        $timestamp = Carbon::now()->translatedFormat('d F Y H:i');
-
         $activationNota->update([
             'current_status_id'  => 4,
         ]);
@@ -126,7 +124,7 @@ class ActivationNota extends Model
 
         $dataOrder = [
             'order' => $order,
-            'installation_date' => $timestamp,
+            'installation_date' => $activationNota->installation_date->translatedFormat('d F Y'),
         ];
 
         $provisioningEmails = Admin::getAllProvisioningEmail();
