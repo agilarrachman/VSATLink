@@ -92,7 +92,7 @@ class ActivationNota extends Model
         if ($status && $status !== 'Semua') {
             $statusMap = [
                 'Konfirmasi Jadwal' => [2],
-                'Sudah Dijadwalkan' => [4],
+                'Sudah Dijadwalkan' => [4, 5],
                 'Perjalan Teknisi' => [6],
                 'Sedang Diproses' => [7, 8, 9],
                 'Belum Ditandatangani' => [9],
